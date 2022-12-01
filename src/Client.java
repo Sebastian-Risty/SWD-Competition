@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Scanner;
 
 class Client {
@@ -15,7 +16,7 @@ class Client {
         this.port = Integer.parseInt(port);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnknownHostException {
         Client client;
         switch (args.length) {
             case 2:
@@ -25,7 +26,7 @@ class Client {
                 client = new Client(args[0], "23704");
                 break;
             default:
-                client = new Client("128.255.17.152", "23704");
+                client = new Client(InetAddress.getLocalHost().getHostAddress(), "23704");
         }
         client.startClient();
     }
