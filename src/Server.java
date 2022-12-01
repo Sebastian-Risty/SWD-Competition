@@ -116,7 +116,7 @@ class Server {
             System.out.println("StartTime: " + startTime);
             BufferedReader reader;
             try {
-                reader = new BufferedReader(new FileReader("/iahome/c/ca/carduser/IdeaProjects/carduser_swd/scratch/final/src/words"));
+                reader = new BufferedReader(new FileReader("words"));
 
                 String line = reader.readLine();
                 while (line != null) {
