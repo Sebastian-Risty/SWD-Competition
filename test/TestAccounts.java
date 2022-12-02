@@ -10,6 +10,7 @@ public class TestAccounts {
     private void init() throws SQLException {
 
         Accounts.initialize();
+        Accounts.clearAll();
         Accounts.addAccount("Sebastian", "password1");
         Accounts.addAccount("Cole", "password2");
         Accounts.addAccount("Sam", "password3");
@@ -22,12 +23,18 @@ public class TestAccounts {
         Accounts.updateScore("Sam", 1000);
         Accounts.updateScore("Cole", 500);
         String expected;
-        expected = "Leaderboard\n\n" +
-                "Rank\tUsername\tScore\t\n" +
+        expected = "Leaderboard:\n\n" +
+                "Username\tScore\t\n" +
                 "Sam\t1000\t\n" +
                 "Cole\t500\t\n" +
                 "Sebastian\t0\t\n";
         assertEquals(expected, Accounts.displayLeaderBoard(10));
+    }
+
+    @Test
+    public void testValidLogin() throws SQLException {
+        init();
+        assertTrue(Accounts.validLogin("Sebastian","password1"));
     }
 
     @Test
