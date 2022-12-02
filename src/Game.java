@@ -4,10 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Game {
-    private Player playerOne;
-    private Player playerTwo;
-
+public class Game implements Runnable {
+    private ArrayList<ClientCommunication> playerList = new ArrayList<>();
     private ArrayList<Character> letters = new ArrayList<>();
     private ArrayList<String> validWords = new ArrayList<>();
     private ArrayList<String> allWords = new ArrayList<>();
@@ -17,10 +15,10 @@ public class Game {
         return letters;
     }
 
-    public Game(Player playerOne, Player playerTwo) {
-        this.playerOne = playerOne;
-        this.playerTwo = playerTwo;
+    @Override
+    public void run() {
         initializeGame();
+        playGame();
     }
 
     private void initializeGame() {
@@ -84,6 +82,10 @@ public class Game {
             freq[letter - 'a']++;
         }
         return freq;
+    }
+
+    public void addPlayer(ClientCommunication player) {
+        playerList.add(player);
     }
 
     public void guess(Player player, String guess) {
