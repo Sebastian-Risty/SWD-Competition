@@ -10,19 +10,9 @@ public class TestAccounts {
     private void init() throws SQLException {
 
         Accounts.initialize();
-
-        try {
-            Accounts.addAccount("Sebastian", "password1");
-            Accounts.addAccount("Cole", "password2");
-            Accounts.addAccount("Sam", "password3");
-        } catch (SQLException ex) { // if accounts are already in database
-            Accounts.clearAll();
-            Accounts.addAccount("Sebastian", "password1");
-            Accounts.addAccount("Cole", "password2");
-            Accounts.addAccount("Sam", "password3");
-            System.out.println("lmao");
-        }
-
+        Accounts.addAccount("Sebastian", "password1");
+        Accounts.addAccount("Cole", "password2");
+        Accounts.addAccount("Sam", "password3");
 
     }
 

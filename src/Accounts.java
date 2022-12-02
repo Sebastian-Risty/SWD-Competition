@@ -20,14 +20,58 @@ public class Accounts {
     }
 
     // adds an account to the database give its username and password. Accounts are given a default score of 0
-    // An exception is thrown if the database cannot be written to, likely meaning the username is already in use
-    public static void addAccount(String usernameInp, String passwordInp) throws SQLException {
-        PreparedStatement ps = connection.prepareStatement("INSERT INTO Accounts (username, password, score) VALUES (?, ?, 0);");
+    // Returns true if account was added successfully, returns false if username is already in database
+    public static boolean addAccount(String usernameInp, String passwordInp) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement("SELECT COUNT(1) FROM Accounts WHERE username = ?;");
         ps.setString(1, usernameInp);
-        ps.setString(2, passwordInp);
-        ps.addBatch();
         resultSet = statement.executeQuery(ps.toString());
-        updateData();
+        metaData = resultSet.getMetaData();
+        /*
+        if(Integer.parseInt(String.valueOf()) == 0){ // the account isn't in the database
+            PreparedStatement ps2 = connection.prepareStatement("INSERT INTO Accounts (username, password, score) VALUES (?, ?, 0);");
+            ps2.setString(1, usernameInp);
+            ps2.setString(2, passwordInp);
+            ps2.addBatch();
+            resultSet = statement.executeQuery(ps2.toString());
+            updateData();
+            return true;
+        } else if(Integer.parseInt(String.valueOf(resultSet)) == 1){ // the account is in the database
+            System.out.println("duplicate account");
+        }
+
+         */
+
+
+        int count = -1;
+        while(resultSet.next()){
+            for(int i = 1; i <= metaData.getColumnCount(); i++){
+                count = resultSet.getInt(1);
+            }
+        }
+
+        if(count >= 1){
+            System.out.println("duplicate account");
+        } else {
+            System.out.println(count);
+            PreparedStatement ps2 = connection.prepareStatement("INSERT INTO Accounts (username, password, score) VALUES (?, ?, 0);");
+            ps2.setString(1, usernameInp);
+            ps2.setString(2, passwordInp);
+            ps2.addBatch();
+            //statement.executeQuery(ps2.toString());
+            updateData();
+            return true;
+        }
+        return false;
+
+
+
+
+//        PreparedStatement ps = connection.prepareStatement("INSERT INTO Accounts (username, password, score) VALUES (?, ?, 0);");
+//        ps.setString(1, usernameInp);
+//        ps.setString(2, passwordInp);
+//        ps.addBatch();
+//        resultSet = statement.executeQuery(ps.toString());
+//        updateData();
     }
 
 
@@ -97,13 +141,13 @@ public class Accounts {
 
     public static void initialize() {
         try {
-            Class.forName("org.postgresql.Driver");
+//            Class.forName("org.postgresql.Driver");
 
             connection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
             statement = connection.createStatement();
             resultSet = statement.executeQuery("SELECT * FROM accounts ORDER BY Score DESC");
             metaData = resultSet.getMetaData();
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) { // | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
 //        catch (ClassNotFoundException e) {
