@@ -60,6 +60,7 @@ public class LoginFXMLController extends Controller {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
+
         // getClient().send the login info
 
         // getClient().receive whether valid or not
@@ -67,18 +68,8 @@ public class LoginFXMLController extends Controller {
         // Set verified equal to what the server said
         boolean verified = true;
 
-
         if(verified) {
-            URL fxmlFile = getClass().getResource("homeScreenFXML.fxml");
-
-            Stage primaryStage = new Stage();
-            assert fxmlFile != null;
-            Parent root = FXMLLoader.load(fxmlFile);
-
-            Scene scene = new Scene(root);
-            primaryStage.setTitle("Sign Up");
-            primaryStage.setScene(scene);
-            primaryStage.show();
+            switchScene("homeScreenFXML.fxml", "Home Screen");
         }
         else {
             verifyRippler.createManualRipple();

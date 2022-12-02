@@ -17,12 +17,18 @@ public class Final_ProjectGUImain extends Application {
     public void start(Stage primaryStage) throws IOException {
         URL fxmlFile = getClass().getResource("LoginFXMl.fxml");
 
+        Controller controller = new Controller();
+
         assert fxmlFile != null;
         Parent root = FXMLLoader.load(fxmlFile);
 
         Scene scene = new Scene(root);
         primaryStage.setTitle("Word Game");
         primaryStage.setScene(scene);
+
+        controller.setRoot(root);
+        //controller.setScene(scene);
+
         primaryStage.show();
     }
 }
