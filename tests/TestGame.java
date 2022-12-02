@@ -1,0 +1,31 @@
+import java.util.Objects;
+import java.util.Scanner;
+
+public class TestGame {
+    public static void main(String[] args) {
+        Player p1 = new Player("player1");
+        Player p2 = new Player("player2");
+        Game game = new Game(p1, p2);
+
+        Scanner scnr = new Scanner(System.in);
+        for (int i = 0; i < 2; i++) {
+            System.out.println("\nPlayer" + (i + 1) + "'s turn");
+            boolean status = true;
+            while (status) {
+                System.out.println("\nYour letters are: " + game.getLetters());
+                System.out.print("\nEnter your guess: ");
+                String input = scnr.next();
+                if (Objects.equals(input, "quit")) {
+                    status = false;
+                } else {
+                    if (i == 0) {
+                        game.guess(p1, input);
+                    } else {
+                        game.guess(p2, input);
+                    }
+                }
+            }
+            game.endGame();
+        }
+    }
+}
