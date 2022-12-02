@@ -6,14 +6,24 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestAccounts {
-    private Accounts accounts;
 
     private void init() throws SQLException {
-        Accounts.clearAll(); // NUKES THE DATABASE EVERY TIME TESTS ARE RUN
 
-        Accounts.addAccount("Sebastian", "password1");
-        Accounts.addAccount("Cole", "password2");
-        Accounts.addAccount("Sam", "password3");
+        Accounts.initialize();
+
+        try {
+            Accounts.addAccount("Sebastian", "password1");
+            Accounts.addAccount("Cole", "password2");
+            Accounts.addAccount("Sam", "password3");
+        } catch (SQLException ex) { // if accounts are already in database
+            Accounts.clearAll();
+            Accounts.addAccount("Sebastian", "password1");
+            Accounts.addAccount("Cole", "password2");
+            Accounts.addAccount("Sam", "password3");
+            System.out.println("lmao");
+        }
+
+
     }
 
     @Test
@@ -24,9 +34,9 @@ public class TestAccounts {
         String expected;
         expected = "Leaderboard\n\n" +
                 "Rank\tUsername\tScore\t\n" +
-                "1\tSam\t1000\t\n" +
-                "2\tCole\t500\t\n" +
-                "3\tSebastian\t0\t\n";
+                "Sam\t1000\t\n" +
+                "Cole\t500\t\n" +
+                "Sebastian\t0\t\n";
         assertEquals(expected, Accounts.displayLeaderBoard(10));
     }
 
