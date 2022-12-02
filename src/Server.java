@@ -175,6 +175,8 @@ class Server {
            if(clientMessage[0].equals(messages.LOGIN_REQUEST.toString())){
                // [1] -> userName, [2] -> password
                try{
+                   Accounts.addAccount(clientMessage[1],clientMessage[2]);
+                   Accounts.validLogin(clientMessage[1],clientMessage[2]);
                    // call db with data
                    // TODO: check db for user+pass
 
