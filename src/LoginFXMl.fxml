@@ -22,8 +22,8 @@
           <RowConstraints maxHeight="319.0" minHeight="10.0" prefHeight="83.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="319.0" minHeight="10.0" prefHeight="72.0" vgrow="SOMETIMES" />
           <RowConstraints maxHeight="219.0" minHeight="10.0" prefHeight="78.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="219.0" minHeight="10.0" prefHeight="68.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="219.0" minHeight="10.0" prefHeight="61.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="219.0" minHeight="10.0" prefHeight="49.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="219.0" minHeight="10.0" prefHeight="78.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <JFXPasswordField fx:id="passwordField" prefHeight="26.0" prefWidth="161.0" promptText="Enter Password Here" GridPane.rowIndex="3">
@@ -44,12 +44,15 @@
                   <Insets left="100.0" right="100.0" />
                </GridPane.margin>
             </JFXTextField>
-            <JFXButton buttonType="RAISED" onAction="#signUpButtonListener" ripplerFill="#eb0808" text="Don't Have an Account? Sign Up Here" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
+            <JFXButton buttonType="RAISED" onAction="#signUpButtonListener" prefHeight="33.0" prefWidth="237.0" ripplerFill="#eb0808" text="Don't Have an Account? Sign Up Here" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
                <font>
                   <Font size="10.0" />
                </font>
             </JFXButton>
-            <JFXButton textFill="#f5efef" GridPane.rowIndex="4" />
+            <JFXButton prefHeight="46.0" prefWidth="79.0" text="Enter" textFill="#1b1919" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font></JFXButton>
          </children>
       </GridPane>
    </children>
