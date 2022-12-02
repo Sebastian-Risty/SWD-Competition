@@ -11,7 +11,7 @@
    <children>
       <ImageView fx:id="background" fitHeight="400.0" fitWidth="599.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="images/LoadScreenBackground.png"/>
+            <Image url="/images/LoadScreenBackground.png"/>
          </image>
       </ImageView>
       <Label layoutX="236.0" layoutY="50.0" text="Select The Game Mode">

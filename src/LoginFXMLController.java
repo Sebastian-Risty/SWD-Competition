@@ -19,6 +19,22 @@ public class LoginFXMLController {
     void signUpButtonListener(ActionEvent event) {
         // switch to sign up screen
     }
+    @FXML
+    void enterButtonListener(ActionEvent event) {
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+
+        // call Matts function for verifying
+
+        boolean verified = false;
+
+        if(verified) {
+            // go to the home page of an account
+        }
+        else {
+            // set stuff to let the user know it was wrong and try again
+        }
+    }
 
 //    void initialize() {
 //        hamburger.set
