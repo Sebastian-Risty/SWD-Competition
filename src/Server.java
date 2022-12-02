@@ -2,7 +2,9 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.HashMap;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -10,34 +12,34 @@ import java.util.concurrent.Executors;
 class Server {
     private static ServerSocket server;
 
-    private static volatile boolean gameStart = false;
-    private static volatile boolean gameEnd = false;
     private int numPlayers = 0;
     private HashMap<String, Integer> results = new HashMap<>();
+    private static final ArrayList<ConnectedClient> clients = new ArrayList<>();
+    private static final ArrayList<Game> lobbies = new ArrayList<>();
+
+    private enum messages{
+        LOGIN_FAILED,
+        LOGIN_SUCCESS,
+        CLIENT_DATA,
+        LOGIN_REQUEST,
+        MODE_SELECTION
+    }
+
+    private enum gameMode{
+        ONE_VS_ONE,
+        BATTLE_ROYAL
+    }
 
     public static void main(String[] args) {
+
         server = null;
         try {
             server = new ServerSocket(23704);
             server.setReuseAddress(true);
 
             ExecutorService executorService = Executors.newCachedThreadPool();
-            Thread apThread = new Thread(new AcceptPlayers());
             executorService.execute(new AcceptPlayers());
-
-            long startTime = System.currentTimeMillis();
-            while (((System.currentTimeMillis() - startTime) / 1000) < 30) {
-            }
-            apThread.interrupt();
-
-            gameStart = true;
-
-            while (((System.currentTimeMillis() - startTime) / 1000) < 30) {
-            }
-
-            gameEnd = true;
-
-            System.out.println("Game End");
+            executorService.execute(new LobbyHandler());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -49,14 +51,9 @@ class Server {
         public void run() {
             System.out.println("AP START");
             try {
-                while (true) {
-                    Socket client = server.accept();
-
-                    System.out.println("New player connected " + client.getInetAddress().getHostAddress());
-
-                    ClientHandler clientSock = new ClientHandler(client);
-
-                    new Thread(clientSock).start();
+                while (!server.isClosed()) {
+                    new Thread(new ConnectedClient(server.accept())).start();
+                    System.out.println("Client Connection Accepted!");
                 }
             } catch (IOException e) {
                 System.out.println("ERROR");
@@ -64,41 +61,83 @@ class Server {
         }
     }
 
+    private static class LobbyHandler implements Runnable {
+        @Override
+        public void run(){
+            System.out.println("LH START");
+            while (!server.isClosed()) {
+                // loop through client list
+                for(ConnectedClient client : clients){
+                    // loop through list of running lobbies, create if none exist or all are full
+                    if(client.requestedGame != null){
+                        switch(client.requestedGame){
+                            case "ONE_VS_ONE":{
+                                // TODO: check for open existing lobbies
+                                // create lobby if none are open/exist, add to lobby list
+                                // add client to the lobby
+                                break;
+                            }
+                            case "BATTLE_ROYAL":{
+                                // TODO: check for open existing lobbies
+                                // create lobby if none are open/exist
+                                // add client to the lobby
+                                break;
+                            }
+                        }
+                        System.out.println("Created New Lobby");
+                    }
+                }
+            }
 
-    private static class ClientHandler implements Runnable {
+        }
+    }
+
+
+    private static class ConnectedClient implements Runnable {
         private final Socket clientSocket;
         private String username = null;
-        private PrintWriter out;
-        private BufferedReader in;
+        private String requestedGame = null;
+        private Game currentLobby = null;
 
-        public ClientHandler(Socket socket) {
+        private Formatter output;
+        private Scanner input;
+
+        public ConnectedClient(Socket socket) {
             this.clientSocket = socket;
+
+            try{
+                input = new Scanner(clientSocket.getInputStream());
+                output = new Formatter(clientSocket.getOutputStream());
+            } catch (IOException e){
+                e.printStackTrace();
+            }
         }
 
         @Override
         public void run() {
             try {
-                out = new PrintWriter(
-                        new OutputStreamWriter(
-                                clientSocket.getOutputStream()));
-                in = new BufferedReader(
-                        new InputStreamReader(
-                                clientSocket.getInputStream()));
-
-                init();
-                while (!gameStart) {
+                init(); // verify login and load client data from db
+                while(!server.isClosed()){ // handle client messages
+                    System.out.println("AWAITING CLIENT COMMAND");
+                    String receivedData = input.nextLine();
+                    System.out.printf("Message Received: %s\n", receivedData);
+                    String[] clientMessage = receivedData.split(",");
+                    switch (clientMessage[0]){
+                        case "MODE_SELECTION":{
+                            requestedGame = clientMessage[1];
+                            break;
+                        }
+                    }
                 }
-                game();
-
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
                 try {
-                    if (out != null) {
-                        out.close();
+                    if (output != null) {
+                        output.close();
                     }
-                    if (in != null) {
-                        in.close();
+                    if (input != null) {
+                        input.close();
                         clientSocket.close();
                     }
                 } catch (IOException e) {
@@ -108,24 +147,40 @@ class Server {
         }
 
         private void init() throws IOException {
-            out.println("Enter Username: ");
-            out.flush();
-            while (username == null) {
-                username = in.readLine();
-            }
-        }
+            System.out.println("START INIT");
 
-        private void game() throws IOException {
-            int score = 0;
-            ArrayList<String> correctGuesses = new ArrayList<>();
-//            out.println(
-//                    "Guess as many words using the following letters as you can: \n" +
-//                            Server.letters.toString() + "\n");
-            out.flush();
-            while (!gameEnd) {
-                String userGuess = in.readLine();
-//                checkGuess(userGuess);
-            }
+            String receivedData = input.nextLine();
+            System.out.printf("Message Received: %s\n", receivedData);
+
+            String[] clientMessage = receivedData.split(",");
+           if(clientMessage[0].equals(messages.LOGIN_REQUEST.toString())){
+               // [1] -> userName, [2] -> password
+               try{
+                   // call db with data
+                   // TODO: check db for user+pass
+
+                   // if userName + pass is found update the data of client
+                   //TODO: create method to take db data and update all client info
+
+                   // output login was success
+                   output.format(String.format("%s\n", messages.LOGIN_SUCCESS));
+                   output.flush();
+
+                   // add valid client to list of connected clients to play match
+                   clients.add(this);
+                   System.out.printf("Added Client %s to client list\n", this.username);
+
+               } catch(Exception e){
+                   output.format(String.format("%s\n", messages.LOGIN_FAILED));
+                   output.flush();
+               }
+           } // TODO: may need to loop here until client successfully logs in
         }
     }
 }
+
+// TODO
+// add lobby type to game class
+// flag for when lobby is full
+// method to add client to lobby
+//
