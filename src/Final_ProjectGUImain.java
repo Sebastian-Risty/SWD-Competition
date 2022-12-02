@@ -18,6 +18,7 @@ public class Final_ProjectGUImain extends Application {
         URL fxmlFile = getClass().getResource("LoginFXMl.fxml");
 
         Controller controller = new Controller();
+        controller.setStage(primaryStage);
 
         assert fxmlFile != null;
         Parent root = FXMLLoader.load(fxmlFile);
@@ -26,8 +27,8 @@ public class Final_ProjectGUImain extends Application {
         primaryStage.setTitle("Word Game");
         primaryStage.setScene(scene);
 
+        controller.setScene(scene);
         controller.setRoot(root);
-        //controller.setScene(scene);
 
         primaryStage.show();
     }
