@@ -23,10 +23,10 @@ public class TestAccounts {
         Accounts.updateScore("Cole", 500);
         String expected;
         expected = "Leaderboard\n\n" +
-                "Username\tScore\t\n" +
-                "Sam\t1000\t\n" +
-                "Cole\t500\t\n" +
-                "Sebastian\t0\t\n";
+                "Rank\tUsername\tScore\t\n" +
+                "1\tSam\t1000\t\n" +
+                "2\tCole\t500\t\n" +
+                "3\tSebastian\t0\t\n";
         assertEquals(expected, Accounts.displayLeaderBoard(10));
     }
 
