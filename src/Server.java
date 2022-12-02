@@ -175,10 +175,12 @@ class Server {
            if(clientMessage[0].equals(messages.LOGIN_REQUEST.toString())){
                // [1] -> userName, [2] -> password
                try{
-                   Accounts.addAccount(clientMessage[1],clientMessage[2]);
-                   Accounts.validLogin(clientMessage[1],clientMessage[2]);
+                   //Accounts.addAccount(clientMessage[1],clientMessage[2]);
+                   //Accounts.validLogin(clientMessage[1],clientMessage[2]);
+                   System.out.printf("RECEIVED USER: %s\n", clientMessage[1]);
                    // call db with data
                    // TODO: check db for user+pass
+
 
                    // if userName + pass is found update the data of client
                    //TODO: create method to take db data and update all client info

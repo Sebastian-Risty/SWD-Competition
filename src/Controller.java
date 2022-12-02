@@ -9,15 +9,28 @@ import java.net.URL;
 import java.net.UnknownHostException;
 
 public class Controller {
-    public Client getClient() {
-        return client;
+    private static String ip;
+    private static int port;
+
+    private static Client client;
+
+    public void setIp(String ip){
+        Controller.ip = ip;}
+
+    public void setPort(int port) {
+        Controller.port = port;}
+
+    public String getIp() {
+        return ip;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public int getPort() {
+        return port;
     }
 
-    private Client client;
+    public Client getClient() {return client;}
+
+    public static void setClient(Client client) {Controller.client = client;}
 
     public Scene getScene() {
         return scene;
