@@ -7,25 +7,19 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
-public class SignUpPageController {
-
-
+public class SignUpPageController extends Controller {
     @FXML
     private JFXPasswordField signUpPasswordField;
-
     @FXML
     private JFXPasswordField signUpConfirmPassword;
-
     @FXML
     private Label signUpFeedbackLabel;
-
     @FXML
     private GridPane bottomGridPane;
     @FXML
     private GridPane parentGridPane;
     @FXML
     private JFXTextField usernameField;
-
     JFXRippler rippler;
 
     @FXML
@@ -43,11 +37,13 @@ public class SignUpPageController {
             signUpFeedbackLabel.setText("Username is too long");
         }
         else if(password.equals(confirmPassword)) {
+            //getClient().send(login info)
 
-            // Add to database
             // Flip to main page
 
-            // check if username is used
+            // getClient().receive response back from server
+
+            // set the feedback label based on what the server responded with
 
             signUpFeedbackLabel.setText("Account created ");
         }

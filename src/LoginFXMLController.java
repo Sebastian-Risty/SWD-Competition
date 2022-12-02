@@ -18,7 +18,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 
-public class LoginFXMLController {
+public class LoginFXMLController extends Controller {
 
     @FXML
     private JFXRippler verifyRippler;
@@ -56,16 +56,29 @@ public class LoginFXMLController {
         primaryStage.show();
     }
     @FXML
-    void enterButtonListener(ActionEvent event) {
+    void enterButtonListener(ActionEvent event) throws IOException {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        // call Matts function for verifying
-        // verified = verifyAccount(username, password);
-        boolean verified = false;
+        // getClient().send the login info
+
+        // getClient().receive whether valid or not
+
+        // Set verified equal to what the server said
+        boolean verified = true;
+
 
         if(verified) {
-            // go to the home page of an account
+            URL fxmlFile = getClass().getResource("homeScreenFXML.fxml");
+
+            Stage primaryStage = new Stage();
+            assert fxmlFile != null;
+            Parent root = FXMLLoader.load(fxmlFile);
+
+            Scene scene = new Scene(root);
+            primaryStage.setTitle("Sign Up");
+            primaryStage.setScene(scene);
+            primaryStage.show();
         }
         else {
             verifyRippler.createManualRipple();
