@@ -47,7 +47,7 @@
                   <Insets left="100.0" right="100.0" />
                </GridPane.margin>
             </JFXTextField>
-            <JFXButton buttonType="RAISED" onAction="#signUpButtonListener" prefHeight="33.0" prefWidth="282.0" ripplerFill="#eb0808" text="Don't Have an Account? Sign Up Here" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER">
+            <JFXButton buttonType="RAISED" onAction="#signUpButtonListener" prefHeight="33.0" prefWidth="282.0" ripplerFill="#0923eb" text="Don't Have an Account? Sign Up Here" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER">
                <font>
                   <Font size="12.0" />
                </font>
