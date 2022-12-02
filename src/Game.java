@@ -13,6 +13,9 @@ public class Game {
     private ArrayList<String> allWords = new ArrayList<>();
     private int[] letterFreq = new int[26];
 
+    public ArrayList<Character> getLetters() {
+        return letters;
+    }
 
     public Game(Player playerOne, Player playerTwo) {
         this.playerOne = playerOne;
@@ -55,7 +58,7 @@ public class Game {
 
     private void findValidWords() {
         validWords = new ArrayList<>();
-        letterFreq = findLetterFreq(String.valueOf(letters));
+        letterFreq = findLetterFreq(String.valueOf(letters).replaceAll("[,\\s\\[\\]]", ""));
         for (String word : allWords) {
             int[] tempFreq = findLetterFreq(word);
             if (findMatch(tempFreq)) {
@@ -87,6 +90,10 @@ public class Game {
         if (validWords.contains(guess.toLowerCase())) {
             player.addScore(1);
         }
+    }
+
+    public void endRound(Player player) {
+
     }
 
 }

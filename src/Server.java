@@ -12,8 +12,6 @@ class Server {
 
     private static volatile boolean gameStart = false;
     private static volatile boolean gameEnd = false;
-    private static ArrayList<String> validWords = new ArrayList<>();
-    private static ArrayList<String> letters = new ArrayList<>();
     private int numPlayers = 0;
     private HashMap<String, Integer> results = new HashMap<>();
 
@@ -120,9 +118,9 @@ class Server {
         private void game() throws IOException {
             int score = 0;
             ArrayList<String> correctGuesses = new ArrayList<>();
-            out.println(
-                    "Guess as many words using the following letters as you can: \n" +
-                            Server.letters.toString() + "\n");
+//            out.println(
+//                    "Guess as many words using the following letters as you can: \n" +
+//                            Server.letters.toString() + "\n");
             out.flush();
             while (!gameEnd) {
                 String userGuess = in.readLine();
