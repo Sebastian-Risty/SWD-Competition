@@ -12,8 +12,6 @@ import java.util.concurrent.Executors;
 class Server {
     private static ServerSocket server;
 
-    private int numPlayers = 0;
-    private HashMap<String, Integer> results = new HashMap<>();
     private static final ArrayList<ConnectedClient> clients = new ArrayList<>();
     private static final ArrayList<Game> lobbies = new ArrayList<>();
 
@@ -22,7 +20,11 @@ class Server {
         LOGIN_SUCCESS,
         CLIENT_DATA,
         LOGIN_REQUEST,
-        MODE_SELECTION
+        MODE_SELECTION,
+        GUESS,
+        GUESS_RESULT,
+        REQUEST_STATS,
+        STATS
     }
 
     private enum gameMode{
@@ -74,13 +76,15 @@ class Server {
                             case "ONE_VS_ONE":{
                                 // TODO: check for open existing lobbies
                                 // create lobby if none are open/exist, add to lobby list
-                                // add client to the lobby
+                                // add client to the lobby (update currentLobby field + increment lobby's playercount field)
+                                // increment connectedClient count field within lobby class
                                 break;
                             }
                             case "BATTLE_ROYAL":{
                                 // TODO: check for open existing lobbies
                                 // create lobby if none are open/exist
                                 // add client to the lobby
+                                // increment connectedClient count field within lobby class
                                 break;
                             }
                         }
@@ -98,6 +102,8 @@ class Server {
         private String username = null;
         private String requestedGame = null;
         private Game currentLobby = null;
+        private int totalScore = 0; // TODO: add to total score once lobby ends, probably done in lobby cleanup method or smthn
+        private int currentScore = 0;
 
         private Formatter output;
         private Scanner input;
@@ -127,12 +133,25 @@ class Server {
                             requestedGame = clientMessage[1];
                             break;
                         }
+                        case "GUESS":{
+                            if(currentLobby != null){
+                                int tempScore = currentLobby.guess(clientMessage[1]);
+                                currentScore += tempScore;
+                                output.format(String.format("%s,%s\n", messages.GUESS_RESULT, this.currentScore));
+                                output.flush();
+                            }
+                            break;
+                        }
+                        case "SHOW_STATS":{
+                            output.format(String.format("%s,%s\n", messages.STATS, this.totalScore)); // TODO: add other stats to display here
+                            output.flush();
+                        }
                     }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                try {
+                try { // TODO: upload client data to DB
                     if (output != null) {
                         output.close();
                     }
@@ -180,7 +199,6 @@ class Server {
 }
 
 // TODO
-// add lobby type to game class
-// flag for when lobby is full
-// method to add client to lobby
+// add lobby type field to game class if getting by object type isnt possible
+// lobby cleanup once match ends or too many clients leave
 //
