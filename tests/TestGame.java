@@ -25,7 +25,6 @@ public class TestGame {
                     }
                 }
             }
-            game.endGame();
         }
     }
 }
