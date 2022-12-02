@@ -15,13 +15,13 @@ public class Final_ProjectGUImain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        URL fxmlFile = getClass().getResource("FinalGUIFXML.fxml");
+        URL fxmlFile = getClass().getResource("LoginFXMl.fxml");
 
         assert fxmlFile != null;
         Parent root = FXMLLoader.load(fxmlFile);
 
         Scene scene = new Scene(root);
-        primaryStage.setTitle("Iowa Football Quiz");
+        primaryStage.setTitle("Word Game");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

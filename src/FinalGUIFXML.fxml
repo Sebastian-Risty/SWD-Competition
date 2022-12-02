@@ -6,7 +6,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-<AnchorPane prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUIcontroller">
+
+<AnchorPane fx:id="anchorPane" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUIcontroller">
    <children>
       <ImageView fx:id="background" fitHeight="400.0" fitWidth="599.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -18,6 +19,6 @@
             <Font name="System Bold" size="22.0" />
          </font>
       </Label>
-      <JFXButton buttonType="RAISED" layoutX="315.0" layoutY="105.0" onAction="#QPMbutton" ripplerFill="#fcfafa" text="Quick Play Mode" />
+      <JFXButton fx:id="QPMbutton" buttonType="RAISED" layoutX="315.0" layoutY="105.0" onAction="#QPMbuttonListner" ripplerFill="#fcfafa" text="Quick Play Mode" />
    </children>
 </AnchorPane>
