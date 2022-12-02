@@ -2,7 +2,7 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class TestGame {
-    public static void main(String[] args) {
+    public static void main(String[] args) { //TODO: update to work with client with similar schema to a live game
         Player p1 = new Player("player1");
         Player p2 = new Player("player2");
         Game game = new Game(p1, p2);

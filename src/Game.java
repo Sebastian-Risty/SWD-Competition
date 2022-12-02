@@ -4,8 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Game implements Runnable {
-    private ArrayList<ClientCommunication> playerList = new ArrayList<>();
+public class Game implements Runnable { //TODO: make class abstract and children runnable maybe?
     private ArrayList<Character> letters = new ArrayList<>();
     private ArrayList<String> validWords = new ArrayList<>();
     private ArrayList<String> allWords = new ArrayList<>();
@@ -84,18 +83,15 @@ public class Game implements Runnable {
         return freq;
     }
 
-    public void addPlayer(ClientCommunication player) {
-        playerList.add(player);
-    }
+    // reference to lobby stored in ConnectedClient object, no longer needed
 
-    public void guess(Player player, String guess) {
+    public int guess(String guess) {
         if (validWords.contains(guess.toLowerCase())) {
-            player.addScore(1);
+            return 1; //TODO: calculate score of each word upon generation based on scoring method, return the value
         }
+        return 0;
     }
 
-    public void endRound(Player player) {
-
-    }
+    //TODO: rounds can be specified as special rule set in subclasses
 
 }
