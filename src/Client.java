@@ -11,6 +11,13 @@ class Client {
     private PrintWriter out;
     private Socket serverSocket;
 
+    private enum messages{
+        LOGIN_FAILED,
+        LOGIN_SUCCESS,
+        CLIENT_DATA,
+        LOGIN_REQUEST
+    }
+
     public Client(String ip, String port) {
         this.ip = ip;
         this.port = Integer.parseInt(port);
