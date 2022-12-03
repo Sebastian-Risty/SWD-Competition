@@ -12,7 +12,19 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
     private int[] letterFreq = new int[26];
     private boolean progressFlag = false;
     private boolean endFlag = false;
+    private boolean startFlag = false;
     private int numConnectedClients = 0;
+
+
+    public boolean isInProgress() {
+        return progressFlag;
+    }
+    public boolean isFinished(){
+        return endFlag;
+    }
+    public boolean hasStarted(){
+        return startFlag;
+    }
 
     public String getGamemode() {
         return gamemode;
@@ -31,31 +43,21 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
     }
 
     public void changeProgressFlag() {
-        if (progressFlag) {
-            progressFlag = false;
-        } else {
-            progressFlag = true;
-        }
+        progressFlag = !progressFlag;
     }
 
     public void changeEndFlag() {
-        if (endFlag) {
-            endFlag = false;
-        } else {
-            endFlag = true;
-        }
+        endFlag = !endFlag;
     }
 
-    public boolean isInProgress() {
-        return progressFlag;
+    public void changeStartFlag() {
+        startFlag = !startFlag;
     }
-    public boolean isFinished(){
-        return endFlag;
-    }
+
 
     public void clientConnected() {
         numConnectedClients++;
-    }
+    } //TOOD may not need
 
     public void clientDisconnected() {
         numConnectedClients--;

@@ -18,7 +18,7 @@ class Server {
 //    private static final ArrayList<ConnectedClient> clients = new ArrayList<>();
 //    private static final ArrayList<Game> lobbies = new ArrayList<>();
 
-    private static ExecutorService executorService = Executors.newCachedThreadPool();
+    private static final ExecutorService executorService = Executors.newCachedThreadPool();
 
     public enum sendMessage {
         LOGIN_REQUEST,      // [1] -> username, [2] -> password
@@ -43,7 +43,7 @@ class Server {
 
             executorService.execute(new AcceptPlayers());
             executorService.execute(new LobbyHandler());
-            executorService.execute(new FinishedMatchHandler());
+            executorService.execute(new MatchHandler());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -135,25 +135,69 @@ class Server {
         }
     }
 
-    private static class FinishedMatchHandler implements Runnable{
+    private static class MatchHandler implements Runnable{
         @Override
         public void run(){
             System.out.println("FMH START");
             while (!server.isClosed()){
-                synchronized (clients){
-                    for (Object o : clients) {
-                        ConnectedClient client = (ConnectedClient) o;
-                        if (client.currentLobby != null && client.currentLobby.isFinished()) {
-                            // update clients data (totalScore+=currentScore)
-                            client.totalGamesPlayed += 1;
+                synchronized (lobbies){
+                    for (Game lobby : lobbies.keySet()) {
+                        if(lobby.hasStarted()){
+                            for(ConnectedClient client : lobbies.get(lobby)){
+                                client.output.format(String.format("%s\n", Client.sendMessage.GAME_START));
+                                client.output.flush();
+                            }
+                            lobby.changeStartFlag();
+                        }
 
-                            synchronized (lobbies){
-                                lobbies.remove(client.currentLobby);
-                                System.out.println("Removed match from lobbies");
+                        if (lobby.isFinished()) {
+                            List<ConnectedClient> sortedClients = lobbies.get(lobby);
+                            Collections.sort(sortedClients);
+
+                            StringBuilder sb = new StringBuilder();
+
+                            sb.append(Client.sendMessage.GAME_END);
+
+                            for(ConnectedClient client : sortedClients){
+                                sb.append(client.username).append(',').append(client.currentScore).append(',');
                             }
 
-                            client.currentLobby = null;
-                            System.out.println("Set client cur lobby to null");
+
+                            sb.delete(sb.length() - 1, sb.length()).append("\n");
+
+                            String temp = sb.toString();
+
+                            for(ConnectedClient client : lobbies.get(lobby)){ // send match data
+                                client.output.format(temp);
+                                client.output.flush();
+
+                                client.currentLobby = null;
+                                System.out.println("Set client cur lobby to null");
+                                client.totalGamesPlayed++;
+
+                                switch(lobby.getGamemode()){
+                                    case "OneVsOne":
+                                        client.OVOGamesPlayed++;
+                                        break;
+                                    case "BattleRoyale":
+                                        client.BRGamesPlayed++;
+                                        break;
+                                }
+                            }
+                            sortedClients.get(0).totalWins++;
+                            switch(lobby.getGamemode()){
+                                case "OneVsOne":
+                                    sortedClients.get(0).OVOGamesPlayed++;
+                                    break;
+                                case "BattleRoyale":
+                                    sortedClients.get(0).BRGamesPlayed++;
+                                    break;
+                            }
+
+                            synchronized (lobbies){
+                                lobbies.remove(lobby);
+                                System.out.println("Removed match from current lobbies");
+                            }
                         }
                     }
                 }
@@ -161,7 +205,7 @@ class Server {
         }
     }
 
-    private static class ConnectedClient implements Runnable {
+    private static class ConnectedClient implements Runnable, Comparable<ConnectedClient> {
         private final Socket clientSocket;
         private String username = null;
         private String requestedGame = null;
@@ -306,7 +350,10 @@ class Server {
             Database.setTable("accounts");
             Database.update(getStatString().split(","));
         }
-
+        @Override
+        public int compareTo(ConnectedClient connectedClient) {
+            return this.currentScore - connectedClient.currentScore;
+        }
     }
 }
 
