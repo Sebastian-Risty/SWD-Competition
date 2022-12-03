@@ -12,6 +12,7 @@ public class PlayerStats {
         setRank(0);
     }
 
+
     public int getScore() {
         return Score;
     }
@@ -67,4 +68,13 @@ public class PlayerStats {
     private String tier;
     private int rank;
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String username;
 }

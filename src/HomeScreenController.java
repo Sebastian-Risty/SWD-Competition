@@ -8,6 +8,8 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
+import java.io.IOException;
+
 public class HomeScreenController extends Controller{
     @FXML
     private JFXHamburger hamburger;
@@ -100,7 +102,17 @@ public class HomeScreenController extends Controller{
 
     @FXML
     void tournamentModeListener() {
-        // switch to tournament mode screen
+        // ask server if user is in a tournament
+        // get response from server
+
+        getClient().sendMessage(String.format("%s,%s,%s\n",Server.sendMessage.MODE_SELECTION ,"Tournament", ""));
+
+        try {
+            switchScene("TournamentHomeFXML.fxml", "Tournament Home");
+        }
+        catch(IOException e) {
+            gameModeFeedback.setText("Could not Open Tournament Mode");
+        }
     }
 
     public void initialize() {
