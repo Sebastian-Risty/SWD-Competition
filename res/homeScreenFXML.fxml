@@ -14,12 +14,12 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-image: url(images/BackGroundImage.jpg);" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="HomeScreenController">
    <children>
-      <Pane fx:id="statsPane" layoutY="109.0" prefHeight="224.0" prefWidth="294.0">
+      <Pane fx:id="statsPane" layoutX="21.0" layoutY="104.0" prefHeight="224.0" prefWidth="285.0">
          <children>
-            <GridPane layoutX="16.0" layoutY="4.0" prefHeight="220.0" prefWidth="329.0">
+            <GridPane layoutX="14.0" layoutY="2.0" prefHeight="220.0" prefWidth="271.0">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="563.0" minWidth="0.0" prefWidth="217.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="600.0" minWidth="10.0" prefWidth="96.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="563.0" minWidth="0.0" prefWidth="215.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="600.0" minWidth="10.0" prefWidth="56.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints maxHeight="107.0" minHeight="0.0" prefHeight="32.0" vgrow="SOMETIMES" />
@@ -34,7 +34,7 @@
                <children>
                   <Label text="Total Wins:">
                      <GridPane.margin>
-                        <Insets left="5.0" />
+                        <Insets left="2.0" />
                      </GridPane.margin>
                      <font>
                         <Font name="System Bold" size="13.0" />
@@ -42,7 +42,7 @@
                   </Label>
                   <Label text="H2H Wins:" GridPane.rowIndex="1">
                      <GridPane.margin>
-                        <Insets left="5.0" />
+                        <Insets left="2.0" />
                      </GridPane.margin>
                      <font>
                         <Font name="System Bold" size="13.0" />
@@ -50,7 +50,7 @@
                   </Label>
                   <Label text="Tournament Wins:" GridPane.rowIndex="2">
                      <GridPane.margin>
-                        <Insets left="5.0" />
+                        <Insets left="2.0" />
                      </GridPane.margin>
                      <font>
                         <Font name="System Bold" size="13.0" />
@@ -58,7 +58,7 @@
                   </Label>
                   <Label text="Tournaments Played:" GridPane.rowIndex="6">
                      <GridPane.margin>
-                        <Insets left="5.0" />
+                        <Insets left="2.0" />
                      </GridPane.margin>
                      <font>
                         <Font name="System Bold" size="13.0" />
@@ -66,7 +66,7 @@
                   </Label>
                   <Label prefHeight="16.0" prefWidth="145.0" text="H2H Games Played:" GridPane.rowIndex="5">
                      <GridPane.margin>
-                        <Insets left="5.0" />
+                        <Insets left="2.0" />
                      </GridPane.margin>
                      <font>
                         <Font name="System Bold" size="13.0" />
@@ -74,24 +74,27 @@
                   </Label>
                   <Label text="Total Games Played:" GridPane.rowIndex="4">
                      <padding>
-                        <Insets left="5.0" />
+                        <Insets left="2.0" />
                      </padding>
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font>
+                     <GridPane.margin>
+                        <Insets left="2.0" />
+                     </GridPane.margin>
                   </Label>
-                  <Label fx:id="totalWins" GridPane.columnIndex="1" />
-                  <Label fx:id="h2hWins" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label fx:id="tourneyWins" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Label fx:id="brWins" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <Label fx:id="gamesPlayed" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <Label fx:id="h2hGames" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <Label fx:id="totalWins" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+                  <Label fx:id="h2hWins" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                  <Label fx:id="tourneyWins" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                  <Label fx:id="brWins" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                  <Label fx:id="gamesPlayed" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+                  <Label fx:id="h2hGames" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
                   <Label text="Battle Royale Wins:" GridPane.rowIndex="3">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font>
                      <GridPane.margin>
-                        <Insets left="5.0" />
+                        <Insets left="2.0" />
                      </GridPane.margin>
                   </Label>
                   <Label prefHeight="16.0" prefWidth="221.0" text="Battle Royale Games Played:" GridPane.rowIndex="7">
@@ -99,11 +102,11 @@
                         <Font name="System Bold" size="13.0" />
                      </font>
                      <GridPane.margin>
-                        <Insets left="5.0" />
+                        <Insets left="2.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label fx:id="tourneysPlayed" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                  <Label fx:id="brPlayed" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                  <Label fx:id="tourneysPlayed" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+                  <Label fx:id="brPlayed" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
                </children>
             </GridPane>
          </children>
@@ -127,6 +130,7 @@
                </GridPane.margin>
             </JFXTextArea>
             <JFXHamburger fx:id="hamburger" onMouseClicked="#hamburgerListener" prefHeight="57.0" prefWidth="55.0" GridPane.columnIndex="2" />
+            <JFXButton onAction="#logOutListener" text="Logout" />
          </children>
       </GridPane>
       <GridPane layoutY="64.0" prefHeight="40.0" prefWidth="600.0">
@@ -151,7 +155,7 @@
                   <Font name="System Bold Italic" size="20.0" />
                </font>
                <GridPane.margin>
-                  <Insets left="30.0" />
+                  <Insets left="100.0" />
                </GridPane.margin>
             </Label>
          </children>

@@ -29,11 +29,6 @@
             <RowConstraints maxHeight="219.0" minHeight="10.0" prefHeight="91.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <JFXPasswordField fx:id="passwordField" prefHeight="26.0" prefWidth="161.0" promptText="Enter Password Here" GridPane.rowIndex="4">
-               <GridPane.margin>
-                  <Insets left="100.0" right="100.0" />
-               </GridPane.margin>
-            </JFXPasswordField>
             <Label text="User Login" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                <font>
                   <Font name="System Bold" size="20.0" />
@@ -42,11 +37,16 @@
                   <Insets />
                </GridPane.margin>
             </Label>
-            <JFXTextField fx:id="usernameField" promptText="Enter Username Here" GridPane.rowIndex="3">
+            <JFXTextField fx:id="usernameField" onKeyPressed="#usernameFieldEnter" promptText="Enter Username Here" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets left="100.0" right="100.0" />
                </GridPane.margin>
             </JFXTextField>
+            <JFXPasswordField fx:id="passwordField" onKeyPressed="#passwordFieldEnter" prefHeight="26.0" prefWidth="161.0" promptText="Enter Password Here" GridPane.rowIndex="4">
+               <GridPane.margin>
+                  <Insets left="100.0" right="100.0" />
+               </GridPane.margin>
+            </JFXPasswordField>
             <JFXButton buttonType="RAISED" onAction="#signUpButtonListener" prefHeight="33.0" prefWidth="282.0" ripplerFill="#0923eb" text="Don't Have an Account? Sign Up Here" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER">
                <font>
                   <Font size="12.0" />
