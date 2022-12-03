@@ -1,15 +1,26 @@
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.Formatter;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-class Client {
+class Client implements Runnable{
     private final String ip;
     private final int port;
-    private BufferedReader in;
-    private PrintWriter out;
+    private Scanner input; // input from server
+    private Formatter output; // output to server
     private Socket serverSocket;
+    //private Controller controller;
 
     private enum messages{
         LOGIN_FAILED,
@@ -18,31 +29,17 @@ class Client {
         LOGIN_REQUEST
     }
 
-    public Client(String ip, String port) {
+    public Client(String ip, int port) {
         this.ip = ip;
-        this.port = Integer.parseInt(port);
-    }
-
-    public static void main(String[] args) throws UnknownHostException {
-        Client client;
-        switch (args.length) {
-            case 2:
-                client = new Client(args[0], args[1]);
-                break;
-            case 1:
-                client = new Client(args[0], "23704");
-                break;
-            default:
-                client = new Client(InetAddress.getLocalHost().getHostAddress(), "23704");
-        }
-        client.startClient();
+        this.port = port;
+        startClient();
+        Executors.newFixedThreadPool(1).execute(this); // add thread for client
     }
 
     private void startClient() {
         try {
             connectToServer();
             openConnection();
-            game();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -50,51 +47,34 @@ class Client {
 
     private void connectToServer() {
         try {
-            serverSocket = new Socket(InetAddress.getByName("127.0.0.1"), 23704);
+            serverSocket = new Socket(ip, port);
         } catch (IOException ioException) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            connectToServer();
+            System.out.println("RETRY CONNECTION");
+            connectToServer(); //TODO: limit retry count
         }
     }
 
-    private void openConnection() throws IOException {
-        out = new PrintWriter(
-                new OutputStreamWriter(
-                        serverSocket.getOutputStream()));
-        in = new BufferedReader(
-                new InputStreamReader(
-                        serverSocket.getInputStream()));
+    private void openConnection() throws IOException { // TODO conform to server std
+        input = new Scanner(serverSocket.getInputStream());
+        output = new Formatter(serverSocket.getOutputStream());
     }
 
-    private void game() throws IOException {
-        init();
-        while (true) {
-            Scanner scnr = new Scanner(System.in);
-            String message = null;
-            message = scnr.nextLine();
-
-            out.println(message.toLowerCase());
-            out.flush();
-
-            String serverInput;
-            while ((serverInput = in.readLine()) != null) {
-                out.println(serverInput);
-                out.flush();
-            }
-
-        }
+    public void sendMessage(String message){ // MUST END WITH NEWLINE
+        output.format(message);
+        output.flush();
     }
 
-    private void init() throws IOException {
-        String startMessage = null;
-        while (startMessage == null) {
-            startMessage = in.readLine();
-        }
+    @Override
+    public void run(){
+        System.out.println("AWAITING SERVER DATA");
+        while(true){
+            // TODO: handle server messages to update gui here
 
+        }
     }
 }
-
