@@ -15,6 +15,7 @@ class Server {
     private static final ArrayList<ConnectedClient> clients = new ArrayList<>();
     private static final ArrayList<Game> lobbies = new ArrayList<>();
 
+
     public enum sendMessage {
         LOGIN_REQUEST,      // [1] -> username, [2] -> password
         MODE_SELECTION,     // [1] -> name of game from gameMode enum
@@ -66,21 +67,42 @@ class Server {
             while (!server.isClosed()) {
                 // loop through client list
                 for(ConnectedClient client : clients){
-                    // loop through list of running lobbies, create if none exist or all are full
+
+                    // HANDLE LOBBY REQUESTS
                     if(client.requestedGame != null){
                         switch(client.requestedGame){
                             case "ONE_VS_ONE":{
-                                // TODO: check for open existing lobbies
-                                // create lobby if none are open/exist, add to lobby list
-                                // add client to the lobby (update currentLobby field + increment lobby's playercount field)
-                                // increment connectedClient count field within lobby class
+                                for(Game game : lobbies){
+                                    if(game instanceof OneVsOne && !game.isInProgress()){ // client joins open game if possible
+                                        // add client
+                                        client.currentLobby = game;
+                                        game.clientConnected();
+                                        break;
+                                    }
+                                }
+                                if(client.currentLobby == null){ // create lobby if none were found
+                                    Game temp = new OneVsOne();
+                                    lobbies.add(temp);
+                                    client.currentLobby = temp;
+                                    temp.clientConnected();
+                                }
                                 break;
                             }
                             case "BATTLE_ROYAL":{
-                                // TODO: check for open existing lobbies
-                                // create lobby if none are open/exist
-                                // add client to the lobby
-                                // increment connectedClient count field within lobby class
+                                for(Game game : lobbies){
+                                    if(game instanceof BattleRoyale && !game.isInProgress()){ // client joins open game if possible
+                                        // add client
+                                        client.currentLobby = game;
+                                        game.clientConnected();
+                                        break;
+                                    }
+                                }
+                                if(client.currentLobby == null){ // create lobby if none were found
+                                    Game temp = new BattleRoyale();
+                                    lobbies.add(temp);
+                                    client.currentLobby = temp;
+                                    temp.clientConnected();
+                                }
                                 break;
                             }
                         }
@@ -92,6 +114,20 @@ class Server {
         }
     }
 
+    private static class FinishedMatchHandler implements Runnable{
+        @Override
+        public void run(){
+            System.out.println("FMH START");
+            while (!server.isClosed()){
+                for(ConnectedClient client : clients){
+                    if(client.currentLobby != null){
+                        // check if match is finished via flag
+                        // update clients data (totalScore+=currentScore)
+                    }
+                }
+            }
+        }
+    }
 
     private static class ConnectedClient implements Runnable {
         private final Socket clientSocket;
@@ -103,6 +139,10 @@ class Server {
 
         private Formatter output;
         private Scanner input;
+
+        private String getStatString(){
+            return String.format("%s,%s", username, totalScore);
+        }
 
         public ConnectedClient(Socket socket) {
             this.clientSocket = socket;
@@ -144,7 +184,7 @@ class Server {
                 e.printStackTrace();
             } finally {
                 try {
-                    sendAccountData();
+                    sendAccountData(); // TODO: remove client from list
                     if (output != null) {
                         output.close();
                     }
@@ -171,8 +211,10 @@ class Server {
                             if(Accounts.validLogin(clientMessage[1],clientMessage[2])){
                                 System.out.println("LOGIN GOOD");
                                 Accounts.setTable("accounts");
-                                acceptAccountData(Accounts.getInfo(this.username));
+                                acceptAccountData(Accounts.getInfo(clientMessage[1]));
                                 output.format(String.format("%s\n", Client.sendMessage.LOGIN_SUCCESS));
+                                output.flush();
+                                output.format(String.format("%s,%s\n", Client.sendMessage.CLIENT_DATA, getStatString())); // send client data
                                 output.flush();
                                 clients.add(this);
                                 System.out.printf("Added Client %s to client list\n", this.username);
@@ -186,6 +228,8 @@ class Server {
                             if(Accounts.addAccount(clientMessage[1],clientMessage[2])){
                                 this.username = clientMessage[1];
                                 output.format(String.format("%s\n", Client.sendMessage.LOGIN_SUCCESS));
+                                output.flush();
+                                output.format(String.format("%s,%s\n", Client.sendMessage.CLIENT_DATA, getStatString())); // send client data
                                 output.flush();
                                 clients.add(this);
                                 System.out.printf("Client %s successfully registered and logged in!\n", this.username);
@@ -203,11 +247,8 @@ class Server {
             totalScore = Integer.parseInt(data[1]);
         }
         private void sendAccountData() throws SQLException {
-            String[] temp = new String[2];
-            temp[0] = this.username;
-            temp[1] = String.valueOf(this.totalScore);
             Accounts.setTable("accounts");
-            Accounts.update(temp);
+            Accounts.update(getStatString().split(","));
         }
 
     }

@@ -16,7 +16,7 @@ class Client implements Runnable{
 
     public enum sendMessage {
         LOGIN_FAILED,   // username/password incorrect
-        LOGIN_SUCCESS,  // valid login
+        LOGIN_SUCCESS,  // [1] -> client data
         CLIENT_DATA,    // [1] -> totalScore
         GUESS_RESULT,   // [1] -> score received from guess
     }

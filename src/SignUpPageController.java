@@ -39,7 +39,7 @@ public class SignUpPageController extends Controller {
         else if(password.equals(confirmPassword)) {
             //getClient().send(login info)
 
-            get
+
 
             setUsername(username);
 

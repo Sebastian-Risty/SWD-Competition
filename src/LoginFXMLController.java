@@ -21,9 +21,9 @@ public class LoginFXMLController extends Controller {
     private GridPane gridPane;
 
     public void initialize() {
-        getClient().setController(this);
         // create a client
         setClient(new Client(getIp(), getPort()));
+        getClient().setController(this);
 
         verifyRippler = new JFXRippler(pane);
         verifyRippler.setRipplerFill(new Color(1,0, 0,0));
