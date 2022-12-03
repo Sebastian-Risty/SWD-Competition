@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.Arrays;
 
 // on executeUpdate vs executeQuery
 // https://stackoverflow.com/questions/21276059/no-results-returned-by-the-query-error-in-postgresql
@@ -63,6 +64,24 @@ public class Accounts {
         return true;
     }
 
+    public static String[] getInfo(String username) throws SQLException {
+        resultSet = statement.executeQuery("SELECT * FROM " + table + " WHERE username = '" + username + "';");
+        metaData = resultSet.getMetaData();
+        int numColumns = metaData.getColumnCount();
+
+
+        StringBuilder output = new StringBuilder();
+        while (resultSet.next()) {
+            for (int i = 1; i <= numColumns; i++) {
+                if(i != 2) // skips outputting the password
+                    output.append(resultSet.getObject(i)).append(",");
+            }
+        }
+
+        return output.toString().split(",");
+        
+    }
+
     // returns true if account was successfully deleted, false if not
     public static boolean deleteAccount(String username, String password) throws SQLException {
         // ensures the inputted username and password are valid, this may not be necessary depending on how we implement this function
@@ -114,15 +133,15 @@ public class Accounts {
             throw new IndexOutOfBoundsException();
         }
 
-        for (int i = 1; i <= metaData.getColumnCount(); i++) {
+        for (int i = 3; i <= metaData.getColumnCount(); i++) {
 //            System.out.println(metaData.getColumnName(i));
 //            System.out.println(data[i - 1]);
 //            System.out.println(data[0]);
 
             if (i == 3) // i = 3 at the score
-                statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = " + Integer.parseInt(data[i - 1]) + " WHERE username = '" + data[0] + "';");
+                statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = " + Integer.parseInt(data[i - 2]) + " WHERE username = '" + data[0] + "';");
             else
-                statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = '" + data[i - 1] + "' WHERE username = '" + data[0] + "';");
+                statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = '" + data[i - 2] + "' WHERE username = '" + data[0] + "';");
         }
         updateData();
 
