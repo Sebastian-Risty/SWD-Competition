@@ -59,7 +59,7 @@ public class TestAccounts {
     public void testGetInfo() throws SQLException {
         init();
         Accounts.setTable("Test");
-        String[] expected = new String[]{"Sebastian","password1","0"};
+        String[] expected = new String[]{"Sebastian", "password1", "0"};
         assertArrayEquals(expected, Accounts.getInfo("Sebastian"));
     }
 }

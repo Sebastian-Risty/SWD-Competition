@@ -24,7 +24,7 @@ public class Accounts {
 //        statement = connection.createStatement();
 
         // all accounts ordered by score from highest to lowest
-        if(Objects.equals(table, "Accounts"))
+        if (Objects.equals(table, "Accounts"))
             resultSet = statement.executeQuery("SELECT * FROM " + table + " ORDER BY totalwins DESC");
         else if (Objects.equals(table, "Test")) {
             resultSet = statement.executeQuery("SELECT * FROM " + table + " ORDER BY score DESC");
@@ -38,7 +38,7 @@ public class Accounts {
     }
 
     private static boolean usernameTaken(String username) throws SQLException {
-        if(!Objects.equals(table, "Test")) // if you're not testing, table should be login
+        if (!Objects.equals(table, "Test")) // if you're not testing, table should be login
             table = "Login";
 
         resultSet = statement.executeQuery("SELECT COUNT(1) FROM " + table + " WHERE username = '" + username + "';");
@@ -74,7 +74,7 @@ public class Accounts {
             // username in use
             return false;
         }
-        if(Objects.equals(table, "Test"))
+        if (Objects.equals(table, "Test"))
             statement.executeUpdate("INSERT INTO test (username, password, score) VALUES ('" + usernameInp + "', '" + passwordInp + "', 0);");
         else {
             statement.executeUpdate("INSERT INTO Login (username, password) VALUES ('" + usernameInp + "', '" + passwordInp + "');");
@@ -103,16 +103,16 @@ public class Accounts {
         System.out.println(output);
 
         return output.toString().split(",");
-        
+
     }
 
     // returns true if account was successfully deleted, false if not
     public static boolean deleteAccount(String username, String password) throws SQLException {
-        if(!Objects.equals(table, "Test"))
+        if (!Objects.equals(table, "Test"))
             table = "Login";
         // ensures the inputted username and password are valid, this may not be necessary depending on how we implement this function
         if (validLogin(username, password)) {
-            if(Objects.equals(table, "Test"))
+            if (Objects.equals(table, "Test"))
                 statement.executeUpdate("DELETE FROM " + table + " WHERE " + table + ".Username = '" + username + "' AND " + table + ".Password = '" + password + "'");
             else {
                 statement.executeUpdate("DELETE FROM accounts WHERE accounts.Username = " + username);
@@ -186,13 +186,13 @@ public class Accounts {
     // should specify table before running (Accounts.setTable())
     public static String[] getTopPlayers(int num) throws SQLException { // MAKE SURE TABLE IS SET TO ACCOUNTS !!!
         StringBuilder output = new StringBuilder();
-        if(Objects.equals(table, "Accounts"))
+        if (Objects.equals(table, "Accounts"))
             resultSet = statement.executeQuery("SELECT Username, Score FROM " + table + " ORDER BY Score DESC");
-        else if (Objects.equals(table,"Tournament")) {
+        else if (Objects.equals(table, "Tournament")) {
             resultSet = statement.executeQuery("SELECT Username, Wins FROM " + table + " ORDER BY Wins DESC");
-        } else if (Objects.equals(table,"Test")) {
+        } else if (Objects.equals(table, "Test")) {
             resultSet = statement.executeQuery("SELECT Username, Score FROM " + table + " ORDER BY Score DESC");
-        } else{
+        } else {
             throw new InputMismatchException(); // if thrown, you need to set table to either accounts or tournament before the function is called
         }
         metaData = resultSet.getMetaData();

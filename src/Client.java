@@ -86,7 +86,7 @@ class Client implements Runnable {
                     break;
                 }
                 case "GAME_START": {
-//                    controller.gameStart(clientMessage[1]);
+                    controller.loginValid();
                     break;
                 }
             }
@@ -94,12 +94,12 @@ class Client implements Runnable {
     }
 
     public enum sendMessage {
-        LOGIN_VALID,    // username/password incorrect
+        LOGIN_VALID,   // username/password incorrect
         LOGIN_INVALID,  //
         CLIENT_DATA,    // [1:9] -> username, total wins, T GP, OVO wins, OVO GP, BR wins, BR GP, T wins, T GP
         SIGNUP_VALID,   //
         SIGNUP_INVALID, //
-        GAME_START,     // [1] -> letters
+        GAME_START, //
         GUESS_RESULT,   // [1] -> score received from guess
     }
 }
