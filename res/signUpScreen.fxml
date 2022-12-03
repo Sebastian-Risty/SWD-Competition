@@ -80,7 +80,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <JFXButton alignment="CENTER" onAction="#signUpButtonListener2" ripplerFill="BLACK" text="Sign-Up" textFill="#1e1d1d" GridPane.halignment="CENTER">
+            <JFXButton alignment="CENTER" onAction="#signUpButtonListener" ripplerFill="BLACK" text="Sign-Up" textFill="#1e1d1d" GridPane.halignment="CENTER">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
