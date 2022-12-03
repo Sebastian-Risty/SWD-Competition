@@ -57,21 +57,20 @@ public class HomeScreenController extends Controller{
 
     @FXML
     void readyUpListener() {
-        String gameMode;
 
         if(battleRoyale.getBackground().getFills().get(0).getFill().equals(Color.GREEN)) {
-            gameMode = "Battle Royale";
             // send start game message to server with battle royale
             gameStatus.setText("Connecting to Game...");
             readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
-            getClient().sendMessage(String.format("%s,%s,%s\n",Server.sendMessage.MODE_SELECTION ,"Battle Royale"));
+            getClient().sendMessage(String.format("%s,%s,%s\n",Server.sendMessage.MODE_SELECTION ,"Battle Royale", ""));
 
         }
         else if(h2hMode.getBackground().getFills().get(0).getFill().equals(Color.GREEN)) {
-            gameMode = "Head to Head";
             // send start game message to server with head to head
             gameStatus.setText("Connecting to Game...");
             readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
+            getClient().sendMessage(String.format("%s,%s,%s\n",Server.sendMessage.MODE_SELECTION ,"H2H", ""));
+
         }
         else {
             gameModeFeedback.setText("Select a Game Mode");
