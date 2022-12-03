@@ -11,6 +11,16 @@ public class Controller {
 
     private static Client client;
 
+    public static PlayerStats getPlayer() {
+        return player;
+    }
+
+    public static void setPlayer(PlayerStats player) {
+        Controller.player = player;
+    }
+
+    private static PlayerStats player;
+
     public void setIp(String ip){
         Controller.ip = ip;}
 

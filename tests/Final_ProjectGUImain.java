@@ -27,6 +27,7 @@ public class Final_ProjectGUImain extends Application {
         primaryStage.setScene(scene);
 
         controller.setRoot(root);
+        controller.setStage(primaryStage);
         //controller.setScene(scene);
 
         primaryStage.show();
