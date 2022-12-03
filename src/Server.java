@@ -23,7 +23,9 @@ class Server {
         MODE_SELECTION,     // [1] -> name of game from gameMode enum
         GUESS,              // [1] -> clients word guess
         LEADERBOARD,        // requests leaderboard update
-        REGISTER_REQUEST    // [1] -> username, [2] -> password
+        REGISTER_REQUEST,    // [1] -> username, [2] -> password
+
+        CLIENT_DATA_REQUEST
     }
 
     public enum gameMode {
@@ -200,6 +202,11 @@ class Server {
                             requestedGame = clientMessage[1];
                             break;
                         }
+                        case "CLIENT_DATA_REQUEST" :{
+                            output.format(String.format("%s,%s\n", Client.sendMessage.CLIENT_DATA, getStatString())); // send client data
+                            output.flush();
+                            break;
+                        }
                         case "GUESS":{
                             if(currentLobby != null && currentLobby.isInProgress()){
                                 int tempScore = currentLobby.guess(clientMessage[1]);
@@ -249,8 +256,6 @@ class Server {
                                 Accounts.setTable("accounts");
                                 acceptAccountData(Accounts.getInfo(clientMessage[1]));
                                 output.format(String.format("%s\n", Client.sendMessage.LOGIN_VALID));
-                                output.flush();
-                                output.format(String.format("%s,%s\n", Client.sendMessage.CLIENT_DATA, getStatString())); // send client data
                                 output.flush();
                                 clients.add(this);
                                 System.out.printf("Added Client %s to client list\n", this.username);

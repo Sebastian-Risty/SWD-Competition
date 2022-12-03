@@ -81,7 +81,7 @@
                      </font>
                   </Label>
                   <Label fx:id="totalWins" GridPane.columnIndex="1" />
-                  <Label fx:id="h2hwins" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label fx:id="h2hWins" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label fx:id="tourneyWins" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <Label fx:id="brWins" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <Label fx:id="gamesPlayed" GridPane.columnIndex="1" GridPane.rowIndex="4" />

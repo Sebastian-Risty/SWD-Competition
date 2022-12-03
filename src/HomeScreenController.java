@@ -63,6 +63,8 @@ public class HomeScreenController extends Controller {
     @FXML
     private Label h2hWins;
 
+    private boolean readiedUp;
+
 
 //    private Background background;
 //    private BackgroundFill red;
@@ -72,20 +74,35 @@ public class HomeScreenController extends Controller {
     @FXML
     void readyUpListener() {
 
-        if (battleRoyale.getBackground().getFills().get(0).getFill().equals(Color.GREEN)) {
-            // send start game message to server with battle royale
-            gameStatus.setText("Connecting to Game...");
-            readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
-            getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.MODE_SELECTION, Server.gameMode.BATTLE_ROYAL));
-        } else if (h2hMode.getBackground().getFills().get(0).getFill().equals(Color.GREEN)) {
-            // send start game message to server with head to head
-            gameStatus.setText("Connecting to Game...");
-            readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
-            getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.MODE_SELECTION, Server.gameMode.ONE_VS_ONE));
-        } else {
-            gameModeFeedback.setText("Select a Game Mode");
-            //gameModeFeedback.setBackground(new Background(new BackgroundFill(Color.RED, null, null)));
-            gameModeFeedback.setTextFill(Color.RED);
+        if(!readiedUp) {
+            if (battleRoyale.getBackground().getFills().get(0).getFill().equals(Color.GREEN)) {
+                // send start game message to server with battle royale
+                gameStatus.setText("Connecting to Game...");
+                readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
+                getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.MODE_SELECTION, Server.gameMode.BATTLE_ROYAL));
+                readiedUp = true;
+                readyUp.setText("Cancel");
+            } else if (h2hMode.getBackground().getFills().get(0).getFill().equals(Color.GREEN)) {
+                // send start game message to server with head to head
+                gameStatus.setText("Connecting to Game...");
+                readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
+                getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.MODE_SELECTION, Server.gameMode.ONE_VS_ONE));
+                readiedUp = true;
+                readyUp.setText("Cancel");
+            } else {
+                gameModeFeedback.setText("Select a Game Mode");
+                //gameModeFeedback.setBackground(new Background(new BackgroundFill(Color.RED, null, null)));
+                gameModeFeedback.setTextFill(Color.RED);
+            }
+        }
+        else {
+            // send cancel message to server
+            readyUp.setText("Ready Up!");
+            readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+            h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+            battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+            gameStatus.setText("");
+            readiedUp = false;
         }
     }
 
@@ -123,20 +140,22 @@ public class HomeScreenController extends Controller {
     }
 
     public void initialize() {
+        readiedUp = false;
         getClient().setController(this);
+        getClient().sendMessage(String.format("%s\n", Server.sendMessage.CLIENT_DATA_REQUEST));
         usernameLabel.setText(getPlayer().getUsername() + "'s Player Stats");
         statsPane.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         tournamentMode.setBackground(new Background(new BackgroundFill(Color.LIGHTYELLOW, null, null)));
-        totalWins.setText(getPlayer().getTotalWins());
-        gamesPlayed.setText(getPlayer().getTotalGamesPlayed());
-        h2hWins.setText(getPlayer().getOVOWins());
-        h2hGames.setText(getPlayer().getOVOGamesPlayed());
-        brWins.setText(getPlayer().getBRWins());
-        brPlayed.setText(getPlayer().getBRGamesPlayed());
-        tourneyWins.setText(getPlayer().getTournamentWins());
-        tourneysPlayed.setText(getPlayer().getTournamentsPlayed());
+//        totalWins.setText(getPlayer().getTotalWins());
+//        gamesPlayed.setText(getPlayer().getTotalGamesPlayed());
+//        h2hWins.setText(getPlayer().getOVOWins());
+//        h2hGames.setText(getPlayer().getOVOGamesPlayed());
+//        brWins.setText(getPlayer().getBRWins());
+//        brPlayed.setText(getPlayer().getBRGamesPlayed());
+//        tourneyWins.setText(getPlayer().getTournamentWins());
+//        tourneysPlayed.setText(getPlayer().getTournamentsPlayed());
 
     }
 
@@ -149,12 +168,14 @@ public class HomeScreenController extends Controller {
                 updatePlayerStatsHelper(username, totalWinsIn, totalGamesPlayed, OVOWins, OVOGamesPlayed, BRWins, BRGamesPlayed, tournamentWins, tournamentsPlayed);
                 totalWins.setText(totalWinsIn);
                 gamesPlayed.setText(totalGamesPlayed);
+                System.out.println(OVOWins);
                 h2hWins.setText(OVOWins);
                 h2hGames.setText(OVOGamesPlayed);
                 brWins.setText(BRWins);
                 brPlayed.setText(BRGamesPlayed);
                 tourneyWins.setText(tournamentWins);
                 tourneysPlayed.setText(tournamentsPlayed);
+                System.out.println(totalGamesPlayed);
             }
         });
     }
