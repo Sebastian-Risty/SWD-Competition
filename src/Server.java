@@ -86,6 +86,7 @@ class Server {
                                     client.currentLobby = temp;
                                     temp.clientConnected();
                                 }
+                                System.out.println("Created New ONE_VS_ONE Lobby");
                                 break;
                             }
                             case "BATTLE_ROYAL":{
@@ -103,14 +104,14 @@ class Server {
                                     client.currentLobby = temp;
                                     temp.clientConnected();
                                 }
+                                System.out.println("Created New BATTLE_ROYAL Lobby");
                                 break;
                             }
                         }
-                        System.out.println("Created New Lobby");
+                        client.requestedGame = null; // set to null once client finds lobby
                     }
                 }
             }
-
         }
     }
 
