@@ -12,6 +12,13 @@ public class PlayerStats {
         setRank(0);
     }
 
+    private int Score;
+    private int numGamesPlayed;
+    private int h2hWins;
+    private int tourneyWins;
+    private String tier;
+    private int rank;
+    public String username;
 
     public int getScore() {
         return Score;
@@ -60,21 +67,7 @@ public class PlayerStats {
     public void setRank(int rank) {
         this.rank = rank;
     }
+    public String getUsername() {return username;}
+    public void setUsername(String username) {this.username = username;}
 
-    private int Score;
-    private int numGamesPlayed;
-    private int h2hWins;
-    private int tourneyWins;
-    private String tier;
-    private int rank;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String username;
 }
