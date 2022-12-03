@@ -56,7 +56,7 @@ public class ClientDriver extends Application {
         primaryStage.setScene(scene);
 
         controller.setRoot(root);
-        //controller.setScene(scene);
+        controller.setStage(primaryStage);
 
         primaryStage.show();
     }
