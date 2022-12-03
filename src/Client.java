@@ -1,17 +1,7 @@
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
-import java.io.*;
-import java.net.InetAddress;
+import java.io.IOException;
 import java.net.Socket;
-import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.Formatter;
 import java.util.Scanner;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 class Client implements Runnable{
@@ -22,11 +12,11 @@ class Client implements Runnable{
     private Socket serverSocket;
     //private Controller controller;
 
-    private enum messages{
-        LOGIN_FAILED,
-        LOGIN_SUCCESS,
-        CLIENT_DATA,
-        LOGIN_REQUEST
+    public enum sendMessage {
+        LOGIN_FAILED,   // username/password incorrect
+        LOGIN_SUCCESS,  // valid login
+        CLIENT_DATA,    // [1] -> totalScore
+        GUESS_RESULT,   // [1] -> score received from guess
     }
 
     public Client(String ip, int port) {
