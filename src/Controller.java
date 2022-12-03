@@ -2,6 +2,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.net.URL;
 
@@ -10,6 +11,16 @@ public class Controller {
     private static int port;
 
     private static Client client;
+
+    public static PlayerStats getPlayer() {
+        return player;
+    }
+
+    public static void setPlayer(PlayerStats player) {
+        Controller.player = player;
+    }
+
+    private static PlayerStats player;
 
     public void setIp(String ip){
         Controller.ip = ip;}
@@ -52,16 +63,6 @@ public class Controller {
     private static Stage stage;
     private static Parent root;
 
-    public static String getUsername() {
-        return username;
-    }
-
-    public static void setUsername(String username) {
-        Controller.username = username;
-    }
-
-    private static String username;
-
     public void switchScene(String fxmlUrl, String sceneTitle) throws IOException {
 
         Stage temp2 = stage;
@@ -81,4 +82,37 @@ public class Controller {
 
         temp2.close();
     }
+
+    public void loginInvalid() {
+    }
+
+    public void loginValid() {
+    }
+
+    public void signUpValid() {
+    }
+
+    public void signUpInvalid() {
+    }
+
+    public void updatePlayerStats(String username, String totalWins, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,
+                                  String BRWins, String BRGamesPlayed, String tournamentWins, String tournamentsPlayed) {
+        updatePlayerStatsHelper(username, totalWins, totalGamesPlayed, OVOWins, OVOGamesPlayed, BRWins, BRGamesPlayed, tournamentWins, tournamentsPlayed);
+    }
+
+    public void updatePlayerStatsHelper(String username, String totalWins, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,
+                                        String BRWins, String BRGamesPlayed, String tournamentWins, String tournamentsPlayed) {
+        player.setUsername(username);
+        player.setTotalWins(Integer.parseInt(totalWins));
+        player.setTotalGamesPlayed(Integer.parseInt(totalGamesPlayed));
+        player.setOVOWins(Integer.parseInt(OVOWins));
+        player.setOVOGamesPlayed(Integer.parseInt(OVOGamesPlayed));
+        player.setBRWins(Integer.parseInt(BRWins));
+        player.setBRGamesPlayed(Integer.parseInt(BRGamesPlayed));
+        player.setTournamentWins(Integer.parseInt(tournamentWins));
+        player.setTournamentsPlayed(Integer.parseInt(tournamentsPlayed));
+    }
+
+
+
 }

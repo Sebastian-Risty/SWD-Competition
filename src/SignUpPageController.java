@@ -1,11 +1,12 @@
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.JFXTextField;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+
+import java.io.IOException;
 
 public class SignUpPageController extends Controller {
     @FXML
@@ -23,7 +24,7 @@ public class SignUpPageController extends Controller {
     JFXRippler rippler;
 
     @FXML
-    void signUpButtonListener2(ActionEvent event) {
+    void signUpButtonListener() {
         String password = signUpPasswordField.getText();
         String confirmPassword = signUpConfirmPassword.getText();
         String username = usernameField.getText();
@@ -37,17 +38,7 @@ public class SignUpPageController extends Controller {
             signUpFeedbackLabel.setText("Username is too long");
         }
         else if(password.equals(confirmPassword)) {
-            //getClient().send(login info)
-
-            setUsername(username);
-
-            // Flip to main page
-
-            // getClient().receive response back from server
-
-            // set the feedback label based on what the server responded with
-
-            signUpFeedbackLabel.setText("Account created ");
+            getClient().sendMessage(String.format("%s,%s,%s\n",Server.sendMessage.REGISTER_REQUEST,username, password));
         }
         else {
             rippler.createManualRipple();
@@ -56,8 +47,37 @@ public class SignUpPageController extends Controller {
     }
 
     public void initialize() {
+        getClient().setController(this);
         rippler = new JFXRippler(bottomGridPane);
         rippler.setRipplerFill(new Color(1,0, 0,0));
         parentGridPane.getChildren().add(rippler);
+    }
+
+    @Override
+    public void signUpValid() {
+        setPlayer(new PlayerStats(usernameField.getText()));
+
+        rippler.setRipplerFill(new Color(0, 0, 1, 0));
+        signUpFeedbackLabel.setText("Account Created\n Loading Home Page...");
+
+        try {
+            Thread.sleep(2000);
+        }
+        catch(InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            switchScene("homeScreenFXML.fxml", "Home Screen");
+        }
+        catch(IOException e) {
+            signUpFeedbackLabel.setText("Home Screen Could Not Be Loaded");
+        }
+    }
+
+    @Override
+    public void signUpInvalid() {
+        rippler.setRipplerFill(new Color(1, 0, 0, 0));
+        signUpFeedbackLabel.setText("Username Already Used");
     }
 }
