@@ -49,6 +49,9 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
     public boolean isInProgress() {
         return progressFlag;
     }
+    public boolean isFinished(){
+        return endFlag;
+    }
 
     public void clientConnected() {
         numConnectedClients++;
@@ -63,7 +66,11 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
         System.out.println("INIT GAME START");
         initializeGame();
         System.out.println("INIT GAME DONE");
-        pregameLobby();
+        try {
+            pregameLobby();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         startGame();
     }
 
@@ -145,7 +152,7 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
         return 0;
     }
 
-    public abstract void pregameLobby();
+    public abstract void pregameLobby() throws InterruptedException;
 
     public abstract void startGame();
 

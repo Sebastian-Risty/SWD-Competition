@@ -39,6 +39,7 @@ class Server {
 
             executorService.execute(new AcceptPlayers());
             executorService.execute(new LobbyHandler());
+            executorService.execute(new FinishedMatchHandler());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -67,17 +68,15 @@ class Server {
             while (!server.isClosed()) {
                 // loop through client list
                 synchronized (clients) {
-                    Iterator clientIterator = clients.iterator();
-                    while (clientIterator.hasNext()) {
+                    for (Object o : clients) {
                         // HANDLE LOBBY REQUESTS
-                        ConnectedClient client = (ConnectedClient) clientIterator.next();
+                        ConnectedClient client = (ConnectedClient) o;
                         if (client.requestedGame != null) {
                             switch (client.requestedGame) {
                                 case "ONE_VS_ONE": {
                                     synchronized (lobbies) {
-                                        Iterator lobbyIterator = lobbies.iterator();
-                                        while (lobbyIterator.hasNext()) {
-                                            Game game = (Game) lobbyIterator.next();
+                                        for (Object lobby : lobbies) {
+                                            Game game = (Game) lobby;
                                             if (game.getGamemode().equals("OneVsOne") && !game.isInProgress()) { // client joins open game if possible
                                                 // add client
                                                 System.out.println("ADDED CLIENT TO GAME");
@@ -99,9 +98,8 @@ class Server {
                                 }
                                 case "BATTLE_ROYAL": {
                                     synchronized (lobbies) {
-                                        Iterator lobbyIterator = lobbies.iterator();
-                                        while (lobbyIterator.hasNext()) {
-                                            Game game = (Game) lobbyIterator.next();
+                                        for (Object lobby : lobbies) {
+                                            Game game = (Game) lobby;
                                             if (game.getGamemode().equals("BattleRoyale") && !game.isInProgress()) { // client joins open game if possible
                                                 // add client
                                                 System.out.println("ADDED CLIENT TO GAME");
@@ -130,20 +128,31 @@ class Server {
         }
     }
 
-//    private static class FinishedMatchHandler implements Runnable{
-//        @Override
-//        public void run(){
-//            System.out.println("FMH START");
-//            while (!server.isClosed()){
-//                for(ConnectedClient client : clients){
-//                    if(client.currentLobby != null){
-//                        // check if match is finished via flag
-//                        // update clients data (totalScore+=currentScore)
-//                    }
-//                }
-//            }
-//        }
-//    }
+    private static class FinishedMatchHandler implements Runnable{
+        @Override
+        public void run(){
+            System.out.println("FMH START");
+            while (!server.isClosed()){
+                synchronized (clients){
+                    for (Object o : clients) {
+                        ConnectedClient client = (ConnectedClient) o;
+                        if (client.currentLobby != null && client.currentLobby.isFinished()) {
+                            // update clients data (totalScore+=currentScore)
+                            client.totalGamesPlayed += 1;
+
+                            synchronized (lobbies){
+                                lobbies.remove(client.currentLobby);
+                                System.out.println("Removed match from lobbies");
+                            }
+
+                            client.currentLobby = null;
+                            System.out.println("Set client cur lobby to null");
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     private static class ConnectedClient implements Runnable {
         private final Socket clientSocket;
@@ -159,8 +168,6 @@ class Server {
         private int BRGamesPlayed = 0;
         private int tourneyWins = 0;
         private int tourneyGamesPlayed = 0;
-
-
 
         private Formatter output;
         private Scanner input;
@@ -202,13 +209,18 @@ class Server {
                             }
                             break;
                         }
-                    }
+                    } // TODO: on window close send command to server saying it close and then flip flag inside this run to then break form loop d then hit finally block so account is removed or smthn
                 }
             } catch (IOException | SQLException e) {
                 e.printStackTrace();
             } finally {
                 try {
-                    sendAccountData(); // TODO: remove client from list
+                    System.out.println("Sending Client Data to DB");
+                    sendAccountData();
+                    synchronized (clients){
+                        clients.remove(this);
+
+                    }
                     if (output != null) {
                         output.close();
                     }
