@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public abstract class Game implements Runnable { //TODO: make class abstract and children runnable maybe?
+
     private ArrayList<Character> letters = new ArrayList<>();
     private ArrayList<String> validWords = new ArrayList<>();// TODO: gen score value for each word, read rules from some other class
     private ArrayList<String> allWords = new ArrayList<>();

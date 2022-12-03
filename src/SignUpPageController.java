@@ -23,7 +23,7 @@ public class SignUpPageController extends Controller {
     JFXRippler rippler;
 
     @FXML
-    void signUpButtonListener2(ActionEvent event) {
+    void signUpButtonListener() {
         String password = signUpPasswordField.getText();
         String confirmPassword = signUpConfirmPassword.getText();
         String username = usernameField.getText();
@@ -37,11 +37,10 @@ public class SignUpPageController extends Controller {
             signUpFeedbackLabel.setText("Username is too long");
         }
         else if(password.equals(confirmPassword)) {
+
+            getClient().sendMessage(String.format("%s,%s,%s\n",Server.sendMessage.REGISTER_REQUEST,username, password));
+
             //getClient().send(login info)
-
-
-
-            setUsername(username);
 
             // Flip to main page
 
@@ -58,8 +57,21 @@ public class SignUpPageController extends Controller {
     }
 
     public void initialize() {
+        getClient().setController(this);
         rippler = new JFXRippler(bottomGridPane);
         rippler.setRipplerFill(new Color(1,0, 0,0));
         parentGridPane.getChildren().add(rippler);
+    }
+
+    @Override
+    public void signUpValid() {
+        rippler.setRipplerFill(new Color(0, 0, 1, 0));
+        try {
+            wait(5);
+        }
+        catch(InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 }

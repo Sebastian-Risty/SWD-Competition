@@ -62,16 +62,6 @@ public class Controller {
     private static Stage stage;
     private static Parent root;
 
-    public static String getUsername() {
-        return username;
-    }
-
-    public static void setUsername(String username) {
-        Controller.username = username;
-    }
-
-    private static String username;
-
     public void switchScene(String fxmlUrl, String sceneTitle) throws IOException {
 
         Stage temp2 = stage;
@@ -93,4 +83,11 @@ public class Controller {
     }
 
     public void loginFailed(){}
+
+    public void loginValid(){}
+
+    public void signUpValid(){}
+
+    public void signUpInvalid(){}
+
 }

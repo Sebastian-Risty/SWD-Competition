@@ -64,15 +64,13 @@ public class HomeScreenController extends Controller{
             // send start game message to server with battle royale
             gameStatus.setText("Connecting to Game...");
             readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
-            getClient().sendMessage(String.format("%s,%s,%s\n",Server.sendMessage.MODE_SELECTION ,"Battle Royale", ""));
-
+            getClient().sendMessage(String.format("%s,%s\n",Server.sendMessage.MODE_SELECTION ,Server.gameMode.BATTLE_ROYAL));
         }
         else if(h2hMode.getBackground().getFills().get(0).getFill().equals(Color.GREEN)) {
             // send start game message to server with head to head
             gameStatus.setText("Connecting to Game...");
             readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
-            getClient().sendMessage(String.format("%s,%s,%s\n",Server.sendMessage.MODE_SELECTION ,"H2H", ""));
-
+            getClient().sendMessage(String.format("%s,%s\n",Server.sendMessage.MODE_SELECTION ,Server.gameMode.ONE_VS_ONE));
         }
         else {
             gameModeFeedback.setText("Select a Game Mode");
@@ -105,7 +103,7 @@ public class HomeScreenController extends Controller{
         // ask server if user is in a tournament
         // get response from server
 
-        getClient().sendMessage(String.format("%s,%s,%s\n",Server.sendMessage.MODE_SELECTION ,"Tournament", ""));
+        //getClient().sendMessage(String.format("%s,%s,%s\n",Server.sendMessage.MODE_SELECTION ,"Tournament", ""));
 
         try {
             switchScene("TournamentHomeFXML.fxml", "Tournament Home");

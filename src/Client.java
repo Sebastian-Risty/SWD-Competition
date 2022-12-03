@@ -4,7 +4,7 @@ import java.util.Formatter;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 
-class Client implements Runnable{
+class Client implements Runnable {
     private final String ip;
     private final int port;
     private Scanner input; // input from server
@@ -12,13 +12,13 @@ class Client implements Runnable{
     private Socket serverSocket;
     private Controller controller;
 
-    public void setController(Controller controller) {this.controller = controller;}
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
 
-    public enum sendMessage {
-        LOGIN_FAILED,   // username/password incorrect
-        LOGIN_SUCCESS,  // [1] -> client data
-        CLIENT_DATA,    // [1] -> totalScore
-        GUESS_RESULT,   // [1] -> score received from guess
+    public void sendMessage(String message) { // MUST END WITH NEWLINE
+        output.format(message);
+        output.flush();
     }
 
     public Client(String ip, int port) {
@@ -56,17 +56,32 @@ class Client implements Runnable{
         output = new Formatter(serverSocket.getOutputStream());
     }
 
-    public void sendMessage(String message){ // MUST END WITH NEWLINE
-        output.format(message);
-        output.flush();
+    @Override
+    public void run() {
+        System.out.println("AWAITING SERVER DATA");
+        while (true) {
+            String receivedData = input.nextLine();
+            System.out.printf("Message Received: %s\n", receivedData);
+            String[] clientMessage = receivedData.split(",");
+            switch (clientMessage[0]) {
+                case "LOGIN_FAILED": {
+                    controller.loginFailed();
+                    break;
+                }
+                case "LOGIN_SUCCESS": {
+                    controller.loginValid(clientMessage[]);
+                    break;
+                }
+            }
+        }
     }
 
-    @Override
-    public void run(){
-        System.out.println("AWAITING SERVER DATA");
-        while(true){
-            // TODO: handle server messages to update gui here
+    public enum sendMessage {
+        LOGIN_FAILED,   // username/password incorrect
+        LOGIN_SUCCESS,  // [1] -> total wins, T GP, OVO wins, OVO GP, BR wins, BR GP, T wins, T GP
+        SIGN_UP,        // sign up clicked
 
-        }
+        CLIENT_DATA,    // [1] -> totalScore
+        GUESS_RESULT,   // [1] -> score received from guess
     }
 }
