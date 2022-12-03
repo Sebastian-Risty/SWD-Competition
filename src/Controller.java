@@ -91,4 +91,6 @@ public class Controller {
 
         temp2.close();
     }
+
+    public void loginFailed(){}
 }

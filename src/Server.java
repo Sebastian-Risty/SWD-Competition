@@ -169,6 +169,7 @@ class Server {
                     switch(clientMessage[0]){
                         case "LOGIN_REQUEST":
                             if(Accounts.validLogin(clientMessage[1],clientMessage[2])){
+                                System.out.println("LOGIN GOOD");
                                 Accounts.setTable("accounts");
                                 acceptAccountData(Accounts.getInfo(this.username));
                                 output.format(String.format("%s\n", Client.sendMessage.LOGIN_SUCCESS));
@@ -176,6 +177,7 @@ class Server {
                                 clients.add(this);
                                 System.out.printf("Added Client %s to client list\n", this.username);
                             } else{
+                                System.out.println("LOGIN FAILED");
                                 output.format(String.format("%s\n", Client.sendMessage.LOGIN_FAILED));
                                 output.flush();
                             }

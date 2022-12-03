@@ -21,7 +21,7 @@ public class LoginFXMLController extends Controller {
     private GridPane gridPane;
 
     public void initialize() {
-
+        getClient().setController(this);
         // create a client
         setClient(new Client(getIp(), getPort()));
 
@@ -58,5 +58,9 @@ public class LoginFXMLController extends Controller {
         else {
             verifyRippler.createManualRipple();
         }
+    }
+    @Override
+    public void loginFailed(){
+
     }
 }
