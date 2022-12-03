@@ -85,6 +85,13 @@ public class Accounts {
     public static boolean deleteAccount(String username, String password) throws SQLException {
         // ensures the inputted username and password are valid, this may not be necessary depending on how we implement this function
         if (validLogin(username, password)) {
+
+
+            // TODO maybe i don't need prepared statements
+//            statement.executeUpdate("DELETE FROM " + table + " WHERE " + table + ".Username = '" + username + "' AND " + table + ".Password = '" + password + "'");
+
+
+
             PreparedStatement ps = connection.prepareStatement("DELETE FROM " + table + " WHERE " + table + ".Username = ? AND " + table + ".Password = ?");
             ps.setString(1, username);
             ps.setString(2, password);
@@ -154,13 +161,13 @@ public class Accounts {
     // are in descending order (i.e. index 0 is the username for the player with the highest score, index 1 is their highest score)
     public static String[] getTopPlayers(int num) throws SQLException {
         StringBuilder output = new StringBuilder();
-        resultSet = statement.executeQuery("SELECT Username, Score FROM Accounts ORDER BY Score DESC");
+        resultSet = statement.executeQuery("SELECT Username, Score FROM " + table + " ORDER BY Score DESC");
         metaData = resultSet.getMetaData();
         int numColumns = metaData.getColumnCount();
 
         int x = 0;
         if (num == 0) // if zero, display the entire leaderboard
-            num = Integer.parseInt(statement.executeQuery("SELECT COUNT(Username) from Accounts").toString());
+            num = Integer.parseInt(statement.executeQuery("SELECT COUNT(Username) from " + table).toString());
         while (resultSet.next() && x < num) {
             for (int i = 1; i <= numColumns; i++) {
                 output.append(resultSet.getObject(i)).append(",");
