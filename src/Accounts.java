@@ -180,7 +180,7 @@ public class Accounts {
             Accounts.table = table;
             connection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM " + table + " ORDER BY Score DESC");
+            resultSet = statement.executeQuery("SELECT * FROM " + table);
             metaData = resultSet.getMetaData();
         } catch (SQLException e) { // | ClassNotFoundException e) {
             throw new RuntimeException(e);

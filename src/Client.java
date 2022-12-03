@@ -10,7 +10,9 @@ class Client implements Runnable{
     private Scanner input; // input from server
     private Formatter output; // output to server
     private Socket serverSocket;
-    //private Controller controller;
+    private Controller controller;
+
+    public void setController(Controller controller) {this.controller = controller;}
 
     public enum sendMessage {
         LOGIN_FAILED,   // username/password incorrect
