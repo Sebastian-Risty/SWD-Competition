@@ -1,6 +1,7 @@
 import org.junit.Test;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,14 +20,14 @@ public class TestAccounts {
     @Test
     public void testUpdate() throws SQLException { // also tests displayLeadBoard() and validLogin()
         init();
-        String[] data = new String[]{"Sam", "password3", "1000"};
+        String[] data = new String[]{"Sam", "1000"};
         Accounts.update(data);
-        String[] data2 = new String[]{"Cole", "password10", "500"};
+        String[] data2 = new String[]{"Cole", "500"};
         Accounts.update(data2);
 
         String[] expected = new String[]{"Sam", "1000", "Cole", "500", "Sebastian", "0"};
         assertArrayEquals(expected, Accounts.getTopPlayers(10));
-        assertTrue(Accounts.validLogin("Cole", "password10"));
+        //assertTrue(Accounts.validLogin("Cole", "password10"));
     }
 
     @Test
@@ -48,5 +49,12 @@ public class TestAccounts {
         Accounts.addAccount("Matt", "password4");
         Accounts.deleteAccount("Matt", "password4");
         assertFalse(Accounts.validLogin("Matt", "password4"));
+    }
+
+    @Test
+    public void testGetInfo() throws SQLException {
+        init();
+        String[] expected = new String[]{"Sebastian","0"};
+        assertArrayEquals(expected, Accounts.getInfo("Sebastian"));
     }
 }
