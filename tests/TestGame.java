@@ -10,7 +10,7 @@ public class TestGame {
             System.out.println("\nPlayer" + (i + 1) + "'s turn");
             boolean status = true;
             while (status) {
-               // System.out.println("\nYour letters are: " + game.getLetters());
+                // System.out.println("\nYour letters are: " + game.getLetters());
                 System.out.print("\nEnter your guess: ");
                 String input = scnr.next();
                 if (Objects.equals(input, "quit")) {

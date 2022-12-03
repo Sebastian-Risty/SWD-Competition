@@ -1,72 +1,13 @@
 public class PlayerStats {
-    PlayerStats(int score, int numGamesPlayed, int h2hWins, int tourneyWins, String tier, int rank) {
-
-    }
-
-    PlayerStats(){
-        setScore(0);
-        setNumGamesPlayed(0);
-        setH2hWins(0);
-        setTourneyWins(0);
-        setTier("Terrible");
-        setRank(0);
-    }
-
-
-    public int getScore() {
-        return Score;
-    }
-
-    public void setScore(int score) {
-        Score = score;
-    }
-
-    public int getNumGamesPlayed() {
-        return numGamesPlayed;
-    }
-
-    public void setNumGamesPlayed(int numGamesPlayed) {
-        this.numGamesPlayed = numGamesPlayed;
-    }
-
-    public int getH2hWins() {
-        return h2hWins;
-    }
-
-    public void setH2hWins(int h2hWins) {
-        this.h2hWins = h2hWins;
-    }
-
-    public int getTourneyWins() {
-        return tourneyWins;
-    }
-
-    public void setTourneyWins(int tourneyWins) {
-        this.tourneyWins = tourneyWins;
-    }
-
-    public String getTier() {
-        return tier;
-    }
-
-    public void setTier(String tier) {
-        this.tier = tier;
-    }
-
-    public int getRank() {
-        return rank;
-    }
-
-    public void setRank(int rank) {
-        this.rank = rank;
-    }
-
-    private int Score;
-    private int numGamesPlayed;
-    private int h2hWins;
-    private int tourneyWins;
-    private String tier;
-    private int rank;
+    private String username;
+    private int totalWins;
+    private int totalGamesPlayed;
+    private int OVOWins;
+    private int OVOGamesPlayed;
+    private int BRWins;
+    private int BRGamesPlayed;
+    private int tournamentWins;
+    private int tournamentsPlayed;
 
     public String getUsername() {
         return username;
@@ -76,5 +17,93 @@ public class PlayerStats {
         this.username = username;
     }
 
-    public String username;
+    public int getTotalWins() {
+        return totalWins;
+    }
+
+    public void setTotalWins(int totalWins) {
+        this.totalWins = totalWins;
+    }
+
+    public int getTotalGamesPlayed() {
+        return totalGamesPlayed;
+    }
+
+    public void setTotalGamesPlayed(int totalGamesPlayed) {
+        this.totalGamesPlayed = totalGamesPlayed;
+    }
+
+    public int getOVOWins() {
+        return OVOWins;
+    }
+
+    public void setOVOWins(int OVOWins) {
+        this.OVOWins = OVOWins;
+    }
+
+    public int getOVOGamesPlayed() {
+        return OVOGamesPlayed;
+    }
+
+    public void setOVOGamesPlayed(int OVOGamesPlayed) {
+        this.OVOGamesPlayed = OVOGamesPlayed;
+    }
+
+    public int getBRWins() {
+        return BRWins;
+    }
+
+    public void setBRWins(int BRWins) {
+        this.BRWins = BRWins;
+    }
+
+    public int getBRGamesPlayed() {
+        return BRGamesPlayed;
+    }
+
+    public void setBRGamesPlayed(int BRGamesPlayed) {
+        this.BRGamesPlayed = BRGamesPlayed;
+    }
+
+    public int getTournamentWins() {
+        return tournamentWins;
+    }
+
+    public void setTournamentWins(int tournamentWins) {
+        this.tournamentWins = tournamentWins;
+    }
+
+    public int getTournamentsPlayed() {
+        return tournamentsPlayed;
+    }
+
+    public void setTournamentsPlayed(int tournamentsPlayed) {
+        this.tournamentsPlayed = tournamentsPlayed;
+    }
+
+    public PlayerStats(String username, int totalWins, int totalGamesPlayed, int OVOWins, int OVOGamesPlayed,
+                       int BRWins, int BRGamesPlayed, int tournamentWins, int tournamentsPlayed) {
+        this.username = username;
+        this.totalWins = totalWins;
+        this.totalGamesPlayed = totalGamesPlayed;
+        this.OVOWins = OVOWins;
+        this.OVOGamesPlayed = OVOGamesPlayed;
+        this.BRWins = BRWins;
+        this.BRGamesPlayed = BRGamesPlayed;
+        this.tournamentWins = tournamentWins;
+        this.tournamentsPlayed = tournamentsPlayed;
+    }
+
+    public PlayerStats(String username) {
+        this.username = username;
+        this.totalWins = 0;
+        this.totalGamesPlayed = 0;
+        this.OVOWins = 0;
+        this.OVOGamesPlayed = 0;
+        this.BRWins = 0;
+        this.BRGamesPlayed = 0;
+        this.tournamentWins = 0;
+        this.tournamentsPlayed = 0;
+    }
+
 }

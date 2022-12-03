@@ -4,7 +4,7 @@ import java.util.Formatter;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 
-class Client implements Runnable{
+class Client implements Runnable {
     private final String ip;
     private final int port;
     private Scanner input; // input from server
@@ -12,13 +12,13 @@ class Client implements Runnable{
     private Socket serverSocket;
     private Controller controller;
 
-    public void setController(Controller controller) {this.controller = controller;}
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
 
-    public enum sendMessage {
-        LOGIN_FAILED,   // username/password incorrect
-        LOGIN_SUCCESS,  // valid login
-        CLIENT_DATA,    // [1] -> totalScore
-        GUESS_RESULT,   // [1] -> score received from guess
+    public void sendMessage(String message) { // MUST END WITH NEWLINE
+        output.format(message);
+        output.flush();
     }
 
     public Client(String ip, int port) {
@@ -56,17 +56,50 @@ class Client implements Runnable{
         output = new Formatter(serverSocket.getOutputStream());
     }
 
-    public void sendMessage(String message){ // MUST END WITH NEWLINE
-        output.format(message);
-        output.flush();
+    @Override
+    public void run() {
+        System.out.println("AWAITING SERVER DATA");
+        while (true) {
+            String receivedData = input.nextLine();
+            System.out.printf("Message Received: %s\n", receivedData);
+            String[] clientMessage = receivedData.split(",");
+            switch (clientMessage[0]) {
+                case "LOGIN_VALID": {
+                    controller.loginValid();
+                    break;
+                }
+                case "LOGIN_INVALID": {
+                    controller.loginInvalid();
+                    break;
+                }
+                case "CLIENT_DATA": {
+                    controller.updatePlayerStats(clientMessage[1], clientMessage[2], clientMessage[3], clientMessage[4],
+                            clientMessage[5], clientMessage[6], clientMessage[7], clientMessage[8], clientMessage[9]);
+                    break;
+                }
+                case "SIGNUP_VALID": {
+                    controller.signUpValid();
+                    break;
+                }
+                case "SIGNUP_INVALID": {
+                    controller.signUpInvalid();
+                    break;
+                }
+                case "GAME_START": {
+                    controller.loginValid();
+                    break;
+                }
+            }
+        }
     }
 
-    @Override
-    public void run(){
-        System.out.println("AWAITING SERVER DATA");
-        while(true){
-            // TODO: handle server messages to update gui here
-
-        }
+    public enum sendMessage {
+        LOGIN_VALID,   // username/password incorrect
+        LOGIN_INVALID,  //
+        CLIENT_DATA,    // [1:9] -> username, total wins, T GP, OVO wins, OVO GP, BR wins, BR GP, T wins, T GP
+        SIGNUP_VALID,   //
+        SIGNUP_INVALID, //
+        GAME_START, //
+        GUESS_RESULT,   // [1] -> score received from guess
     }
 }

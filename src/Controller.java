@@ -2,6 +2,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.net.URL;
 
@@ -21,11 +22,13 @@ public class Controller {
 
     private static PlayerStats player;
 
-    public void setIp(String ip){
-        Controller.ip = ip;}
+    public void setIp(String ip) {
+        Controller.ip = ip;
+    }
 
     public void setPort(int port) {
-        Controller.port = port;}
+        Controller.port = port;
+    }
 
     public String getIp() {
         return ip;
@@ -35,25 +38,34 @@ public class Controller {
         return port;
     }
 
-    public Client getClient() {return client;}
+    public Client getClient() {
+        return client;
+    }
 
-    public static void setClient(Client client) {Controller.client = client;}
+    public static void setClient(Client client) {
+        Controller.client = client;
+    }
 
     public Scene getScene() {
         return scene;
     }
+
     public void setScene(Scene scene) {
         this.scene = scene;
     }
+
     public Stage getStage() {
         return stage;
     }
+
     public void setStage(Stage stage) {
         this.stage = stage;
     }
+
     public Parent getRoot() {
         return root;
     }
+
     public void setRoot(Parent root) {
         this.root = root;
     }
@@ -61,16 +73,6 @@ public class Controller {
     private static Scene scene;
     private static Stage stage;
     private static Parent root;
-
-    public static String getUsername() {
-        return username;
-    }
-
-    public static void setUsername(String username) {
-        Controller.username = username;
-    }
-
-    private static String username;
 
     public void switchScene(String fxmlUrl, String sceneTitle) throws IOException {
 
@@ -92,5 +94,35 @@ public class Controller {
         temp2.close();
     }
 
-    public void loginFailed(){}
+    public void loginInvalid() {
+    }
+
+    public void loginValid() {
+    }
+
+    public void signUpValid() {
+    }
+
+    public void signUpInvalid() {
+    }
+
+    public void updatePlayerStats(String username, String totalWins, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,
+                                  String BRWins, String BRGamesPlayed, String tournamentWins, String tournamentsPlayed) {
+        updatePlayerStatsHelper(username, totalWins, totalGamesPlayed, OVOWins, OVOGamesPlayed, BRWins, BRGamesPlayed, tournamentWins, tournamentsPlayed);
+    }
+
+    public void updatePlayerStatsHelper(String username, String totalWins, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,
+                                        String BRWins, String BRGamesPlayed, String tournamentWins, String tournamentsPlayed) {
+        player.setUsername(username);
+        player.setTotalWins(Integer.parseInt(totalWins));
+        player.setTotalGamesPlayed(Integer.parseInt(totalGamesPlayed));
+        player.setOVOWins(Integer.parseInt(OVOWins));
+        player.setOVOGamesPlayed(Integer.parseInt(OVOGamesPlayed));
+        player.setBRWins(Integer.parseInt(BRWins));
+        player.setBRGamesPlayed(Integer.parseInt(BRGamesPlayed));
+        player.setTournamentWins(Integer.parseInt(tournamentWins));
+        player.setTournamentsPlayed(Integer.parseInt(tournamentsPlayed));
+    }
+
+
 }
