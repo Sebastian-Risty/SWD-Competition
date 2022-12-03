@@ -234,6 +234,7 @@ class Server {
                             break;
                         case "REGISTER_REQUEST":
                             if(Accounts.addAccount(clientMessage[1],clientMessage[2])){
+                                System.out.println("SUCCESSFULLY REGISTERED");
                                 this.username = clientMessage[1];
                                 output.format(String.format("%s\n", Client.sendMessage.SIGNUP_VALID));
                                 output.flush();
@@ -242,6 +243,7 @@ class Server {
                                 clients.add(this);
                                 System.out.printf("Client %s successfully registered and logged in!\n", this.username);
                             } else{
+                                System.out.println("FAILED TO REGISTERED");
                                 output.format(String.format("%s\n", Client.sendMessage.SIGNUP_INVALID));
                                 output.flush();
                             }
