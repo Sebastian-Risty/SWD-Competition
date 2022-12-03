@@ -1,10 +1,8 @@
-import java.io.*;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Formatter;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -12,9 +10,13 @@ import java.util.concurrent.Executors;
 class Server {
     private static ServerSocket server;
 
-    private static final ArrayList<ConnectedClient> clients = new ArrayList<>();
-    private static final ArrayList<Game> lobbies = new ArrayList<>();
+    private static final List clients = Collections.synchronizedList(new ArrayList<ConnectedClient>());
+    private static final List lobbies = Collections.synchronizedList(new ArrayList<Game>());
 
+//    private static final ArrayList<ConnectedClient> clients = new ArrayList<>();
+//    private static final ArrayList<Game> lobbies = new ArrayList<>();
+
+    private static ExecutorService executorService = Executors.newCachedThreadPool();
 
     public enum sendMessage {
         LOGIN_REQUEST,      // [1] -> username, [2] -> password
@@ -24,19 +26,17 @@ class Server {
         REGISTER_REQUEST    // [1] -> username, [2] -> password
     }
 
-    public enum gameMode{
+    public enum gameMode {
         ONE_VS_ONE,
         BATTLE_ROYAL
     }
 
     public static void main(String[] args) {
-
         server = null;
         try {
             server = new ServerSocket(23704);
             server.setReuseAddress(true);
 
-            ExecutorService executorService = Executors.newCachedThreadPool();
             executorService.execute(new AcceptPlayers());
             executorService.execute(new LobbyHandler());
 
@@ -66,69 +66,84 @@ class Server {
             System.out.println("LH START");
             while (!server.isClosed()) {
                 // loop through client list
-                for(ConnectedClient client : clients){
-
-                    // HANDLE LOBBY REQUESTS
-                    if(client.requestedGame != null){
-                        switch(client.requestedGame){
-                            case "ONE_VS_ONE":{
-                                for(Game game : lobbies){
-                                    if(game instanceof OneVsOne && !game.isInProgress()){ // client joins open game if possible
-                                        // add client
-                                        client.currentLobby = game;
-                                        game.clientConnected();
-                                        break;
+                synchronized (clients) {
+                    Iterator clientIterator = clients.iterator();
+                    while (clientIterator.hasNext()) {
+                        // HANDLE LOBBY REQUESTS
+                        ConnectedClient client = (ConnectedClient) clientIterator.next();
+                        if (client.requestedGame != null) {
+                            switch (client.requestedGame) {
+                                case "ONE_VS_ONE": {
+                                    synchronized (lobbies) {
+                                        Iterator lobbyIterator = lobbies.iterator();
+                                        while (lobbyIterator.hasNext()) {
+                                            Game game = (Game) lobbyIterator.next();
+                                            if (game.getGamemode().equals("OneVsOne") && !game.isInProgress()) { // client joins open game if possible
+                                                // add client
+                                                System.out.println("ADDED CLIENT TO GAME");
+                                                client.currentLobby = game;
+                                                game.clientConnected();
+                                                break;
+                                            }
+                                        }
                                     }
-                                }
-                                if(client.currentLobby == null){ // create lobby if none were found
-                                    Game temp = new OneVsOne();
-                                    lobbies.add(temp);
-                                    client.currentLobby = temp;
-                                    temp.clientConnected();
-                                }
-                                System.out.println("Created New ONE_VS_ONE Lobby");
-                                break;
-                            }
-                            case "BATTLE_ROYAL":{
-                                for(Game game : lobbies){
-                                    if(game instanceof BattleRoyale && !game.isInProgress()){ // client joins open game if possible
-                                        // add client
-                                        client.currentLobby = game;
-                                        game.clientConnected();
-                                        break;
+                                    if (client.currentLobby == null) { // create lobby if none were found
+                                        System.out.println("Created New ONE_VS_ONE Lobby");
+                                        Game temp = new OneVsOne();
+                                        executorService.execute(temp);
+                                        lobbies.add(temp);
+                                        client.currentLobby = temp;
+                                        temp.clientConnected();
                                     }
+                                    break;
                                 }
-                                if(client.currentLobby == null){ // create lobby if none were found
-                                    Game temp = new BattleRoyale();
-                                    lobbies.add(temp);
-                                    client.currentLobby = temp;
-                                    temp.clientConnected();
+                                case "BATTLE_ROYAL": {
+                                    synchronized (lobbies) {
+                                        Iterator lobbyIterator = lobbies.iterator();
+                                        while (lobbyIterator.hasNext()) {
+                                            Game game = (Game) lobbyIterator.next();
+                                            if (game.getGamemode().equals("BattleRoyale") && !game.isInProgress()) { // client joins open game if possible
+                                                // add client
+                                                System.out.println("ADDED CLIENT TO GAME");
+                                                client.currentLobby = game;
+                                                game.clientConnected();
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if (client.currentLobby == null) { // create lobby if none were found
+                                        Game temp = new BattleRoyale();
+                                        executorService.execute(temp);
+                                        lobbies.add(temp);
+                                        client.currentLobby = temp;
+                                        temp.clientConnected();
+                                    }
+                                    System.out.println("Created New BATTLE_ROYAL Lobby");
+                                    break;
                                 }
-                                System.out.println("Created New BATTLE_ROYAL Lobby");
-                                break;
                             }
+                            client.requestedGame = null; // set to null once client finds lobby
                         }
-                        client.requestedGame = null; // set to null once client finds lobby
                     }
                 }
             }
         }
     }
 
-    private static class FinishedMatchHandler implements Runnable{
-        @Override
-        public void run(){
-            System.out.println("FMH START");
-            while (!server.isClosed()){
-                for(ConnectedClient client : clients){
-                    if(client.currentLobby != null){
-                        // check if match is finished via flag
-                        // update clients data (totalScore+=currentScore)
-                    }
-                }
-            }
-        }
-    }
+//    private static class FinishedMatchHandler implements Runnable{
+//        @Override
+//        public void run(){
+//            System.out.println("FMH START");
+//            while (!server.isClosed()){
+//                for(ConnectedClient client : clients){
+//                    if(client.currentLobby != null){
+//                        // check if match is finished via flag
+//                        // update clients data (totalScore+=currentScore)
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     private static class ConnectedClient implements Runnable {
         private final Socket clientSocket;

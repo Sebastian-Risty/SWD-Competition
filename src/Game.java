@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public abstract class Game implements Runnable { //TODO: make class abstract and children runnable maybe?
-
+    private String gamemode;
     private ArrayList<Character> letters = new ArrayList<>();
     private ArrayList<String> validWords = new ArrayList<>();// TODO: gen score value for each word, read rules from some other class
     private ArrayList<String> allWords = new ArrayList<>();
@@ -13,6 +13,14 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
     private boolean progressFlag = false;
     private boolean endFlag = false;
     private int numConnectedClients = 0;
+
+    public String getGamemode() {
+        return gamemode;
+    }
+
+    public void setGamemode(String gamemode) {
+        this.gamemode = gamemode;
+    }
 
     public ArrayList<Character> getLetters() {
         return letters;
@@ -52,9 +60,11 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
 
     @Override
     public void run() {
+        System.out.println("INIT GAME START");
         initializeGame();
-        startGame();
+        System.out.println("INIT GAME DONE");
         pregameLobby();
+        startGame();
     }
 
     private void initializeGame() {
