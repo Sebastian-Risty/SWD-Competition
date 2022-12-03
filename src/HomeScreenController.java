@@ -124,10 +124,20 @@ public class HomeScreenController extends Controller {
 
     public void initialize() {
         getClient().setController(this);
+        usernameLabel.setText(getPlayer().getUsername() + "'s Player Stats");
         statsPane.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         tournamentMode.setBackground(new Background(new BackgroundFill(Color.LIGHTYELLOW, null, null)));
+        totalWins.setText(getPlayer().getTotalWins());
+        gamesPlayed.setText(getPlayer().getTotalGamesPlayed());
+        h2hWins.setText(getPlayer().getOVOWins());
+        h2hGames.setText(getPlayer().getOVOGamesPlayed());
+        brWins.setText(getPlayer().getBRWins());
+        brPlayed.setText(getPlayer().getBRGamesPlayed());
+        tourneyWins.setText(getPlayer().getTournamentWins());
+        tourneysPlayed.setText(getPlayer().getTournamentsPlayed());
+
     }
 
     @Override

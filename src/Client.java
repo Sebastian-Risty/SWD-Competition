@@ -66,6 +66,7 @@ class Client implements Runnable {
             switch (clientMessage[0]) {
                 case "LOGIN_VALID": {
                     controller.loginValid();
+                    //sendMessage(String.format("%s,%s\n", Server.sen, Server.gameMode.BATTLE_ROYAL))
                     break;
                 }
                 case "LOGIN_INVALID": {
