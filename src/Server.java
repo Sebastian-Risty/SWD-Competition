@@ -10,8 +10,9 @@ import java.util.concurrent.Executors;
 class Server {
     private static ServerSocket server;
 
-    private static final List clients = Collections.synchronizedList(new ArrayList<ConnectedClient>());
-    private static final List lobbies = Collections.synchronizedList(new ArrayList<Game>());
+    private static final List<ConnectedClient> clients = Collections.synchronizedList(new ArrayList<>());
+    //    private static final List lobbies = Collections.synchronizedList(new ArrayList<Game>());
+    private static final Map<Game, List<ConnectedClient>> lobbies = Collections.synchronizedMap(new HashMap<>());
 
 //    private static final ArrayList<ConnectedClient> clients = new ArrayList<>();
 //    private static final ArrayList<Game> lobbies = new ArrayList<>();
@@ -70,17 +71,16 @@ class Server {
             while (!server.isClosed()) {
                 // loop through client list
                 synchronized (clients) {
-                    for (Object o : clients) {
+                    for (ConnectedClient client : clients) {
                         // HANDLE LOBBY REQUESTS
-                        ConnectedClient client = (ConnectedClient) o;
                         if (client.requestedGame != null) {
                             switch (client.requestedGame) {
                                 case "ONE_VS_ONE": {
                                     synchronized (lobbies) {
-                                        for (Object lobby : lobbies) {
-                                            Game game = (Game) lobby;
+                                        for (Game game : lobbies.keySet()) {
                                             if (game.getGamemode().equals("OneVsOne") && !game.isInProgress()) { // client joins open game if possible
                                                 // add client
+                                                lobbies.get(game).add(client);
                                                 System.out.println("ADDED CLIENT TO GAME");
                                                 client.currentLobby = game;
                                                 game.clientConnected();
@@ -92,7 +92,9 @@ class Server {
                                         System.out.println("Created New ONE_VS_ONE Lobby");
                                         Game temp = new OneVsOne();
                                         executorService.execute(temp);
-                                        lobbies.add(temp);
+                                        lobbies.put(temp, Collections.synchronizedList(new ArrayList<ConnectedClient>() {{
+                                            add(client);
+                                        }}));
                                         client.currentLobby = temp;
                                         temp.clientConnected();
                                     }
@@ -100,10 +102,10 @@ class Server {
                                 }
                                 case "BATTLE_ROYAL": {
                                     synchronized (lobbies) {
-                                        for (Object lobby : lobbies) {
-                                            Game game = (Game) lobby;
+                                        for (Game game : lobbies.keySet()) {
                                             if (game.getGamemode().equals("BattleRoyale") && !game.isInProgress()) { // client joins open game if possible
                                                 // add client
+                                                lobbies.get(game).add(client);
                                                 System.out.println("ADDED CLIENT TO GAME");
                                                 client.currentLobby = game;
                                                 game.clientConnected();
@@ -114,7 +116,9 @@ class Server {
                                     if (client.currentLobby == null) { // create lobby if none were found
                                         Game temp = new BattleRoyale();
                                         executorService.execute(temp);
-                                        lobbies.add(temp);
+                                        lobbies.put(temp, Collections.synchronizedList(new ArrayList<ConnectedClient>() {{
+                                            add(client);
+                                        }}));
                                         client.currentLobby = temp;
                                         temp.clientConnected();
                                     }
