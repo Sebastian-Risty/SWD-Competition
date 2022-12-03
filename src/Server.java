@@ -3,7 +3,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Formatter;
-import java.util.HashMap;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,19 +14,14 @@ class Server {
     private static final ArrayList<ConnectedClient> clients = new ArrayList<>();
     private static final ArrayList<Game> lobbies = new ArrayList<>();
 
-    private enum messages{
-        LOGIN_FAILED,
-        LOGIN_SUCCESS,
-        CLIENT_DATA,
-        LOGIN_REQUEST,
-        MODE_SELECTION,
-        GUESS,
-        GUESS_RESULT,
-        REQUEST_STATS,
-        STATS
+    public enum sendMessage {
+        LOGIN_REQUEST,  // [1] -> username, [2] -> password
+        MODE_SELECTION, // [1] -> name of game from gameMode enum
+        GUESS,          // [1] -> clients word guess
+        LEADERBOARD     // requests leaderboard update
     }
 
-    private enum gameMode{
+    public enum gameMode{
         ONE_VS_ONE,
         BATTLE_ROYAL
     }
@@ -137,14 +131,10 @@ class Server {
                             if(currentLobby != null){
                                 int tempScore = currentLobby.guess(clientMessage[1]);
                                 currentScore += tempScore;
-                                output.format(String.format("%s,%s\n", messages.GUESS_RESULT, this.currentScore));
+                                output.format(String.format("%s,%s\n", Client.sendMessage.GUESS_RESULT, this.currentScore));
                                 output.flush();
                             }
                             break;
-                        }
-                        case "SHOW_STATS":{
-                            output.format(String.format("%s,%s\n", messages.STATS, this.totalScore)); // TODO: add other stats to display here
-                            output.flush();
                         }
                     }
                 }
@@ -172,19 +162,21 @@ class Server {
             System.out.printf("Message Received: %s\n", receivedData);
 
             String[] clientMessage = receivedData.split(",");
-           if(clientMessage[0].equals(messages.LOGIN_REQUEST.toString())){
+           if(clientMessage[0].equals(sendMessage.LOGIN_REQUEST.toString())){
                // [1] -> userName, [2] -> password
                try{
-                   Accounts.addAccount(clientMessage[1],clientMessage[2]);
-                   Accounts.validLogin(clientMessage[1],clientMessage[2]);
+                   //Accounts.addAccount(clientMessage[1],clientMessage[2]);
+                   //Accounts.validLogin(clientMessage[1],clientMessage[2]);
+                   System.out.printf("RECEIVED USER: %s\n", clientMessage[1]);
                    // call db with data
                    // TODO: check db for user+pass
+
 
                    // if userName + pass is found update the data of client
                    //TODO: create method to take db data and update all client info
 
                    // output login was success
-                   output.format(String.format("%s\n", messages.LOGIN_SUCCESS));
+                   output.format(String.format("%s\n", Client.sendMessage.LOGIN_SUCCESS));
                    output.flush();
 
                    // add valid client to list of connected clients to play match
@@ -192,7 +184,7 @@ class Server {
                    System.out.printf("Added Client %s to client list\n", this.username);
 
                } catch(Exception e){
-                   output.format(String.format("%s\n", messages.LOGIN_FAILED));
+                   output.format(String.format("%s\n", Client.sendMessage.LOGIN_FAILED));
                    output.flush();
                }
            } // TODO: may need to loop here until client successfully logs in
