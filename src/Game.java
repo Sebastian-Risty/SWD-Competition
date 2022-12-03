@@ -16,14 +16,35 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
         return letters;
     }
 
-    public boolean isInProgress(){return inProgress;}
-    public void clientConnected(){connectedClients++;}
-    public void clientDisconnected(){connectedClients--;}
+    public int getConnectedClients() {
+        return connectedClients;
+    }
+
+    public void changeProgress() {
+        if (inProgress) {
+            inProgress = false;
+        } else {
+            inProgress = true;
+        }
+    }
+
+    public boolean isInProgress() {
+        return inProgress;
+    }
+
+    public void clientConnected() {
+        connectedClients++;
+    }
+
+    public void clientDisconnected() {
+        connectedClients--;
+    }
 
     @Override
     public void run() {
         initializeGame();
-        //playGame();
+        pregameLobby();
+        startGame();
     }
 
     private void initializeGame() {
@@ -89,8 +110,6 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
         return freq;
     }
 
-    public abstract void closeLobby(); // TODO: depending on inherited class, flip flag once x clients connect, timer optional
-
     // reference to lobby stored in ConnectedClient object, no longer needed
 
     public int guess(String guess) {
@@ -99,6 +118,12 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
         }
         return 0;
     }
+
+    public abstract void pregameLobby();
+
+    public abstract void startGame();
+
+    public abstract void closeLobby(); // TODO: depending on inherited class, flip flag once x clients connect, timer optional
 
 
     //TODO: rounds can be specified as special rule set in subclasses
