@@ -24,7 +24,7 @@ public class LoginFXMLController extends Controller {
     public void initialize() {
 
         // create a client
-        setClient(new Client(getIp(), getPort()));
+        //setClient(new Client(getIp(), getPort()));
 
         verifyRippler = new JFXRippler(pane);
         verifyRippler.setRipplerFill(new Color(1,0, 0,0));
