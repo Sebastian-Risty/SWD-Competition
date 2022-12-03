@@ -4,6 +4,9 @@ public class Tournament implements Runnable {
     private long startTime;
     private boolean endFlag = false;
 
+    public boolean checkStatus() {
+        return endFlag;
+    }
 
     public Tournament(long startTime) {
         this.startTime = startTime;
