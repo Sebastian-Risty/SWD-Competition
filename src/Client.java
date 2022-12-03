@@ -16,24 +16,9 @@ class Client implements Runnable {
         this.controller = controller;
     }
 
-    @Override
-    public void run() {
-        System.out.println("AWAITING SERVER DATA");
-        while (true) {
-            String receivedData = input.nextLine();
-            System.out.printf("Message Received: %s\n", receivedData);
-            String[] clientMessage = receivedData.split(",");
-            switch (clientMessage[0]) {
-                case "LOGIN_FAILED": {
-                    // call login fail
-                    break;
-                }
-                case "LOGIN_SUCCESS": {
-
-                    break;
-                }
-            }
-        }
+    public void sendMessage(String message) { // MUST END WITH NEWLINE
+        output.format(message);
+        output.flush();
     }
 
     public Client(String ip, int port) {
@@ -71,9 +56,24 @@ class Client implements Runnable {
         output = new Formatter(serverSocket.getOutputStream());
     }
 
-    public void sendMessage(String message) { // MUST END WITH NEWLINE
-        output.format(message);
-        output.flush();
+    @Override
+    public void run() {
+        System.out.println("AWAITING SERVER DATA");
+        while (true) {
+            String receivedData = input.nextLine();
+            System.out.printf("Message Received: %s\n", receivedData);
+            String[] clientMessage = receivedData.split(",");
+            switch (clientMessage[0]) {
+                case "LOGIN_FAILED": {
+                    // call login fail
+                    break;
+                }
+                case "LOGIN_SUCCESS": {
+
+                    break;
+                }
+            }
+        }
     }
 
     public enum sendMessage {
