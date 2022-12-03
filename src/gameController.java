@@ -9,10 +9,8 @@ public class gameController extends Controller {
 
     @FXML
     private JFXTextArea wordPanel;
-
     @FXML
     private JFXTextArea guessWordField;
-
     @FXML
     private Label letters;
 
@@ -36,7 +34,6 @@ public class gameController extends Controller {
 
     @Override
     public void endGame() {
-
     }
 
 }
