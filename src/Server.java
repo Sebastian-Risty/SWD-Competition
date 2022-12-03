@@ -1,4 +1,4 @@
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLException;
@@ -24,7 +24,7 @@ class Server {
         REGISTER_REQUEST    // [1] -> username, [2] -> password
     }
 
-    public enum gameMode {
+    public enum gameMode{
         ONE_VS_ONE,
         BATTLE_ROYAL
     }
@@ -62,65 +62,66 @@ class Server {
 
     private static class LobbyHandler implements Runnable {
         @Override
-        public void run() {
+        public void run(){
             System.out.println("LH START");
             while (!server.isClosed()) {
                 // loop through client list
-                for (ConnectedClient client : clients) {
+                for(ConnectedClient client : clients){
 
                     // HANDLE LOBBY REQUESTS
-                    if (client.requestedGame != null) {
-                        switch (client.requestedGame) {
-                            case "ONE_VS_ONE": {
-                                for (Game game : lobbies) {
-                                    if (game instanceof OneVsOne && !game.isInProgress()) { // client joins open game if possible
+                    if(client.requestedGame != null){
+                        switch(client.requestedGame){
+                            case "ONE_VS_ONE":{
+                                for(Game game : lobbies){
+                                    if(game instanceof OneVsOne && !game.isInProgress()){ // client joins open game if possible
                                         // add client
                                         client.currentLobby = game;
                                         game.clientConnected();
                                         break;
                                     }
                                 }
-                                if (client.currentLobby == null) { // create lobby if none were found
+                                if(client.currentLobby == null){ // create lobby if none were found
                                     Game temp = new OneVsOne();
                                     lobbies.add(temp);
                                     client.currentLobby = temp;
                                     temp.clientConnected();
                                 }
+                                System.out.println("Created New ONE_VS_ONE Lobby");
                                 break;
                             }
-                            case "BATTLE_ROYAL": {
-                                for (Game game : lobbies) {
-                                    if (game instanceof BattleRoyale && !game.isInProgress()) { // client joins open game if possible
+                            case "BATTLE_ROYAL":{
+                                for(Game game : lobbies){
+                                    if(game instanceof BattleRoyale && !game.isInProgress()){ // client joins open game if possible
                                         // add client
                                         client.currentLobby = game;
                                         game.clientConnected();
                                         break;
                                     }
                                 }
-                                if (client.currentLobby == null) { // create lobby if none were found
+                                if(client.currentLobby == null){ // create lobby if none were found
                                     Game temp = new BattleRoyale();
                                     lobbies.add(temp);
                                     client.currentLobby = temp;
                                     temp.clientConnected();
                                 }
+                                System.out.println("Created New BATTLE_ROYAL Lobby");
                                 break;
                             }
                         }
-                        System.out.println("Created New Lobby");
+                        client.requestedGame = null; // set to null once client finds lobby
                     }
                 }
             }
-
         }
     }
 
-    private static class FinishedMatchHandler implements Runnable {
+    private static class FinishedMatchHandler implements Runnable{
         @Override
-        public void run() {
+        public void run(){
             System.out.println("FMH START");
-            while (!server.isClosed()) {
-                for (ConnectedClient client : clients) {
-                    if (client.currentLobby != null) {
+            while (!server.isClosed()){
+                for(ConnectedClient client : clients){
+                    if(client.currentLobby != null){
                         // check if match is finished via flag
                         // update clients data (totalScore+=currentScore)
                     }
@@ -145,40 +146,40 @@ class Server {
         private int tourneyGamesPlayed = 0;
 
 
+
         private Formatter output;
         private Scanner input;
+        private String getStatString(){
+            return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s", username, totalWins, totalGamesPlayed, OVOWins, OVOGamesPlayed, BRWins, BRGamesPlayed, tourneyWins, tourneyGamesPlayed);
+        }
 
         public ConnectedClient(Socket socket) {
             this.clientSocket = socket;
 
-            try {
+            try{
                 input = new Scanner(clientSocket.getInputStream());
                 output = new Formatter(clientSocket.getOutputStream());
-            } catch (IOException e) {
+            } catch (IOException e){
                 e.printStackTrace();
             }
-        }
-
-        private String getStatString() {
-            return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s", username, totalWins, totalGamesPlayed, OVOWins, OVOGamesPlayed, BRWins, BRGamesPlayed, tourneyWins, tourneyGamesPlayed);
         }
 
         @Override
         public void run() {
             try {
                 init(); // verify login and load client data from db
-                while (!server.isClosed()) { // handle client messages
+                while(!server.isClosed()){ // handle client messages
                     System.out.println("AWAITING CLIENT COMMAND");
                     String receivedData = input.nextLine();
                     System.out.printf("Message Received: %s\n", receivedData);
                     String[] clientMessage = receivedData.split(",");
-                    switch (clientMessage[0]) {
-                        case "MODE_SELECTION": {
+                    switch (clientMessage[0]){
+                        case "MODE_SELECTION":{
                             requestedGame = clientMessage[1];
                             break;
                         }
-                        case "GUESS": {
-                            if (currentLobby != null && currentLobby.isInProgress()) {
+                        case "GUESS":{
+                            if(currentLobby != null && currentLobby.isInProgress()){
                                 int tempScore = currentLobby.guess(clientMessage[1]);
                                 currentScore += tempScore;
                                 output.format(String.format("%s,%s\n", Client.sendMessage.GUESS_RESULT, this.currentScore));
@@ -209,14 +210,14 @@ class Server {
         private void init() throws IOException, SQLException {
             System.out.println("START INIT");
             Accounts.initialize("login");
-            while (this.username == null) {
-                if (input.hasNext()) {
+            while(this.username == null){
+                if(input.hasNext()){
                     String receivedData = input.nextLine();
                     System.out.printf("Message Received: %s\n", receivedData);
                     String[] clientMessage = receivedData.split(",");
-                    switch (clientMessage[0]) {
+                    switch(clientMessage[0]){
                         case "LOGIN_REQUEST":
-                            if (Accounts.validLogin(clientMessage[1], clientMessage[2])) {
+                            if(Accounts.validLogin(clientMessage[1],clientMessage[2])){
                                 System.out.println("LOGIN GOOD");
                                 Accounts.setTable("accounts");
                                 acceptAccountData(Accounts.getInfo(clientMessage[1]));
@@ -226,14 +227,15 @@ class Server {
                                 output.flush();
                                 clients.add(this);
                                 System.out.printf("Added Client %s to client list\n", this.username);
-                            } else {
+                            } else{
                                 System.out.println("LOGIN FAILED");
                                 output.format(String.format("%s\n", Client.sendMessage.LOGIN_INVALID));
                                 output.flush();
                             }
                             break;
                         case "REGISTER_REQUEST":
-                            if (Accounts.addAccount(clientMessage[1], clientMessage[2])) {
+                            if(Accounts.addAccount(clientMessage[1],clientMessage[2])){
+                                System.out.println("SUCCESSFULLY REGISTERED");
                                 this.username = clientMessage[1];
                                 output.format(String.format("%s\n", Client.sendMessage.SIGNUP_VALID));
                                 output.flush();
@@ -241,7 +243,8 @@ class Server {
                                 output.flush();
                                 clients.add(this);
                                 System.out.printf("Client %s successfully registered and logged in!\n", this.username);
-                            } else {
+                            } else{
+                                System.out.println("FAILED TO REGISTERED");
                                 output.format(String.format("%s\n", Client.sendMessage.SIGNUP_INVALID));
                                 output.flush();
                             }
@@ -250,8 +253,7 @@ class Server {
                 }
             }
         }
-
-        private void acceptAccountData(String[] data) {
+        private void acceptAccountData(String[] data){
             username = data[0];
             totalWins = Integer.parseInt(data[1]);
             totalGamesPlayed = Integer.parseInt(data[2]);
@@ -262,7 +264,6 @@ class Server {
             tourneyWins = Integer.parseInt(data[7]);
             tourneyGamesPlayed = Integer.parseInt(data[8]);
         }
-
         // [1] -> userName, total wins, T GamePlayed, OVO wins, OVO GP, BR wins, BR GP, T wins, T GP
         private void sendAccountData() throws SQLException {
             Accounts.setTable("accounts");
