@@ -110,6 +110,10 @@ public class Controller {
 
     }
 
+    public void endGame() {
+
+    }
+
     public void getLetters(String letters) {
 
     }

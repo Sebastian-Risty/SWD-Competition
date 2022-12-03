@@ -34,4 +34,9 @@ public class gameController extends Controller {
         letters.setText(lettersIn);
     }
 
+    @Override
+    public void endGame() {
+
+    }
+
 }
