@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -247,7 +248,7 @@ class Server {
 
         private void init() throws IOException, SQLException {
             System.out.println("START INIT");
-            Accounts.initialize("login");
+            Database.initialize("login");
             while(this.username == null){
                 if(input.hasNext()){
                     String receivedData = input.nextLine();
@@ -255,10 +256,10 @@ class Server {
                     String[] clientMessage = receivedData.split(",");
                     switch(clientMessage[0]){
                         case "LOGIN_REQUEST":
-                            if(Accounts.validLogin(clientMessage[1],clientMessage[2])){
+                            if(Database.validLogin(clientMessage[1],clientMessage[2])){
                                 System.out.println("LOGIN GOOD");
-                                Accounts.setTable("accounts");
-                                acceptAccountData(Accounts.getInfo(clientMessage[1]));
+                                Database.setTable("accounts");
+                                acceptAccountData(Database.getInfo(clientMessage[1]));
                                 output.format(String.format("%s\n", Client.sendMessage.LOGIN_VALID));
                                 output.flush();
                                 clients.add(this);
@@ -270,7 +271,7 @@ class Server {
                             }
                             break;
                         case "REGISTER_REQUEST":
-                            if(Accounts.addAccount(clientMessage[1],clientMessage[2])){
+                            if(Database.addAccount(clientMessage[1],clientMessage[2])){
                                 System.out.println("SUCCESSFULLY REGISTERED");
                                 this.username = clientMessage[1];
                                 output.format(String.format("%s\n", Client.sendMessage.SIGNUP_VALID));
@@ -301,9 +302,9 @@ class Server {
             tourneyGamesPlayed = Integer.parseInt(data[8]);
         }
         // [1] -> userName, total wins, T GamePlayed, OVO wins, OVO GP, BR wins, BR GP, T wins, T GP
-        private void sendAccountData() throws SQLException {
-            Accounts.setTable("accounts");
-            Accounts.update(getStatString().split(","));
+        private void sendAccountData() throws SQLException, FileNotFoundException {
+            Database.setTable("accounts");
+            Database.update(getStatString().split(","));
         }
 
     }
