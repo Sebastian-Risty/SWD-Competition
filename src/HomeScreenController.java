@@ -215,11 +215,15 @@ public class HomeScreenController extends Controller {
 
     @Override
     public void gameStart() {
-        try {
-            switchScene("gameFXML.fxml", "Word Game");
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    switchScene("gameFXML.fxml", "Word Game");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }
