@@ -65,11 +65,11 @@ class Client implements Runnable {
             String[] clientMessage = receivedData.split(",");
             switch (clientMessage[0]) {
                 case "LOGIN_FAILED": {
-                    // call login fail
+                    controller.loginFailed();
                     break;
                 }
                 case "LOGIN_SUCCESS": {
-
+                    controller.loginValid(clientMessage[]);
                     break;
                 }
             }
@@ -78,7 +78,7 @@ class Client implements Runnable {
 
     public enum sendMessage {
         LOGIN_FAILED,   // username/password incorrect
-        LOGIN_SUCCESS,  // [1] -> username, total wins, T GP, OVO wins, OVO GP
+        LOGIN_SUCCESS,  // [1] -> total wins, T GP, OVO wins, OVO GP, BR wins, BR GP, T wins, T GP
         SIGN_UP,        // sign up clicked
 
         CLIENT_DATA,    // [1] -> totalScore
