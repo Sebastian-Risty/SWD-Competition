@@ -86,7 +86,7 @@ class Client implements Runnable {
                     break;
                 }
                 case "GAME_START": {
-                    controller.gameStart(clientMessage[1]);
+//                    controller.gameStart(clientMessage[1]);
                     break;
                 }
             }

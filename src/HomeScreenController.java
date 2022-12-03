@@ -133,8 +133,8 @@ public class HomeScreenController extends Controller{
     }
 
     @Override
-    public void updatePlayerStats(String username, int totalWinsIn, int totalGamesPlayed, int OVOWins, int OVOGamesPlayed,
-                                  int BRWins, int BRGamesPlayed, int tournamentWins, int tournamentsPlayed) {
+    public void updatePlayerStats(String username, String totalWinsIn, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,
+                                  String BRWins, String BRGamesPlayed, String tournamentWins, String tournamentsPlayed) {
         updatePlayerStatsHelper(username, totalWinsIn, totalGamesPlayed, OVOWins, OVOGamesPlayed, BRWins, BRGamesPlayed, tournamentWins, tournamentsPlayed);
         totalWins.setText(String.valueOf(totalWinsIn));
         gamesPlayed.setText(String.valueOf(totalGamesPlayed));

@@ -2,7 +2,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.graalvm.compiler.asm.sparc.SPARCAssembler;
 
 import java.io.IOException;
 import java.net.URL;
@@ -84,29 +83,34 @@ public class Controller {
         temp2.close();
     }
 
-    public void loginInvalid(){}
+    public void loginInvalid() {
+    }
 
-    public void loginValid(){}
+    public void loginValid() {
+    }
 
-    public void signUpValid(){}
+    public void signUpValid() {
+    }
 
-    public void signUpInvalid(){}
-    public void updatePlayerStats(String username, int totalWins, int totalGamesPlayed, int OVOWins, int OVOGamesPlayed,
-                                  int BRWins, int BRGamesPlayed, int tournamentWins, int tournamentsPlayed) {
+    public void signUpInvalid() {
+    }
+
+    public void updatePlayerStats(String username, String totalWins, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,
+                                  String BRWins, String BRGamesPlayed, String tournamentWins, String tournamentsPlayed) {
         updatePlayerStatsHelper(username, totalWins, totalGamesPlayed, OVOWins, OVOGamesPlayed, BRWins, BRGamesPlayed, tournamentWins, tournamentsPlayed);
     }
 
-    public void updatePlayerStatsHelper(String username, int totalWins, int totalGamesPlayed, int OVOWins, int OVOGamesPlayed,
-                                        int BRWins, int BRGamesPlayed, int tournamentWins, int tournamentsPlayed) {
+    public void updatePlayerStatsHelper(String username, String totalWins, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,
+                                        String BRWins, String BRGamesPlayed, String tournamentWins, String tournamentsPlayed) {
         player.setUsername(username);
-        player.setTotalWins(totalWins);
-        player.setTotalGamesPlayed(totalGamesPlayed);
-        player.setOVOWins(OVOWins);
-        player.setOVOGamesPlayed(OVOGamesPlayed);
-        player.setBRWins(BRWins);
-        player.setBRGamesPlayed(BRGamesPlayed);
-        player.setTournamentWins(tournamentWins);
-        player.setTournamentsPlayed(tournamentsPlayed);
+        player.setTotalWins(Integer.parseInt(totalWins));
+        player.setTotalGamesPlayed(Integer.parseInt(totalGamesPlayed));
+        player.setOVOWins(Integer.parseInt(OVOWins));
+        player.setOVOGamesPlayed(Integer.parseInt(OVOGamesPlayed));
+        player.setBRWins(Integer.parseInt(BRWins));
+        player.setBRGamesPlayed(Integer.parseInt(BRGamesPlayed));
+        player.setTournamentWins(Integer.parseInt(tournamentWins));
+        player.setTournamentsPlayed(Integer.parseInt(tournamentsPlayed));
     }
 
 
