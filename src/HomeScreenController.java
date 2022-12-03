@@ -137,14 +137,14 @@ public class HomeScreenController extends Controller {
             @Override
             public void run() {
                 updatePlayerStatsHelper(username, totalWinsIn, totalGamesPlayed, OVOWins, OVOGamesPlayed, BRWins, BRGamesPlayed, tournamentWins, tournamentsPlayed);
-                totalWins.setText(String.valueOf(totalWinsIn));
-                gamesPlayed.setText(String.valueOf(totalGamesPlayed));
-                h2hWins.setText(String.valueOf(OVOWins));
-                h2hGames.setText(String.valueOf(OVOGamesPlayed));
-                brWins.setText(String.valueOf(BRWins));
-                brPlayed.setText(String.valueOf(BRGamesPlayed));
-                tourneyWins.setText(String.valueOf(tournamentWins));
-                tourneysPlayed.setText(String.valueOf(tournamentsPlayed));
+                totalWins.setText(totalWinsIn);
+                gamesPlayed.setText(totalGamesPlayed);
+                h2hWins.setText(OVOWins);
+                h2hGames.setText(OVOGamesPlayed);
+                brWins.setText(BRWins);
+                brPlayed.setText(BRGamesPlayed);
+                tourneyWins.setText(tournamentWins);
+                tourneysPlayed.setText(tournamentsPlayed);
             }
         });
     }
