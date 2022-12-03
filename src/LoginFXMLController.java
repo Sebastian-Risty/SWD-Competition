@@ -1,7 +1,6 @@
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.JFXTextField;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
@@ -24,7 +23,7 @@ public class LoginFXMLController extends Controller {
     public void initialize() {
 
         // create a client
-        //setClient(new Client(getIp(), getPort()));
+        setClient(new Client(getIp(), getPort()));
 
         verifyRippler = new JFXRippler(pane);
         verifyRippler.setRipplerFill(new Color(1,0, 0,0));
@@ -44,11 +43,15 @@ public class LoginFXMLController extends Controller {
         getClient().sendMessage(String.format("%s,%s,%s\n",Server.sendMessage.LOGIN_REQUEST ,username, password));
 
         // getClient().receive whether valid or not
+        // receive player info
+
+        // Make a new player with the info from the client
+        setPlayer(new PlayerStats());
 
         // Set verified equal to what the server said
         boolean verified = true;
 
-        if(verified) {
+        if(verified && !username.equals("") && !password.equals("")) {
             setUsername(username);
             switchScene("homeScreenFXML.fxml", "Home Screen");
         }
