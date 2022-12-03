@@ -2,14 +2,13 @@ import org.junit.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestAccounts {
 
     private void init() throws SQLException {
 
-        Accounts.initialize();
+        Accounts.initialize("test");
         Accounts.clearAll();
         Accounts.addAccount("Sebastian", "password1");
         Accounts.addAccount("Cole", "password2");
@@ -18,23 +17,22 @@ public class TestAccounts {
     }
 
     @Test
-    public void testUpdateScore() throws SQLException { // also tests displayLeadBoard()
+    public void testUpdate() throws SQLException { // also tests displayLeadBoard() and validLogin()
         init();
-        Accounts.updateScore("Sam", 1000);
-        Accounts.updateScore("Cole", 500);
-        String expected;
-        expected = "Leaderboard:\n\n" +
-                "Username\tScore\t\n" +
-                "Sam\t1000\t\n" +
-                "Cole\t500\t\n" +
-                "Sebastian\t0\t\n";
-        assertEquals(expected, Accounts.displayLeaderBoard(10));
+        String[] data = new String[]{"Sam", "password3", "1000"};
+        Accounts.update(data);
+        String[] data2 = new String[]{"Cole", "password10", "500"};
+        Accounts.update(data2);
+
+        String[] expected = new String[]{"Sam", "1000", "Cole", "500", "Sebastian", "0"};
+        assertArrayEquals(expected, Accounts.getTopPlayers(10));
+        assertTrue(Accounts.validLogin("Cole", "password10"));
     }
 
     @Test
     public void testValidLogin() throws SQLException {
         init();
-        assertTrue(Accounts.validLogin("Sebastian","password1"));
+        assertTrue(Accounts.validLogin("Sebastian", "password1"));
     }
 
     @Test

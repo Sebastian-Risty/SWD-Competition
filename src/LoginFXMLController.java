@@ -41,7 +41,7 @@ public class LoginFXMLController extends Controller {
         String password = passwordField.getText();
 
         // getClient().send the login info
-        getClient().sendMessage(String.format("LOGIN_REQUEST,%s,%s\n", username, password));
+        getClient().sendMessage(String.format("%s,%s,%s\n",Server.sendMessage.LOGIN_REQUEST ,username, password));
 
         // getClient().receive whether valid or not
 
