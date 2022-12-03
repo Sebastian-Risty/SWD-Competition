@@ -28,39 +28,27 @@ public class Accounts {
     }
 
     private static boolean usernameTaken(String username) throws SQLException {
-        PreparedStatement ps = connection.prepareStatement("SELECT COUNT(1) FROM " + table + " WHERE username = ?;");
-        ps.setString(1, username);
-        //ps.addBatch();
-        return getCount(ps) == 1;
+        resultSet = statement.executeQuery("SELECT COUNT(1) FROM " + table + " WHERE username = '" + username + "';");
+        return inDB(resultSet);
     }
 
 
     // checks that the user's login is valid. If the function runs without throwing an SQLException, the login is valid
     // if not, either the username or password is wrong
     public static boolean validLogin(String username, String password) throws SQLException {
-        PreparedStatement ps = connection.prepareStatement("SELECT COUNT(1) FROM " + table + " WHERE username = ? AND password = ?;");
-
-        ps.setString(1, username);
-        ps.setString(2, password);
-        ps.addBatch();
-        int count = getCount(ps);
-        // System.out.println("validlogin count: " + count);
-        return count == 1;
+        resultSet = statement.executeQuery("SELECT COUNT(1) FROM " + table + " WHERE username = '" + username + "' AND password = '" + password + "';");
+        return inDB(resultSet);
     }
 
-
-    // returns 1 if the account referenced in ps is found, 0 if not
-    private static int getCount(PreparedStatement ps) throws SQLException {
-        resultSet = statement.executeQuery(ps.toString());
-        metaData = resultSet.getMetaData();
-
+    private static boolean inDB(ResultSet rs) throws SQLException {
+        ResultSetMetaData md = rs.getMetaData();
         int count = -1;
-        while (resultSet.next()) {
-            for (int i = 1; i <= metaData.getColumnCount(); i++) {
+        while (rs.next()) {
+            for (int i = 1; i <= md.getColumnCount(); i++) {
                 count = resultSet.getInt(i);
             }
         }
-        return count;
+        return count == 1;
     }
 
     // adds an account to the database give its username and password. Accounts are given a default score of 0
@@ -70,33 +58,16 @@ public class Accounts {
             // username in use
             return false;
         }
-        PreparedStatement ps2 = connection.prepareStatement("INSERT INTO " + table + " (username, password, score) VALUES (?, ?, 0);");
-        ps2.setString(1, usernameInp);
-        ps2.setString(2, passwordInp);
-        // ps2.addBatch();
-        statement.executeUpdate(ps2.toString());
+        statement.executeUpdate("INSERT INTO " + table + " (username, password, score) VALUES ('" + usernameInp + "', '" + passwordInp + "', 0);");
         updateData();
         return true;
-
-
     }
 
     // returns true if account was successfully deleted, false if not
     public static boolean deleteAccount(String username, String password) throws SQLException {
         // ensures the inputted username and password are valid, this may not be necessary depending on how we implement this function
         if (validLogin(username, password)) {
-
-
-            // TODO maybe i don't need prepared statements
-//            statement.executeUpdate("DELETE FROM " + table + " WHERE " + table + ".Username = '" + username + "' AND " + table + ".Password = '" + password + "'");
-
-
-
-            PreparedStatement ps = connection.prepareStatement("DELETE FROM " + table + " WHERE " + table + ".Username = ? AND " + table + ".Password = ?");
-            ps.setString(1, username);
-            ps.setString(2, password);
-//            ps.addBatch();
-            statement.executeUpdate(ps.toString());
+            statement.executeUpdate("DELETE FROM " + table + " WHERE " + table + ".Username = '" + username + "' AND " + table + ".Password = '" + password + "'");
             return true;
         }
         return false;
