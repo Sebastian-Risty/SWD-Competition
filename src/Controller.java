@@ -22,11 +22,13 @@ public class Controller {
 
     private static PlayerStats player;
 
-    public void setIp(String ip){
-        Controller.ip = ip;}
+    public void setIp(String ip) {
+        Controller.ip = ip;
+    }
 
     public void setPort(int port) {
-        Controller.port = port;}
+        Controller.port = port;
+    }
 
     public String getIp() {
         return ip;
@@ -36,25 +38,34 @@ public class Controller {
         return port;
     }
 
-    public Client getClient() {return client;}
+    public Client getClient() {
+        return client;
+    }
 
-    public static void setClient(Client client) {Controller.client = client;}
+    public static void setClient(Client client) {
+        Controller.client = client;
+    }
 
     public Scene getScene() {
         return scene;
     }
+
     public void setScene(Scene scene) {
         this.scene = scene;
     }
+
     public Stage getStage() {
         return stage;
     }
+
     public void setStage(Stage stage) {
         this.stage = stage;
     }
+
     public Parent getRoot() {
         return root;
     }
+
     public void setRoot(Parent root) {
         this.root = root;
     }
@@ -112,7 +123,6 @@ public class Controller {
         player.setTournamentWins(Integer.parseInt(tournamentWins));
         player.setTournamentsPlayed(Integer.parseInt(tournamentsPlayed));
     }
-
 
 
 }

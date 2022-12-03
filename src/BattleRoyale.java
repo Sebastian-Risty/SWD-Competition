@@ -1,4 +1,9 @@
 public class BattleRoyale extends Game {
+
+    public BattleRoyale() {
+        setGamemode("BattleRoyale");
+    }
+
     @Override
     public void pregameLobby() {
         while (!isInProgress()) {
