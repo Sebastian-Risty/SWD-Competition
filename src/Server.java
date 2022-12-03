@@ -134,14 +134,22 @@ class Server {
         private String username = null;
         private String requestedGame = null;
         private Game currentLobby = null;
-        private int totalScore = 0; // TODO: add to total score once lobby ends, probably done in lobby cleanup method or smthn
         private int currentScore = 0;
+        private int totalWins = 0;
+        private int totalGamesPlayed = 0;
+        private int OVOWins = 0;
+        private int OVOGamesPlayed = 0;
+        private int BRWins = 0;
+        private int BRGamesPlayed = 0;
+        private int tourneyWins = 0;
+        private int tourneyGamesPlayed = 0;
+
+
 
         private Formatter output;
         private Scanner input;
-
         private String getStatString(){
-            return String.format("%s,%s", username, totalScore);
+            return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s", username, totalWins, totalGamesPlayed, OVOWins, OVOGamesPlayed, BRWins, BRGamesPlayed, tourneyWins, tourneyGamesPlayed);
         }
 
         public ConnectedClient(Socket socket) {
@@ -244,8 +252,16 @@ class Server {
         }
         private void acceptAccountData(String[] data){
             username = data[0];
-            totalScore = Integer.parseInt(data[1]);
+            totalWins = Integer.parseInt(data[1]);
+            totalGamesPlayed = Integer.parseInt(data[2]);
+            OVOWins = Integer.parseInt(data[3]);
+            OVOGamesPlayed = Integer.parseInt(data[4]);
+            BRWins = Integer.parseInt(data[5]);
+            BRGamesPlayed = Integer.parseInt(data[6]);
+            tourneyWins = Integer.parseInt(data[7]);
+            tourneyGamesPlayed = Integer.parseInt(data[8]);
         }
+        // [1] -> userName, total wins, T GamePlayed, OVO wins, OVO GP, BR wins, BR GP, T wins, T GP
         private void sendAccountData() throws SQLException {
             Accounts.setTable("accounts");
             Accounts.update(getStatString().split(","));
