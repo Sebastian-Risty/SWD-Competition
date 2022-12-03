@@ -14,7 +14,7 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-image: url(images/BackGroundImage.jpg);" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="HomeScreenController">
    <children>
-      <Pane fx:id="statsPane" layoutY="109.0">
+      <Pane fx:id="statsPane" layoutY="109.0" prefHeight="224.0" prefWidth="294.0">
          <children>
             <GridPane layoutX="16.0" layoutY="4.0" prefHeight="220.0" prefWidth="329.0">
               <columnConstraints>
@@ -81,7 +81,7 @@
                      </font>
                   </Label>
                   <Label fx:id="totalWins" GridPane.columnIndex="1" />
-                  <Label fx:id="h2hwins" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label fx:id="h2hWins" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label fx:id="tourneyWins" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <Label fx:id="brWins" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <Label fx:id="gamesPlayed" GridPane.columnIndex="1" GridPane.rowIndex="4" />
@@ -195,7 +195,7 @@
       </GridPane>
       <Pane layoutX="14.0" layoutY="320.0" prefHeight="66.0" prefWidth="200.0">
          <children>
-            <JFXButton fx:id="tournamentMode" layoutY="17.0" onAction="#tournamentModeListener" text="Tournament Mode">
+            <JFXButton fx:id="tournamentMode" layoutX="-8.0" layoutY="33.0" onAction="#tournamentModeListener" text="Tournament Mode">
                <font>
                   <Font name="System Bold Italic" size="17.0" />
                </font>

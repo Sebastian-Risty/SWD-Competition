@@ -15,7 +15,7 @@ public class Final_ProjectGUImain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        URL fxmlFile = getClass().getResource("LoginFXMl.fxml");
+        URL fxmlFile = getClass().getResource("gameFXML.fxml");
 
         Controller controller = new Controller();
 

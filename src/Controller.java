@@ -108,20 +108,22 @@ public class Controller {
 
     public void updatePlayerStats(String username, String totalWins, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,
                                   String BRWins, String BRGamesPlayed, String tournamentWins, String tournamentsPlayed) {
+
+        System.out.println("Here bitch");
         updatePlayerStatsHelper(username, totalWins, totalGamesPlayed, OVOWins, OVOGamesPlayed, BRWins, BRGamesPlayed, tournamentWins, tournamentsPlayed);
     }
 
     public void updatePlayerStatsHelper(String username, String totalWins, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,
                                         String BRWins, String BRGamesPlayed, String tournamentWins, String tournamentsPlayed) {
         player.setUsername(username);
-        player.setTotalWins(Integer.parseInt(totalWins));
-        player.setTotalGamesPlayed(Integer.parseInt(totalGamesPlayed));
-        player.setOVOWins(Integer.parseInt(OVOWins));
-        player.setOVOGamesPlayed(Integer.parseInt(OVOGamesPlayed));
-        player.setBRWins(Integer.parseInt(BRWins));
-        player.setBRGamesPlayed(Integer.parseInt(BRGamesPlayed));
-        player.setTournamentWins(Integer.parseInt(tournamentWins));
-        player.setTournamentsPlayed(Integer.parseInt(tournamentsPlayed));
+        player.setTotalWins(totalWins);
+        player.setTotalGamesPlayed(totalGamesPlayed);
+        player.setOVOWins(OVOWins);
+        player.setOVOGamesPlayed(OVOGamesPlayed);
+        player.setBRWins(BRWins);
+        player.setBRGamesPlayed(BRGamesPlayed);
+        player.setTournamentWins(tournamentWins);
+        player.setTournamentsPlayed(tournamentsPlayed);
     }
 
 

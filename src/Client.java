@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
@@ -73,6 +74,7 @@ class Client implements Runnable {
                     break;
                 }
                 case "CLIENT_DATA": {
+                    System.out.println(Arrays.toString(clientMessage));
                     controller.updatePlayerStats(clientMessage[1], clientMessage[2], clientMessage[3], clientMessage[4],
                             clientMessage[5], clientMessage[6], clientMessage[7], clientMessage[8], clientMessage[9]);
                     break;
