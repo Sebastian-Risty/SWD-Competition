@@ -220,7 +220,7 @@ class Server {
                                 System.out.println("LOGIN GOOD");
                                 Accounts.setTable("accounts");
                                 acceptAccountData(Accounts.getInfo(clientMessage[1]));
-                                output.format(String.format("%s\n", Client.sendMessage.LOGIN_SUCCESS));
+                                output.format(String.format("%s\n", Client.sendMessage.LOGIN_VALID));
                                 output.flush();
                                 output.format(String.format("%s,%s\n", Client.sendMessage.CLIENT_DATA, getStatString())); // send client data
                                 output.flush();
@@ -228,21 +228,21 @@ class Server {
                                 System.out.printf("Added Client %s to client list\n", this.username);
                             } else{
                                 System.out.println("LOGIN FAILED");
-                                output.format(String.format("%s\n", Client.sendMessage.LOGIN_FAILED));
+                                output.format(String.format("%s\n", Client.sendMessage.LOGIN_INVALID));
                                 output.flush();
                             }
                             break;
                         case "REGISTER_REQUEST":
                             if(Accounts.addAccount(clientMessage[1],clientMessage[2])){
                                 this.username = clientMessage[1];
-                                output.format(String.format("%s\n", Client.sendMessage.LOGIN_SUCCESS));
+                                output.format(String.format("%s\n", Client.sendMessage.SIGNUP_VALID));
                                 output.flush();
                                 output.format(String.format("%s,%s\n", Client.sendMessage.CLIENT_DATA, getStatString())); // send client data
                                 output.flush();
                                 clients.add(this);
                                 System.out.printf("Client %s successfully registered and logged in!\n", this.username);
                             } else{
-                                output.format(String.format("%s\n", Client.sendMessage.LOGIN_FAILED));
+                                output.format(String.format("%s\n", Client.sendMessage.SIGNUP_INVALID));
                                 output.flush();
                             }
                             break;
