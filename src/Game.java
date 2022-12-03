@@ -9,21 +9,51 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
     private ArrayList<String> validWords = new ArrayList<>();// TODO: gen score value for each word, read rules from some other class
     private ArrayList<String> allWords = new ArrayList<>();
     private int[] letterFreq = new int[26];
-    private boolean inProgress = false;
-    private int connectedClients = 0;
+    private boolean progressFlag = false;
+    private boolean endFlag = false;
+    private int numConnectedClients = 0;
 
     public ArrayList<Character> getLetters() {
         return letters;
     }
 
-    public boolean isInProgress(){return inProgress;}
-    public void clientConnected(){connectedClients++;}
-    public void clientDisconnected(){connectedClients--;}
+    public int getNumConnectedClients() {
+        return numConnectedClients;
+    }
+
+    public void changeProgressFlag() {
+        if (progressFlag) {
+            progressFlag = false;
+        } else {
+            progressFlag = true;
+        }
+    }
+
+    public void changeEndFlag() {
+        if (endFlag) {
+            endFlag = false;
+        } else {
+            endFlag = true;
+        }
+    }
+
+    public boolean isInProgress() {
+        return progressFlag;
+    }
+
+    public void clientConnected() {
+        numConnectedClients++;
+    }
+
+    public void clientDisconnected() {
+        numConnectedClients--;
+    }
 
     @Override
     public void run() {
         initializeGame();
-        //playGame();
+        startGame();
+        pregameLobby();
     }
 
     private void initializeGame() {
@@ -89,8 +119,6 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
         return freq;
     }
 
-    public abstract void closeLobby(); // TODO: depending on inherited class, flip flag once x clients connect, timer optional
-
     // reference to lobby stored in ConnectedClient object, no longer needed
 
     public int guess(String guess) {
@@ -99,6 +127,10 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
         }
         return 0;
     }
+
+    public abstract void pregameLobby();
+
+    public abstract void startGame();
 
 
     //TODO: rounds can be specified as special rule set in subclasses

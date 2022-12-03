@@ -1,4 +1,4 @@
-import java.io.*;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -116,7 +116,7 @@ class Server {
         @Override
         public void run() {
             try {
-                init(); // verify login and load client data from db
+                userInit(); // verify login and load client data from db
                 while(!server.isClosed()){ // handle client messages
                     System.out.println("AWAITING CLIENT COMMAND");
                     String receivedData = input.nextLine();
@@ -155,27 +155,27 @@ class Server {
             }
         }
 
-        private void init() throws IOException {
+        private void userInit() throws IOException {
             System.out.println("START INIT");
 
             String receivedData = input.nextLine();
             System.out.printf("Message Received: %s\n", receivedData);
 
             String[] clientMessage = receivedData.split(",");
-           if(clientMessage[0].equals(sendMessage.LOGIN_REQUEST.toString())){
-               // [1] -> userName, [2] -> password
-               try{
-                   //Accounts.addAccount(clientMessage[1],clientMessage[2]);
-                   //Accounts.validLogin(clientMessage[1],clientMessage[2]);
-                   System.out.printf("RECEIVED USER: %s\n", clientMessage[1]);
-                   // call db with data
-                   // TODO: check db for user+pass
+            if (clientMessage[0].equals(sendMessage.LOGIN_REQUEST.toString())) {
+                // [1] -> userName, [2] -> password
+                try {
+                    //Accounts.addAccount(clientMessage[1],clientMessage[2]);
+                    //Accounts.validLogin(clientMessage[1],clientMessage[2]);
+                    System.out.printf("RECEIVED USER: %s\n", clientMessage[1]);
+                    // call db with data
+                    // TODO: check db for user+pass
 
 
-                   // if userName + pass is found update the data of client
-                   //TODO: create method to take db data and update all client info
+                    // if userName + pass is found update the data of client
+                    //TODO: create method to take db data and update all client info
 
-                   // output login was success
+                    // output login was success
                    output.format(String.format("%s\n", Client.sendMessage.LOGIN_SUCCESS));
                    output.flush();
 
