@@ -114,6 +114,10 @@ public class Controller {
 
     }
 
+    public void displayResults(String[] results) {
+
+    }
+
     public void getLetters(String letters) {
 
     }
