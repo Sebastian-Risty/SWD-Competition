@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+
 import java.io.IOException;
 
 public class LoginFXMLController extends Controller {
@@ -21,9 +22,9 @@ public class LoginFXMLController extends Controller {
     private GridPane gridPane;
 
     public void initialize() {
-        getClient().setController(this);
         // create a client
         setClient(new Client(getIp(), getPort()));
+        getClient().setController(this);
 
         verifyRippler = new JFXRippler(pane);
         verifyRippler.setRipplerFill(new Color(1,0, 0,0));
@@ -46,7 +47,7 @@ public class LoginFXMLController extends Controller {
         // receive player info
 
         // Make a new player with the info from the client
-        setPlayer(new PlayerStats());
+        setPlayer(new PlayerStats(username));
 
         // Set verified equal to what the server said
         boolean verified = true;
