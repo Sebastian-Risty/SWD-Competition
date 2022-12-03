@@ -57,30 +57,36 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
     }
 
     private void initializeGame() {
-        ArrayList<String> sixLetterWordPool = new ArrayList<>();
+        ArrayList<String> wordsToChooseFrom = new ArrayList<>();
         BufferedReader reader;
         try {
             reader = new BufferedReader(new FileReader("words"));
 
             String line = reader.readLine();
             while (line != null) {
-                if (line.length() > 2 && line.length() < 7) {
+                if (line.length() > 2 && line.length() < 9) {
                     allWords.add(line);
                     //TODO CAN CHANGE NUMBER OF LETTER HERE
-                    if (line.length() == 6) {
-                        sixLetterWordPool.add(line);
+                    if (line.length() < 6) {
+                        wordsToChooseFrom.add(line);
                     }
                 }
                 line = reader.readLine();
             }
             reader.close();
 
-            int selectedIndex = (int) (Math.random() * sixLetterWordPool.size());
+            int selectedIndex = (int) (Math.random() * wordsToChooseFrom.size());
 
-            String selectedWord = sixLetterWordPool.get(selectedIndex);
+            String selectedWord = wordsToChooseFrom.get(selectedIndex);
             for (char letter : selectedWord.toCharArray()) {
                 letters.add(letter);
             }
+
+            int numAddedLetters = (int) (Math.random() * 4);
+            for (int i = 0; i < numAddedLetters; i++) {
+                letters.add((char) ((Math.random() * 26) + 97));
+            }
+
             Collections.sort(letters);
             findValidWords();
 
