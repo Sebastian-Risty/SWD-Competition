@@ -64,12 +64,29 @@ class Client implements Runnable {
             System.out.printf("Message Received: %s\n", receivedData);
             String[] clientMessage = receivedData.split(",");
             switch (clientMessage[0]) {
-                case "LOGIN_FAILED": {
-                    controller.loginFailed();
+                case "LOGIN_VALID": {
+                    controller.loginValid();
                     break;
                 }
-                case "LOGIN_SUCCESS": {
-                    controller.loginValid(clientMessage[]);
+                case "LOGIN_INVALID": {
+                    controller.loginInvalid();
+                    break;
+                }
+                case "CLIENT_DATA": {
+                    controller.updatePlayerStats(clientMessage[1], clientMessage[2], clientMessage[3], clientMessage[4],
+                            clientMessage[5], clientMessage[6], clientMessage[7], clientMessage[8], clientMessage[9]);
+                    break;
+                }
+                case "SIGNUP_VALID": {
+                    controller.signUpValid();
+                    break;
+                }
+                case "SIGNUP_INVALID": {
+                    controller.signUpInvalid();
+                    break;
+                }
+                case "GAME_START": {
+                    controller.gameStart(clientMessage[1]);
                     break;
                 }
             }
@@ -77,11 +94,12 @@ class Client implements Runnable {
     }
 
     public enum sendMessage {
-        LOGIN_FAILED,   // username/password incorrect
-        LOGIN_SUCCESS,  // [1] -> total wins, T GP, OVO wins, OVO GP, BR wins, BR GP, T wins, T GP
-        SIGN_UP,        // sign up clicked
-
-        CLIENT_DATA,    // [1] -> totalScore
+        LOGIN_VALID,    // username/password incorrect
+        LOGIN_INVALID,  //
+        CLIENT_DATA,    // [1:9] -> username, total wins, T GP, OVO wins, OVO GP, BR wins, BR GP, T wins, T GP
+        SIGNUP_VALID,   //
+        SIGNUP_INVALID, //
+        GAME_START,     // [1] -> letters
         GUESS_RESULT,   // [1] -> score received from guess
     }
 }
