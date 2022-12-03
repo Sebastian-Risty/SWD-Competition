@@ -1,5 +1,6 @@
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXHamburger;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -10,7 +11,7 @@ import javafx.scene.paint.Color;
 
 import java.io.IOException;
 
-public class HomeScreenController extends Controller{
+public class HomeScreenController extends Controller {
     @FXML
     private Pane statsPane;
 
@@ -71,19 +72,17 @@ public class HomeScreenController extends Controller{
     @FXML
     void readyUpListener() {
 
-        if(battleRoyale.getBackground().getFills().get(0).getFill().equals(Color.GREEN)) {
+        if (battleRoyale.getBackground().getFills().get(0).getFill().equals(Color.GREEN)) {
             // send start game message to server with battle royale
             gameStatus.setText("Connecting to Game...");
             readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
-            getClient().sendMessage(String.format("%s,%s\n",Server.sendMessage.MODE_SELECTION ,Server.gameMode.BATTLE_ROYAL));
-        }
-        else if(h2hMode.getBackground().getFills().get(0).getFill().equals(Color.GREEN)) {
+            getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.MODE_SELECTION, Server.gameMode.BATTLE_ROYAL));
+        } else if (h2hMode.getBackground().getFills().get(0).getFill().equals(Color.GREEN)) {
             // send start game message to server with head to head
             gameStatus.setText("Connecting to Game...");
             readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
-            getClient().sendMessage(String.format("%s,%s\n",Server.sendMessage.MODE_SELECTION ,Server.gameMode.ONE_VS_ONE));
-        }
-        else {
+            getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.MODE_SELECTION, Server.gameMode.ONE_VS_ONE));
+        } else {
             gameModeFeedback.setText("Select a Game Mode");
             //gameModeFeedback.setBackground(new Background(new BackgroundFill(Color.RED, null, null)));
             gameModeFeedback.setTextFill(Color.RED);
@@ -118,8 +117,7 @@ public class HomeScreenController extends Controller{
 
         try {
             switchScene("TournamentHomeFXML.fxml", "Tournament Home");
-        }
-        catch(IOException e) {
+        } catch (IOException e) {
             gameModeFeedback.setText("Could not Open Tournament Mode");
         }
     }
@@ -135,15 +133,19 @@ public class HomeScreenController extends Controller{
     @Override
     public void updatePlayerStats(String username, String totalWinsIn, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,
                                   String BRWins, String BRGamesPlayed, String tournamentWins, String tournamentsPlayed) {
-        updatePlayerStatsHelper(username, totalWinsIn, totalGamesPlayed, OVOWins, OVOGamesPlayed, BRWins, BRGamesPlayed, tournamentWins, tournamentsPlayed);
-        totalWins.setText(String.valueOf(totalWinsIn));
-        gamesPlayed.setText(String.valueOf(totalGamesPlayed));
-        h2hWins.setText(String.valueOf(OVOWins));
-        h2hGames.setText(String.valueOf(OVOGamesPlayed));
-        brWins.setText(String.valueOf(BRWins));
-        brPlayed.setText(String.valueOf(BRGamesPlayed));
-        tourneyWins.setText(String.valueOf(tournamentWins));
-        tourneysPlayed.setText(String.valueOf(tournamentsPlayed));
-
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                updatePlayerStatsHelper(username, totalWinsIn, totalGamesPlayed, OVOWins, OVOGamesPlayed, BRWins, BRGamesPlayed, tournamentWins, tournamentsPlayed);
+                totalWins.setText(String.valueOf(totalWinsIn));
+                gamesPlayed.setText(String.valueOf(totalGamesPlayed));
+                h2hWins.setText(String.valueOf(OVOWins));
+                h2hGames.setText(String.valueOf(OVOGamesPlayed));
+                brWins.setText(String.valueOf(BRWins));
+                brPlayed.setText(String.valueOf(BRGamesPlayed));
+                tourneyWins.setText(String.valueOf(tournamentWins));
+                tourneysPlayed.setText(String.valueOf(tournamentsPlayed));
+            }
+        });
     }
 }
