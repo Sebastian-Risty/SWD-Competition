@@ -1,6 +1,7 @@
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Scanner;
@@ -15,10 +16,11 @@ class Server {
     private static final ArrayList<Game> lobbies = new ArrayList<>();
 
     public enum sendMessage {
-        LOGIN_REQUEST,  // [1] -> username, [2] -> password
-        MODE_SELECTION, // [1] -> name of game from gameMode enum
-        GUESS,          // [1] -> clients word guess
-        LEADERBOARD     // requests leaderboard update
+        LOGIN_REQUEST,      // [1] -> username, [2] -> password
+        MODE_SELECTION,     // [1] -> name of game from gameMode enum
+        GUESS,              // [1] -> clients word guess
+        LEADERBOARD,        // requests leaderboard update
+        REGISTER_REQUEST    // [1] -> username, [2] -> password
     }
 
     public enum gameMode{
@@ -116,7 +118,7 @@ class Server {
         @Override
         public void run() {
             try {
-                userInit(); // verify login and load client data from db
+                init(); // verify login and load client data from db
                 while(!server.isClosed()){ // handle client messages
                     System.out.println("AWAITING CLIENT COMMAND");
                     String receivedData = input.nextLine();
@@ -128,7 +130,7 @@ class Server {
                             break;
                         }
                         case "GUESS":{
-                            if(currentLobby != null){
+                            if(currentLobby != null && currentLobby.isInProgress()){
                                 int tempScore = currentLobby.guess(clientMessage[1]);
                                 currentScore += tempScore;
                                 output.format(String.format("%s,%s\n", Client.sendMessage.GUESS_RESULT, this.currentScore));
@@ -138,10 +140,11 @@ class Server {
                         }
                     }
                 }
-            } catch (IOException e) {
+            } catch (IOException | SQLException e) {
                 e.printStackTrace();
             } finally {
-                try { // TODO: upload client data to DB
+                try {
+                    sendAccountData();
                     if (output != null) {
                         output.close();
                     }
@@ -149,46 +152,62 @@ class Server {
                         input.close();
                         clientSocket.close();
                     }
-                } catch (IOException e) {
+                } catch (IOException | SQLException e) {
                     e.printStackTrace();
                 }
             }
         }
 
-        private void userInit() throws IOException {
+        private void init() throws IOException, SQLException {
             System.out.println("START INIT");
-
-            String receivedData = input.nextLine();
-            System.out.printf("Message Received: %s\n", receivedData);
-
-            String[] clientMessage = receivedData.split(",");
-            if (clientMessage[0].equals(sendMessage.LOGIN_REQUEST.toString())) {
-                // [1] -> userName, [2] -> password
-                try {
-                    //Accounts.addAccount(clientMessage[1],clientMessage[2]);
-                    //Accounts.validLogin(clientMessage[1],clientMessage[2]);
-                    System.out.printf("RECEIVED USER: %s\n", clientMessage[1]);
-                    // call db with data
-                    // TODO: check db for user+pass
-
-
-                    // if userName + pass is found update the data of client
-                    //TODO: create method to take db data and update all client info
-
-                    // output login was success
-                   output.format(String.format("%s\n", Client.sendMessage.LOGIN_SUCCESS));
-                   output.flush();
-
-                   // add valid client to list of connected clients to play match
-                   clients.add(this);
-                   System.out.printf("Added Client %s to client list\n", this.username);
-
-               } catch(Exception e){
-                   output.format(String.format("%s\n", Client.sendMessage.LOGIN_FAILED));
-                   output.flush();
-               }
-           } // TODO: may need to loop here until client successfully logs in
+            Accounts.initialize("login");
+            while(this.username == null){
+                if(input.hasNext()){
+                    String receivedData = input.nextLine();
+                    System.out.printf("Message Received: %s\n", receivedData);
+                    String[] clientMessage = receivedData.split(",");
+                    switch(clientMessage[0]){
+                        case "LOGIN_REQUEST":
+                            if(Accounts.validLogin(clientMessage[1],clientMessage[2])){
+                                Accounts.setTable("accounts");
+                                acceptAccountData(Accounts.getInfo(this.username));
+                                output.format(String.format("%s\n", Client.sendMessage.LOGIN_SUCCESS));
+                                output.flush();
+                                clients.add(this);
+                                System.out.printf("Added Client %s to client list\n", this.username);
+                            } else{
+                                output.format(String.format("%s\n", Client.sendMessage.LOGIN_FAILED));
+                                output.flush();
+                            }
+                            break;
+                        case "REGISTER_REQUEST":
+                            if(Accounts.addAccount(clientMessage[1],clientMessage[2])){
+                                this.username = clientMessage[1];
+                                output.format(String.format("%s\n", Client.sendMessage.LOGIN_SUCCESS));
+                                output.flush();
+                                clients.add(this);
+                                System.out.printf("Client %s successfully registered and logged in!\n", this.username);
+                            } else{
+                                output.format(String.format("%s\n", Client.sendMessage.LOGIN_FAILED));
+                                output.flush();
+                            }
+                            break;
+                    }
+                }
+            }
         }
+        private void acceptAccountData(String[] data){
+            username = data[0];
+            totalScore = Integer.parseInt(data[1]);
+        }
+        private void sendAccountData() throws SQLException {
+            String[] temp = new String[2];
+            temp[0] = this.username;
+            temp[1] = String.valueOf(this.totalScore);
+            Accounts.setTable("accounts");
+            Accounts.update(temp);
+        }
+
     }
 }
 
