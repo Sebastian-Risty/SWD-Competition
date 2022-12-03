@@ -39,6 +39,8 @@ public class SignUpPageController extends Controller {
         else if(password.equals(confirmPassword)) {
             //getClient().send(login info)
 
+            setUsername(username);
+
             // Flip to main page
 
             // getClient().receive response back from server
