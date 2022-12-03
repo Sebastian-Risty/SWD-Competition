@@ -44,13 +44,12 @@ public class LoginFXMLController extends Controller {
         }
     }
     @Override
-    public void loginFailed() {
+    public void loginInvalid() {
         verifyRippler.createManualRipple();
     }
     @Override
     public void loginValid() {
-        setPlayer(new PlayerStats());
-        getPlayer().setUsername(usernameField.getText());
+        setPlayer(new PlayerStats(usernameField.getText()));
 
         try {
             switchScene("homeScreenFXML.fxml", "Home Screen");
