@@ -3,7 +3,7 @@ import javafx.fxml.FXML;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-public class gameController {
+public class gameController extends Controller {
 
     @FXML
     private JFXTextArea wordPanel;
@@ -20,6 +20,7 @@ public class gameController {
     }
 
     public void initialize() {
+        getClient().setController(this);
     }
 
 }

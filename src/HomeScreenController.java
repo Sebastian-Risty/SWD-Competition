@@ -116,16 +116,20 @@ public class HomeScreenController extends Controller {
 
     @FXML
     void h2hListener() {
-        gameModeFeedback.setText("");
-        battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
-        h2hMode.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
+        if(!readiedUp) {
+            gameModeFeedback.setText("");
+            battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+            h2hMode.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
+        }
     }
 
     @FXML
     void battleRoyaleListener() {
-        gameModeFeedback.setText("");
-        h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
-        battleRoyale.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
+        if(!readiedUp) {
+            gameModeFeedback.setText("");
+            h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+            battleRoyale.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
+        }
     }
 
     @FXML
@@ -142,6 +146,19 @@ public class HomeScreenController extends Controller {
             }
         }
     }
+
+    @FXML
+    void logOutListener() {
+        try {
+            switchScene("LoginFXML.fxml", "Login");
+            setPlayer(null);
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     @FXML
     void tournamentModeListener() {
@@ -175,7 +192,6 @@ public class HomeScreenController extends Controller {
 //        brPlayed.setText(getPlayer().getBRGamesPlayed());
 //        tourneyWins.setText(getPlayer().getTournamentWins());
 //        tourneysPlayed.setText(getPlayer().getTournamentsPlayed());
-
     }
 
     @Override
@@ -187,15 +203,23 @@ public class HomeScreenController extends Controller {
                 updatePlayerStatsHelper(username, totalWinsIn, totalGamesPlayed, OVOWins, OVOGamesPlayed, BRWins, BRGamesPlayed, tournamentWins, tournamentsPlayed);
                 totalWins.setText(totalWinsIn);
                 gamesPlayed.setText(totalGamesPlayed);
-                System.out.println(OVOWins);
                 h2hWins.setText(OVOWins);
                 h2hGames.setText(OVOGamesPlayed);
                 brWins.setText(BRWins);
                 brPlayed.setText(BRGamesPlayed);
                 tourneyWins.setText(tournamentWins);
                 tourneysPlayed.setText(tournamentsPlayed);
-                System.out.println(totalGamesPlayed);
             }
         });
+    }
+
+    @Override
+    public void gameStart() {
+        try {
+            switchScene("gameFXML.fxml", "Word Game");
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 }

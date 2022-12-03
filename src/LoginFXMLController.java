@@ -2,7 +2,10 @@ import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.JFXTextField;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -25,9 +28,24 @@ public class LoginFXMLController extends Controller {
         // create a client
         setClient(new Client(getIp(), getPort()));
         getClient().setController(this);
+
         verifyRippler = new JFXRippler(pane);
         verifyRippler.setRipplerFill(new Color(1, 0, 0, 0));
         gridPane.getChildren().add(verifyRippler);
+        usernameField.requestFocus();
+    }
+
+    @FXML
+    void passwordFieldEnter(KeyEvent event) {
+        if(event.getEventType().equals(KeyEvent.KEY_PRESSED) && event.getCode().equals(KeyCode.ENTER)) {
+            enterButtonListener();
+        }
+    }
+    @FXML
+    void usernameFieldEnter(KeyEvent event) {
+        if(event.getEventType().equals(KeyEvent.KEY_PRESSED) && event.getCode().equals(KeyCode.ENTER)) {
+            passwordField.requestFocus();
+        }
     }
 
     @FXML
