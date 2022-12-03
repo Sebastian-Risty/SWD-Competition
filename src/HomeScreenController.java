@@ -130,6 +130,19 @@ public class HomeScreenController extends Controller {
     }
 
     @FXML
+    void logOutListener() {
+        try {
+            switchScene("LoginFXML.fxml", "Login");
+            setPlayer(null);
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    @FXML
     void tournamentModeListener() {
         // ask server if user is in a tournament
         // get response from server
@@ -160,7 +173,6 @@ public class HomeScreenController extends Controller {
 //        brPlayed.setText(getPlayer().getBRGamesPlayed());
 //        tourneyWins.setText(getPlayer().getTournamentWins());
 //        tourneysPlayed.setText(getPlayer().getTournamentsPlayed());
-
     }
 
     @Override
@@ -180,5 +192,15 @@ public class HomeScreenController extends Controller {
                 tourneysPlayed.setText(tournamentsPlayed);
             }
         });
+    }
+
+    @Override
+    public void gameStart() {
+        try {
+            switchScene("gameFXML.fxml", "Word Game");
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 }

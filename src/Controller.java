@@ -84,6 +84,7 @@ public class Controller {
 
         URL fxmlFile = getClass().getResource(fxmlUrl);
         assert fxmlFile != null;
+        System.out.println("Bitch");
         setRoot(FXMLLoader.load(fxmlFile));
         setScene(new Scene(getRoot()));
         getStage().setScene(getScene());
@@ -104,6 +105,10 @@ public class Controller {
     }
 
     public void signUpInvalid() {
+    }
+
+    public void gameStart() {
+
     }
 
     public void updatePlayerStats(String username, String totalWins, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,

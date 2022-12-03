@@ -130,6 +130,7 @@
                </GridPane.margin>
             </JFXTextArea>
             <JFXHamburger fx:id="hamburger" onMouseClicked="#hamburgerListener" prefHeight="57.0" prefWidth="55.0" GridPane.columnIndex="2" />
+            <JFXButton onAction="#logOutListener" text="Logout" />
          </children>
       </GridPane>
       <GridPane layoutY="64.0" prefHeight="40.0" prefWidth="600.0">

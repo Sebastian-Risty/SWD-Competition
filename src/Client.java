@@ -88,7 +88,7 @@ class Client implements Runnable {
                     break;
                 }
                 case "GAME_START": {
-                    controller.loginValid();
+                    controller.gameStart();
                     break;
                 }
             }

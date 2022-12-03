@@ -46,7 +46,7 @@ public class ClientDriver extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        URL fxmlFile = getClass().getResource("LoginFXMl.fxml");
+        URL fxmlFile = getClass().getResource("LoginFXML.fxml");
 
         assert fxmlFile != null;
         Parent root = FXMLLoader.load(fxmlFile);
