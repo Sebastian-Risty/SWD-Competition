@@ -3,7 +3,6 @@ import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
 
 public class HomeScreenController {
-
     @FXML
     private JFXHamburger hamburger;
 
@@ -11,7 +10,6 @@ public class HomeScreenController {
     void hamburgerListener(MouseEvent event) {
 
     }
-
     public void initialize() {
 
     }
