@@ -1,29 +1,19 @@
-import com.jfoenix.controls.JFXHamburger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-
 import java.io.IOException;
 
 public class gameResultsController extends Controller {
 
     @FXML
     private ListView<String> leaderboardList;
-
-    @FXML
-    private JFXHamburger hamburger;
-
     @FXML
     private Label positionLabel;
-
     @FXML
     private Label scoreLabel;
-
 
     public void initialize() {
         getClient().setController(this);
@@ -42,8 +32,8 @@ public class gameResultsController extends Controller {
                     String name = results[i];
 
                     if (name.equals(getPlayer().getUsername())) {
-                        positionLabel.setText(String.valueOf((i/2) + 1));
-                        scoreLabel.setText(results[i+1]);
+                        positionLabel.setText(String.valueOf((i / 2) + 1));
+                        scoreLabel.setText(results[i + 1]);
                     }
 
                     String score = results[i + 1];
@@ -56,13 +46,10 @@ public class gameResultsController extends Controller {
 
     @FXML
     void returnToMenuButtonListener() {
-                try {
-                    switchScene("homeScreenFXML.fxml", "Home Screen");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-    }
-
-    public void hamburgerListener(MouseEvent mouseEvent) {
+        try {
+            switchScene("homeScreenFXML.fxml", "Home Screen");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

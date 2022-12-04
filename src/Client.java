@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 class Client implements Runnable {
     private boolean textMode = false;
     private final String ip;
@@ -160,7 +161,8 @@ class Client implements Runnable {
                 }
             } else {
                 switch (clientMessage[0]) {
-                    case "LOGIN_VALID": {
+                    case "LOGIN_VALID":
+                    case "SIGNUP_VALID": {
                         loggedIn = true;
                         break;
                     }
@@ -168,10 +170,6 @@ class Client implements Runnable {
                         System.out.println(Arrays.toString(clientMessage));
                         stats = new PlayerStats(clientMessage[1], clientMessage[2], clientMessage[3], clientMessage[4],
                                 clientMessage[5], clientMessage[6], clientMessage[7], clientMessage[8], clientMessage[9]);
-                        break;
-                    }
-                    case "SIGNUP_VALID": {
-                        loggedIn = true;
                         break;
                     }
                     case "GAME_START": {
@@ -188,7 +186,7 @@ class Client implements Runnable {
                         controller.guessResult(Integer.parseInt(clientMessage[1]));
                         break;
                     }
-                    case "SHUTDOWN":
+                    case "SHUTDOWN": {
                         clientExecutor.shutdown();
                         try {
                             if (!clientExecutor.awaitTermination(2, TimeUnit.SECONDS)) {

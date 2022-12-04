@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXHamburger?>
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -47,7 +46,6 @@
                         <Insets bottom="15.0" left="80.0" right="165.0" top="15.0" />
                     </GridPane.margin>
                 </JFXTextArea>
-                <JFXHamburger fx:id="hamburger" onMouseClicked="#hamburgerListener" prefHeight="57.0" prefWidth="55.0" GridPane.columnIndex="2" />
                 <GridPane>
                     <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -95,10 +93,5 @@
                 </GridPane>
             </children>
         </Pane>
-        <Label layoutX="106.0" layoutY="79.0" text="Username  :  Score">
-            <font>
-                <Font size="18.0" />
-            </font>
-        </Label>
     </children>
 </AnchorPane>
