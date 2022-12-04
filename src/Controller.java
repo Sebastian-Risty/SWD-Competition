@@ -12,6 +12,10 @@ public class Controller {
 
     private static Client client;
 
+    private static PlayerStats player;
+
+    private static TournamentStats tournament;
+
     public static PlayerStats getPlayer() {
         return player;
     }
@@ -20,7 +24,15 @@ public class Controller {
         Controller.player = player;
     }
 
-    private static PlayerStats player;
+    public static TournamentStats getTournament() {
+        return tournament;
+    }
+
+    public static void setTournament(TournamentStats tournament) {
+        Controller.tournament = tournament;
+    }
+
+
 
     public void setIp(String ip) {
         Controller.ip = ip;
@@ -51,7 +63,7 @@ public class Controller {
     }
 
     public void setScene(Scene scene) {
-        this.scene = scene;
+        Controller.scene = scene;
     }
 
     public Stage getStage() {
@@ -59,7 +71,7 @@ public class Controller {
     }
 
     public void setStage(Stage stage) {
-        this.stage = stage;
+        Controller.stage = stage;
     }
 
     public Parent getRoot() {
@@ -67,7 +79,7 @@ public class Controller {
     }
 
     public void setRoot(Parent root) {
-        this.root = root;
+        Controller.root = root;
     }
 
     private static Scene scene;
@@ -122,6 +134,20 @@ public class Controller {
         player.setBRGamesPlayed(Integer.parseInt(BRGamesPlayed));
         player.setTournamentWins(Integer.parseInt(tournamentWins));
         player.setTournamentsPlayed(Integer.parseInt(tournamentsPlayed));
+    }
+
+    public void updateTSLeader(String rank, String username, String tournamentWins, String tournamentGamesLeft) {
+        tournament.setRank(Integer.parseInt(rank));
+        tournament.setUsername(username);
+        tournament.setTournamentWins(Integer.parseInt(tournamentWins));
+        tournament.setTournamentGamesLeft(Integer.parseInt(tournamentGamesLeft));
+    }
+
+    public void updateTSUser(String rank, String username, String tournamentWins, String tournamentGamesLeft) {
+        tournament.setRank(Integer.parseInt(rank));
+        tournament.setUsername(username);
+        tournament.setTournamentWins(Integer.parseInt(tournamentWins));
+        tournament.setTournamentGamesLeft(Integer.parseInt(tournamentGamesLeft));
     }
 
 
