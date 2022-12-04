@@ -95,7 +95,6 @@ public class ClientDriver extends Application {
                         break;
                 }
             } while(input!= '1' && input!= '2');
-
         }
     }
 
