@@ -47,7 +47,17 @@ class Server {
                     break;
                 case 2:
                     server = new ServerSocket(Integer.parseInt(args[0]));
-                    scrambleFile = new File(String.format("./%s", args[1])); // handle file not found
+                    scrambleFile = new File(String.format("./%s", args[1]));
+                    if(!scrambleFile.exists()){
+                        scrambleFile = new File(String.format("%s", args[1]));
+                        if(!scrambleFile.exists()){
+                            System.out.println("FILE CANNOT BE FOUND");
+                            scrambleFile = null;
+                        }
+                    }
+                    if(scrambleFile!=null){
+                        System.out.println("FILE FOUND");
+                    }
                     break;
                 default:
                     server = new ServerSocket(23704);
