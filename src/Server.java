@@ -12,6 +12,7 @@ import java.util.concurrent.Executors;
 class Server {
     private static ServerSocket server;
     private static File scrambleFile = null;
+    private static Integer fileIndex = 0;
 
     private static final List<ConnectedClient> clients = Collections.synchronizedList(new ArrayList<>());
     //    private static final List lobbies = Collections.synchronizedList(new ArrayList<Game>());
@@ -46,7 +47,17 @@ class Server {
                     break;
                 case 2:
                     server = new ServerSocket(Integer.parseInt(args[0]));
-                    scrambleFile = new File(String.format("./%s", args[1])); // handle file not found
+                    scrambleFile = new File(String.format("./%s", args[1]));
+                    if(!scrambleFile.exists()){
+                        scrambleFile = new File(String.format("%s", args[1]));
+                        if(!scrambleFile.exists()){
+                            System.out.println("FILE CANNOT BE FOUND");
+                            scrambleFile = null;
+                        }
+                    }
+                    if(scrambleFile!=null){
+                        System.out.println("FILE FOUND");
+                    }
                     break;
                 default:
                     server = new ServerSocket(23704);
@@ -105,7 +116,7 @@ class Server {
                                         System.out.println("Created New ONE_VS_ONE Lobby");
                                         Game temp;
                                         if(scrambleFile != null){
-                                            temp = new OneVsOne(scrambleFile);
+                                            temp = new OneVsOne(scrambleFile, fileIndex);
                                         } else{
                                             temp = new OneVsOne();
                                         }
@@ -114,7 +125,8 @@ class Server {
                                             add(client);
                                         }}));
                                         client.currentLobby = temp;
-                                        temp.clientConnected();
+                                        temp.clientConnected(); // TODO: still neeD?
+                                        fileIndex++;
                                     }
                                     break;
                                 }
@@ -135,7 +147,7 @@ class Server {
                                         System.out.println("Created New BAttlE_ROYALE Lobby");
                                         Game temp;
                                         if(scrambleFile != null){
-                                            temp = new BattleRoyale(scrambleFile);
+                                            temp = new BattleRoyale(scrambleFile, fileIndex);
                                         } else{
                                             temp = new BattleRoyale();
                                         }
@@ -145,6 +157,7 @@ class Server {
                                         }}));
                                         client.currentLobby = temp;
                                         temp.clientConnected();
+                                        fileIndex++;
                                     }
                                     System.out.println("Created New BATTLE_ROYAL Lobby");
                                     break;
