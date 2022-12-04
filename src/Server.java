@@ -237,7 +237,7 @@ class Server {
 
         private void init() throws IOException, SQLException {
             System.out.println("START INIT");
-            Database.initialize("login");
+            Database.initialize("Login");
             while(this.username == null){
                 if(input.hasNext()){
                     String receivedData = input.nextLine();

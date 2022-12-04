@@ -2,10 +2,6 @@ import java.io.*;
 import java.sql.*;
 import java.util.Objects;
 
-
-// on executeUpdate vs executeQuery
-// https://stackoverflow.com/questions/21276059/no-results-returned-by-the-query-error-in-postgresql
-
 public class Database {
     private static final String DATABASE_URL = "jdbc:postgresql://s-l112.engr.uiowa.edu/swd_db08";
     private static final String USERNAME = "swd_student08";
@@ -282,7 +278,7 @@ public class Database {
                 statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = '" + Integer.parseInt(data[i - 1]) + "' WHERE tournamentid = '" + data[0] + "';");
             } else if (i == 1) { // changing a username
                 statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = '" + data[i - 1] + "' WHERE username = '" + data[0] + "';");
-            } else if ((Objects.equals(table, "Test") || Objects.equals(table, "login")) && i == 2) // changing a password
+            } else if ((Objects.equals(table, "Test") || Objects.equals(table, "Login")) && i == 2) // changing a password
                 statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = '" + Encryptor.shiftMessage(data[i - 1], keyInfo, false) + "' WHERE username = '" + data[0] + "';");
             else // changing any column other than the username or password (all other columns are integers)
                 statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = " + Integer.parseInt(data[i - 1]) + " WHERE username = '" + data[0] + "';");
