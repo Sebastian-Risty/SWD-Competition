@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class ClientDriver extends Application {
     private static Controller controller;
 
-    public static void main(String[] args) throws UnknownHostException {
+    public static void main(String[] args) throws UnknownHostException, InterruptedException {
         Client textClient = null;
         switch (args.length) {
             case 3:
@@ -72,7 +72,8 @@ public class ClientDriver extends Application {
                         textClient.sendMessage(String.format("%s,%s,%s\n", Server.sendMessage.REGISTER_REQUEST, username, scanner.nextLine()));
                         break;
                 }
-                if(!textClient.isLoggedIn()){
+                Thread.sleep(100);
+                if(!textClient.isLoggedIn() && input == '1' || input == '2'){
                     System.out.println("login failed, please try again or register first");
                 }
             } while(!textClient.isLoggedIn());
@@ -94,8 +95,6 @@ public class ClientDriver extends Application {
                         break;
                 }
             } while(input!= '1' && input!= '2');
-
-
 
         }
     }
