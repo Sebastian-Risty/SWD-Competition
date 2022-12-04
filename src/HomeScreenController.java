@@ -39,9 +39,6 @@ public class HomeScreenController extends Controller {
     private Label brPlayed;
 
     @FXML
-    private JFXHamburger hamburger;
-
-    @FXML
     private Label usernameLabel;
 
     @FXML
@@ -75,18 +72,6 @@ public class HomeScreenController extends Controller {
 
     @FXML
     private JFXButton logOutButton;
-
-    JFXButton[] jfxButtons = {
-            new JFXButton("Some text"),
-            new JFXButton("Some text"),
-            new JFXButton("Some text"),};
-    private HamburgerSlideCloseTransition transition;
-
-
-//    private Background background;
-//    private BackgroundFill red;
-//    private BackgroundFill green;
-//    private BackgroundFill blue;
 
     @FXML
     void readyUpListener() {
@@ -138,21 +123,6 @@ public class HomeScreenController extends Controller {
             gameModeFeedback.setText("");
             h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
             battleRoyale.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
-        }
-    }
-
-    @FXML
-    void hamburgerListener() {
-        transition.setRate(transition.getRate() * -1);
-        transition.play();
-        if (transition.getRate() == -1) {
-            for (JFXButton jfxButton : jfxButtons) {
-                jfxButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-            }
-        } else {
-            for (JFXButton jfxButton : jfxButtons) {
-                jfxButton.setContentDisplay(ContentDisplay.RIGHT);
-            }
         }
     }
 
@@ -210,7 +180,6 @@ public class HomeScreenController extends Controller {
         h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         tournamentMode.setBackground(new Background(new BackgroundFill(Color.LIGHTYELLOW, null, null)));
-//        transition = new HamburgerNextArrowBasicTransition(hamburger);
     }
 
     @Override

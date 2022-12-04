@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -47,6 +49,7 @@ public class gameController extends Controller {
 
     public void initialize() {
         getClient().setController(this);
+        guessWordField.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         letters.setText(getClient().getLetters());
         scoreLabel.setText(scoreLabel.getText() + " 0");
         timeLabel.setText(timeLabel.getText() + " 0");
