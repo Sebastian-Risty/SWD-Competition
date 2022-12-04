@@ -451,7 +451,7 @@ class Server {
         }
         // [1] -> userName, total wins, T GamePlayed, OVO wins, OVO GP, BR wins, BR GP, T wins, T GP
         private void sendAccountData() throws SQLException, FileNotFoundException {
-            Database.setTable("accounts");
+            Database.setTable("Accounts");
             Database.update(getStatString().split(","));
         }
         @Override
