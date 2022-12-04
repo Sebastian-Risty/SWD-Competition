@@ -56,7 +56,7 @@ public class ClientDriver extends Application {
             System.out.println("[2] Register");
             do{
                 input = scanner.nextLine().charAt(0);
-                String username = null;
+                String username ;
                 switch (input) {
 
                     case '1': // login
@@ -94,7 +94,29 @@ public class ClientDriver extends Application {
                         textClient.sendMessage(String.format("%s,%s\n", Server.sendMessage.MODE_SELECTION, Server.gameMode.BATTLE_ROYAL));
                         break;
                 }
-            } while(input!= '1' && input!= '2');
+                Thread.sleep(100);
+                System.out.println("waiting for match to start, press 3 to cancel");
+                while(!textClient.isGameStart() && input == '1' || input == '2'){
+                    if(scanner.hasNext()){
+                        if(scanner.nextLine().charAt(0) == '3'){
+                            textClient.sendMessage(String.format("%s\n", Server.sendMessage.CANCEL_MM));
+                            break;
+                        }
+                    }
+                }
+            } while(!textClient.isGameStart());
+
+            System.out.println("Enter Guesses!");
+            // play game
+            do{
+                System.out.printf("LETTERS: %s\n", textClient.getLetters());
+                String guess = scanner.nextLine();
+                textClient.sendMessage(String.format("%s,%s\n", Server.sendMessage.GUESS, guess));
+                Thread.sleep(100);
+
+
+            } while(true); // wait until match is over
+
         }
     }
 

@@ -22,6 +22,11 @@ class Client implements Runnable {
 
     // TEXTMODE STUFF
     private boolean loggedIn = false;
+    private boolean gameStart = false;
+
+    public boolean isGameStart() {
+        return gameStart;
+    }
 
     public boolean isLoggedIn() {
         return loggedIn;
@@ -164,7 +169,7 @@ class Client implements Runnable {
                     }
                     case "GAME_END": {
                         gameResults = clientMessage;
-                        controller.endGame();
+                        gameStart = true;
                         break;
                     }
                     case "GUESS_RESULT" :{
