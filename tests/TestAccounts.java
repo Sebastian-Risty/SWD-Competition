@@ -11,7 +11,7 @@ public class TestAccounts {
 
     private static final String KEY_NAME = "key";
 
-    private void init() throws SQLException, FileNotFoundException {
+    private void init() throws SQLException {
         Database.initialize("Test");
         Database.clearAll();
 
@@ -22,7 +22,7 @@ public class TestAccounts {
     }
 
     @Test
-    public void testUpdate() throws SQLException, FileNotFoundException { // also tests displayLeadBoard() and validLogin()
+    public void testUpdate() throws SQLException { // also tests displayLeadBoard() and validLogin()
         init();
         Database.setTable("Test");
         String[] data = new String[]{"Sam", "mypassword1", "1000"}; // note when testing that the password (index 1) must be numerical because of the Integer.Parseint() in update()
