@@ -140,14 +140,21 @@ public class Controller {
 
     public void signUpInvalid() {
     }
-    
-    public void gameStart(){}
-    
-    public void endGame(){}
-    
-    public void displayResults(String[] clientMessage){}
-    
-    public void guessResult(int score){}
+
+    public void updateTimer(int time) {
+    }
+
+    public void gameStart() {
+    }
+
+    public void endGame() {
+    }
+
+    public void displayResults(String[] clientMessage) {
+    }
+
+    public void guessResult(int score) {
+    }
 
     public void updatePlayerStats(String username, String totalWins, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,
                                   String BRWins, String BRGamesPlayed, String tournamentWins, String tournamentsPlayed) {

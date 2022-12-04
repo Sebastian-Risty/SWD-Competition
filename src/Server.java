@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 
 class Server {
@@ -157,11 +156,11 @@ class Server {
                                                         throw new RuntimeException(e);
                                                     }
                                                     for(ConnectedClient lobbyClient : lobbies.get(game)){
-                                                        lobbyClient.output.format(String.format("%s,%s\n", Client.sendMessage.TIMER_UPDATE, game.getLobbyStartTime()));
+                                                        lobbyClient.output.format(String.format("%s,%s,%s\n", Client.sendMessage.TIMER_UPDATE, game.getLobbyStartTime(), game.getCountDownTime()));
                                                         lobbyClient.output.flush();
                                                     }
                                                 } else if(game.getNumConnectedClients() > 3){ // send the remaining time to any new clients
-                                                    client.output.format(String.format("%s,%s\n", Client.sendMessage.TIMER_UPDATE, game.getLobbyStartTime()));
+                                                    client.output.format(String.format("%s,%s,%s\n", Client.sendMessage.TIMER_UPDATE, game.getLobbyStartTime(), game.getCountDownTime()));
                                                     client.output.flush();
                                                 }
                                                 break;

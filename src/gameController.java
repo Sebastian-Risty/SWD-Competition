@@ -7,7 +7,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
@@ -87,11 +86,20 @@ public class gameController extends Controller {
                     guessRippler.setRipplerFill(new Color(0, 1, 0, 0));
 
                     guessRippler.createManualRipple();
-                }
-                else {
+                } else {
                     guessRippler.setRipplerFill(new Color(1, 0, 0, 0));
                     guessRippler.createManualRipple();
                 }
+            }
+        });
+    }
+
+    @Override
+    public void updateTimer(int time) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                timeLabel.setText("Time: " + time);
             }
         });
     }

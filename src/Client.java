@@ -135,7 +135,7 @@ class Client implements Runnable {
                         break;
                     }
                     case "TIMER_UPDATE": {
-                        timerHandler = new TimerHandler(clientMessage[1]);
+                        timerHandler = new TimerHandler(controller, clientMessage[1], clientMessage[2]);
                     }
                     case "PLAYER_COUNT_UPDATE": {
 
@@ -198,15 +198,29 @@ class Client implements Runnable {
     }
 
     private static class TimerHandler implements Runnable {
+        private Controller controller;
         private long startTime;
+        private int totalTime;
 
-        public TimerHandler(String startTime) {
-            this.startTime = startTime.
+        public TimerHandler(Controller controller, String startTime, String totalTime) {
+            this.controller = controller;
+            this.startTime = Long.parseLong(startTime);
+            this.totalTime = Integer.parseInt(totalTime);
         }
 
         @Override
         public void run() {
-
+            long elapsed;
+            while ((elapsed = (System.currentTimeMillis() - startTime)) < (totalTime * 1000L)) {
+                if ((elapsed % 1000) == 0) {
+                    controller.updateTimer((int) (totalTime - (elapsed / 1000)));
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
         }
     }
 
