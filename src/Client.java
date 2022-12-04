@@ -19,6 +19,7 @@ class Client implements Runnable {
     private String[] gameResults;
     private PlayerStats stats;
     private final ExecutorService clientExecutor = Executors.newFixedThreadPool(1);
+    private TimerHandler timerHandler = null;
 
     // TEXTMODE STUFF
     private boolean loggedIn = false;
@@ -30,7 +31,11 @@ class Client implements Runnable {
     public void setTextMode(boolean textMode) {
         this.textMode = textMode;
     }
-    public boolean isTextMode(){return textMode;}
+
+    public boolean isTextMode() {
+        return textMode;
+    }
+
     public String[] getGameResults() {
         return gameResults;
     }
@@ -90,7 +95,7 @@ class Client implements Runnable {
             String receivedData = input.nextLine();
             System.out.printf("Message Received: %s\n", receivedData);
             String[] clientMessage = receivedData.split(",");
-            if(!textMode){
+            if (!textMode) {
                 switch (clientMessage[0]) {
                     case "LOGIN_VALID": {
                         controller.loginValid();
@@ -125,13 +130,19 @@ class Client implements Runnable {
                         controller.endGame();
                         break;
                     }
-                    case "GUESS_RESULT" :{
+                    case "GUESS_RESULT": {
                         controller.guessResult(Integer.parseInt(clientMessage[1]));
+                    }
+                    case "TIMER_UPDATE": {
+                        timerHandler = new TimerHandler(clientMessage[1]);
+                    }
+                    case "PLAYER_COUNT_UPDATE": {
+
                     }
                     case "SHUTDOWN":
                         clientExecutor.shutdown();
                         try {
-                            if(!clientExecutor.awaitTermination(2, TimeUnit.SECONDS)){
+                            if (!clientExecutor.awaitTermination(2, TimeUnit.SECONDS)) {
                                 System.out.println("shutdown failed, forcing.");
                                 clientExecutor.shutdownNow();
                             }
@@ -140,7 +151,7 @@ class Client implements Runnable {
                         }
 
                 }
-            } else{
+            } else {
                 switch (clientMessage[0]) {
                     case "LOGIN_VALID": {
                         loggedIn = true;
@@ -166,13 +177,13 @@ class Client implements Runnable {
                         controller.endGame();
                         break;
                     }
-                    case "GUESS_RESULT" :{
+                    case "GUESS_RESULT": {
                         controller.guessResult(Integer.parseInt(clientMessage[1]));
                     }
                     case "SHUTDOWN":
                         clientExecutor.shutdown();
                         try {
-                            if(!clientExecutor.awaitTermination(2, TimeUnit.SECONDS)){
+                            if (!clientExecutor.awaitTermination(2, TimeUnit.SECONDS)) {
                                 System.out.println("shutdown failed, forcing.");
                                 clientExecutor.shutdownNow();
                             }
@@ -181,6 +192,19 @@ class Client implements Runnable {
                         }
                 }
             }
+        }
+    }
+
+    private static class TimerHandler implements Runnable {
+        private long startTime;
+
+        public TimerHandler(String startTime) {
+            this.startTime = startTime.
+        }
+
+        @Override
+        public void run() {
+
         }
     }
 
