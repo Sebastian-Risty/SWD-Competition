@@ -40,8 +40,8 @@ public class gameController extends Controller {
             lastGuess = guessWordField.getText();
             getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.GUESS, guessWordField.getText()));
             guessWordField.setText("");
-            guessRippler.setRipplerFill(new Color(0,0,0,1));
-            guessRippler.createManualRipple();
+            guessRippler = new JFXRippler(childPane);
+            parentPane.getChildren().add(guessRippler);
         }
     }
 
@@ -80,13 +80,13 @@ public class gameController extends Controller {
                 if(score>0) {
                     wordPanel.setText(wordPanel.getText() + lastGuess);
                     playerScore += score;
-                    scoreLabel.setText(scoreLabel.getText() + " " + score);
-                    guessRippler.setRipplerFill(new Color(0, 1, 0, 0));
+                    scoreLabel.setText("Score: " + playerScore);
+                    guessRippler.setRipplerFill(new Color(0, 1, 0, 10));
 
                     guessRippler.createManualRipple();
                 }
                 else {
-                    guessRippler.setRipplerFill(new Color(1, 0, 0, 0));
+                    guessRippler.setRipplerFill(new Color(1, 0, 0, 10));
                     guessRippler.createManualRipple();
                 }
             }
