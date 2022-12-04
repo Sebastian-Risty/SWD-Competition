@@ -132,6 +132,7 @@ class Client implements Runnable {
                     }
                     case "GUESS_RESULT": {
                         controller.guessResult(Integer.parseInt(clientMessage[1]));
+                        break;
                     }
                     case "TIMER_UPDATE": {
                         timerHandler = new TimerHandler(clientMessage[1]);
@@ -179,6 +180,7 @@ class Client implements Runnable {
                     }
                     case "GUESS_RESULT": {
                         controller.guessResult(Integer.parseInt(clientMessage[1]));
+                        break;
                     }
                     case "SHUTDOWN":
                         clientExecutor.shutdown();

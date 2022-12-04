@@ -356,6 +356,15 @@ class Server {
                                 output.format("%s", Client.sendMessage.SHUTDOWN);
                                 output.flush();
                                 break;
+                            case "CANCEL_MM":
+                                System.out.println("CLIENT CANCELED MM");
+                                this.requestedGame = null;
+                                if(this.currentLobby != null){
+                                    lobbies.get(this.currentLobby).remove(this); // TODO: may need to put in sync blocks
+                                    this.currentLobby.clientDisconnected();
+                                    this.currentLobby = null;
+                                }
+                                break;
                             }
                         } // TODO: on window close send command to server saying it close and then flip flag inside this run to then break form loop d then hit finally block so account is removed or smthn
                      catch(Exception e){

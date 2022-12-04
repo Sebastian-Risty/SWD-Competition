@@ -85,7 +85,6 @@ public class LoginFXMLController extends Controller {
     @Override
     public void loginValid() {
         setPlayer(new PlayerStats(usernameField.getText()));
-
         Platform.runLater(new Runnable() {
             @Override
             public void run() {

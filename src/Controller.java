@@ -16,6 +16,25 @@ public class Controller {
 
     private static TournamentStats tournament;
 
+    public double getxPos() {
+        return xPos;
+    }
+
+    public void setxPos(double xPos) {
+        Controller.xPos = xPos;
+    }
+
+    public double getyPos() {
+        return yPos;
+    }
+
+    public void setyPos(double yPos) {
+        Controller.yPos = yPos;
+    }
+
+    private static double xPos;
+    private static double yPos;
+
     public static PlayerStats getPlayer() {
         return player;
     }
@@ -88,9 +107,10 @@ public class Controller {
 
     public void switchScene(String fxmlUrl, String sceneTitle) throws IOException {
 
-        System.out.println(fxmlUrl);
         Stage temp2 = stage;
 
+        setyPos(stage.getY());
+        setxPos(stage.getX());
         Stage tempStage = new Stage();
 
         setStage(tempStage);
@@ -102,6 +122,8 @@ public class Controller {
         getStage().setScene(getScene());
 
         stage.setTitle(sceneTitle);
+        stage.setX(getxPos());
+        stage.setY(getyPos());
         getStage().show();
 
         temp2.close();
