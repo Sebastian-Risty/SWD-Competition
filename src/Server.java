@@ -131,7 +131,6 @@ class Server {
                                     break;
                                 }
                                 case "BATTLE_ROYAL": {
-
                                     synchronized (lobbies) {
                                         for (Game game : lobbies.keySet()) {
                                             if (game.getGamemode().equals("BattleRoyale") && !game.isInProgress()) { // client joins open game if possible
@@ -140,6 +139,21 @@ class Server {
                                                 System.out.println("ADDED CLIENT TO GAME");
                                                 client.currentLobby = game;
                                                 game.clientConnected();
+
+                                                for(ConnectedClient lobbyClient : lobbies.get(game)){
+                                                    lobbyClient.output.format(String.format("%s,%s\n", Client.sendMessage.PLAYER_COUNT_UPDATE, game.getNumConnectedClients()));
+                                                    lobbyClient.output.flush();
+                                                }
+
+                                                if (game.getNumConnectedClients() == 3){ // send lobby start time to the 3 connected clients
+                                                    for(ConnectedClient lobbyClient : lobbies.get(game)){
+                                                        lobbyClient.output.format(String.format("%s,%s\n", Client.sendMessage.TIMER_UPDATE, game.getLobbyStartTime()));
+                                                        lobbyClient.output.flush();
+                                                    }
+                                                } else if(game.getNumConnectedClients() > 3){ // send the remaining time to any new clients
+                                                    client.output.format(String.format("%s,%s\n", Client.sendMessage.TIMER_UPDATE, game.getLobbyStartTime()));
+                                                    client.output.flush();
+                                                }
                                                 break;
                                             }
                                         }
@@ -154,11 +168,13 @@ class Server {
                                         }
                                         executorService.execute(temp);
                                         temp.setCountDownTime(30);
+                                        temp.setMatchTime(60);
                                         lobbies.put(temp, Collections.synchronizedList(new ArrayList<ConnectedClient>() {{
                                             add(client);
                                         }}));
                                         client.currentLobby = temp;
                                         temp.clientConnected();
+                                        client.output.format("%s,%s\n", Client.sendMessage.PLAYER_COUNT_UPDATE, temp.getNumConnectedClients());
                                         fileIndex++;
                                     }
                                     System.out.println("Created New BATTLE_ROYAL Lobby");
