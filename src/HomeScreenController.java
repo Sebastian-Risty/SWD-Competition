@@ -100,7 +100,7 @@ public class HomeScreenController extends Controller {
             // send cancel message to server
             getClient().sendMessage(String.format("%s\n", Server.sendMessage.CANCEL_MM));
             readyUp.setText("Ready Up!");
-            logOutButton.setText("Logout");
+            logOutButton.setText("Log Out");
             readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
             h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
             battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
