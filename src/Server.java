@@ -121,6 +121,7 @@ class Server {
                                             temp = new OneVsOne();
                                         }
                                         executorService.execute(temp);
+                                        temp.setMatchTime(30);
                                         lobbies.put(temp, Collections.synchronizedList(new ArrayList<ConnectedClient>() {{
                                             add(client);
                                         }}));
