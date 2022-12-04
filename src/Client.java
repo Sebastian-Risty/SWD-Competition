@@ -18,7 +18,7 @@ class Client implements Runnable {
     private String letters;
     private String[] gameResults;
     private PlayerStats stats;
-    private final ExecutorService clientExecutor = Executors.newFixedThreadPool(1);
+    private final ExecutorService clientExecutor = Executors.newCachedThreadPool();
     private TimerHandler timerHandler = null;
 
     // TEXTMODE STUFF
@@ -135,10 +135,11 @@ class Client implements Runnable {
                         break;
                     }
                     case "TIMER_UPDATE": {
-                        timerHandler = new TimerHandler(controller, clientMessage[1], clientMessage[2]);
+                        clientExecutor.execute(new TimerHandler(this, clientMessage[1], clientMessage[2]));
+                        break;
                     }
                     case "PLAYER_COUNT_UPDATE": {
-
+                        break;
                     }
                     case "SHUTDOWN":
                         clientExecutor.shutdown();
@@ -199,22 +200,24 @@ class Client implements Runnable {
     }
 
     private static class TimerHandler implements Runnable {
-        private Controller controller;
+        private Client client;
         private long startTime;
         private int totalTime;
 
-        public TimerHandler(Controller controller, String startTime, String totalTime) {
-            this.controller = controller;
+        public TimerHandler(Client client, String startTime, String totalTime) {
+            System.out.println("TIMER CONSTRUCTOR");
+            this.client = client;
             this.startTime = Long.parseLong(startTime);
             this.totalTime = Integer.parseInt(totalTime);
         }
 
         @Override
         public void run() {
+            System.out.println("TIMER RUN");
             long elapsed;
             while ((elapsed = (System.currentTimeMillis() - startTime)) < (totalTime * 1000L)) {
                 if ((elapsed % 1000) == 0) {
-                    controller.updateTimer((int) (totalTime - (elapsed / 1000)));
+                    client.controller.updateTimer((int) (totalTime - (elapsed / 1000)));
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException e) {

@@ -144,6 +144,7 @@ public class Controller {
     }
 
     public void updateTimer(int time) {
+        System.out.println("NOT CORRECT");
     }
     public void loginInvalid() {}
     public void loginValid() {}

@@ -208,7 +208,7 @@ class Server {
                             for(ConnectedClient client : lobbies.get(lobby)) {
                                 client.output.format(String.format("%s,%s\n", Client.sendMessage.GAME_START, lobby.getLetters().toString().replaceAll("[], \\[]", "")));
                                 client.output.flush();
-                                client.output.format(String.format("%s,%s,%s\n", Client.sendMessage.TIMER_UPDATE, lobby.getLobbyStartTime(), lobby.getCountDownTime()));
+                                client.output.format(String.format("%s,%s,%s\n", Client.sendMessage.TIMER_UPDATE, System.currentTimeMillis(), lobby.getMatchTime()));
                                 client.output.flush();
                             }
                             lobby.changeStartFlag();
