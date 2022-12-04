@@ -1,7 +1,9 @@
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXHamburger;
+import com.jfoenix.transitions.hamburger.HamburgerSlideCloseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -63,6 +65,23 @@ public class HomeScreenController extends Controller {
     @FXML
     private Label h2hWins;
 
+    @FXML
+    private JFXButton logoutConfirmationYes;
+    @FXML
+    private JFXButton logoutConfirmationNo;
+
+    private boolean readiedUp;
+    private boolean logout;
+
+    @FXML
+    private JFXButton logOutButton;
+
+    JFXButton[] jfxButtons = {
+            new JFXButton("Some text"),
+            new JFXButton("Some text"),
+            new JFXButton("Some text"),};
+    private HamburgerSlideCloseTransition transition;
+
 
 //    private Background background;
 //    private BackgroundFill red;
@@ -72,40 +91,99 @@ public class HomeScreenController extends Controller {
     @FXML
     void readyUpListener() {
 
-        if (battleRoyale.getBackground().getFills().get(0).getFill().equals(Color.GREEN)) {
-            // send start game message to server with battle royale
-            gameStatus.setText("Connecting to Game...");
-            readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
-            getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.MODE_SELECTION, Server.gameMode.BATTLE_ROYAL));
-        } else if (h2hMode.getBackground().getFills().get(0).getFill().equals(Color.GREEN)) {
-            // send start game message to server with head to head
-            gameStatus.setText("Connecting to Game...");
-            readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
-            getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.MODE_SELECTION, Server.gameMode.ONE_VS_ONE));
-        } else {
-            gameModeFeedback.setText("Select a Game Mode");
-            //gameModeFeedback.setBackground(new Background(new BackgroundFill(Color.RED, null, null)));
-            gameModeFeedback.setTextFill(Color.RED);
+        if(!readiedUp) {
+            if (battleRoyale.getBackground().getFills().get(0).getFill().equals(Color.GREEN)) {
+                // send start game message to server with battle royale
+                gameStatus.setText("Connecting to Game...");
+                readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
+                getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.MODE_SELECTION, Server.gameMode.BATTLE_ROYAL));
+                readiedUp = true;
+                readyUp.setText("Cancel");
+            } else if (h2hMode.getBackground().getFills().get(0).getFill().equals(Color.GREEN)) {
+                // send start game message to server with head to head
+                gameStatus.setText("Connecting to Game...");
+                readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
+                getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.MODE_SELECTION, Server.gameMode.ONE_VS_ONE));
+                readiedUp = true;
+                readyUp.setText("Cancel");
+            } else {
+                gameModeFeedback.setText("Select a Game Mode");
+                //gameModeFeedback.setBackground(new Background(new BackgroundFill(Color.RED, null, null)));
+                gameModeFeedback.setTextFill(Color.RED);
+            }
+        }
+        else {
+            // send cancel message to server
+            readyUp.setText("Ready Up!");
+            readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+            h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+            battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+            gameStatus.setText("");
+            readiedUp = false;
         }
     }
 
     @FXML
     void h2hListener() {
-        gameModeFeedback.setText("");
-        battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
-        h2hMode.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
+        if(!readiedUp) {
+            gameModeFeedback.setText("");
+            battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+            h2hMode.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
+        }
     }
 
     @FXML
     void battleRoyaleListener() {
-        gameModeFeedback.setText("");
-        h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
-        battleRoyale.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
+        if(!readiedUp) {
+            gameModeFeedback.setText("");
+            h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+            battleRoyale.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
+        }
     }
 
     @FXML
     void hamburgerListener(MouseEvent event) {
+        transition.setRate(transition.getRate() * -1);
+        transition.play();
+        if (transition.getRate() == -1) {
+            for (JFXButton jfxButton : jfxButtons) {
+                jfxButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            }
+        } else {
+            for (JFXButton jfxButton : jfxButtons) {
+                jfxButton.setContentDisplay(ContentDisplay.RIGHT);
+            }
+        }
+    }
 
+    @FXML
+    void logOutListener() {
+      logout = true;
+      logOutButton.setText("Are You Sure?");
+      logoutConfirmationNo.setText("No");
+      logoutConfirmationYes.setText("Yes");
+    }
+
+    @FXML
+    void logOutConfirmationYesListener() {
+        if(logout) {
+            try {
+                switchScene("LoginFXML.fxml", "Login");
+                setPlayer(null);
+            }
+            catch(IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    @FXML
+    void logOutConfirmationNoListener() {
+        if(logout) {
+            logOutButton.setText("Logout");
+            logoutConfirmationNo.setText("");
+            logoutConfirmationYes.setText("");
+            logout = false;
+        }
     }
 
     @FXML
@@ -123,11 +201,24 @@ public class HomeScreenController extends Controller {
     }
 
     public void initialize() {
+        readiedUp = false;
+        logout = false;
         getClient().setController(this);
+        getClient().sendMessage(String.format("%s\n", Server.sendMessage.CLIENT_DATA_REQUEST));
+        usernameLabel.setText(getPlayer().getUsername() + "'s Player Stats");
         statsPane.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         tournamentMode.setBackground(new Background(new BackgroundFill(Color.LIGHTYELLOW, null, null)));
+//        transition = new HamburgerNextArrowBasicTransition(hamburger);
+//        totalWins.setText(getPlayer().getTotalWins());
+//        gamesPlayed.setText(getPlayer().getTotalGamesPlayed());
+//        h2hWins.setText(getPlayer().getOVOWins());
+//        h2hGames.setText(getPlayer().getOVOGamesPlayed());
+//        brWins.setText(getPlayer().getBRWins());
+//        brPlayed.setText(getPlayer().getBRGamesPlayed());
+//        tourneyWins.setText(getPlayer().getTournamentWins());
+//        tourneysPlayed.setText(getPlayer().getTournamentsPlayed());
     }
 
     @Override
@@ -137,14 +228,28 @@ public class HomeScreenController extends Controller {
             @Override
             public void run() {
                 updatePlayerStatsHelper(username, totalWinsIn, totalGamesPlayed, OVOWins, OVOGamesPlayed, BRWins, BRGamesPlayed, tournamentWins, tournamentsPlayed);
-                totalWins.setText(String.valueOf(totalWinsIn));
-                gamesPlayed.setText(String.valueOf(totalGamesPlayed));
-                h2hWins.setText(String.valueOf(OVOWins));
-                h2hGames.setText(String.valueOf(OVOGamesPlayed));
-                brWins.setText(String.valueOf(BRWins));
-                brPlayed.setText(String.valueOf(BRGamesPlayed));
-                tourneyWins.setText(String.valueOf(tournamentWins));
-                tourneysPlayed.setText(String.valueOf(tournamentsPlayed));
+                totalWins.setText(totalWinsIn);
+                gamesPlayed.setText(totalGamesPlayed);
+                h2hWins.setText(OVOWins);
+                h2hGames.setText(OVOGamesPlayed);
+                brWins.setText(BRWins);
+                brPlayed.setText(BRGamesPlayed);
+                tourneyWins.setText(tournamentWins);
+                tourneysPlayed.setText(tournamentsPlayed);
+            }
+        });
+    }
+
+    @Override
+    public void gameStart() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    switchScene("gameFXML.fxml", "Word Game");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

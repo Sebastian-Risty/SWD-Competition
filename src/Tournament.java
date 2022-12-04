@@ -18,7 +18,7 @@ public class Tournament implements Runnable {
 
     @Override
     public void run() {
-        while (((System.currentTimeMillis() * startTime) / 1000) < (hoursLive * 60)) ;
+        while (((System.currentTimeMillis() - startTime) / 1000) < (hoursLive * 60 * 60)) ;
         endFlag = true;
     }
 }

@@ -1,16 +1,39 @@
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 
 class Client implements Runnable {
+    private boolean textMode = false;
     private final String ip;
     private final int port;
     private Scanner input; // input from server
     private Formatter output; // output to server
     private Socket serverSocket;
     private Controller controller;
+    private String letters;
+    private String[] gameResults;
+
+    // TEXTMODE STUFF
+    private boolean loggedIn = false;
+
+    public boolean isLoggedIn() {
+        return loggedIn;
+    }
+
+    public void setTextMode(boolean textMode) {
+        this.textMode = textMode;
+    }
+    public boolean isTextMode(){return textMode;}
+    public String[] getGameResults() {
+        return gameResults;
+    }
+
+    public String getLetters() {
+        return letters;
+    }
 
     public void setController(Controller controller) {
         this.controller = controller;
@@ -51,7 +74,7 @@ class Client implements Runnable {
         }
     }
 
-    private void openConnection() throws IOException { // TODO conform to server std
+    private void openConnection() throws IOException {
         input = new Scanner(serverSocket.getInputStream());
         output = new Formatter(serverSocket.getOutputStream());
     }
@@ -63,35 +86,78 @@ class Client implements Runnable {
             String receivedData = input.nextLine();
             System.out.printf("Message Received: %s\n", receivedData);
             String[] clientMessage = receivedData.split(",");
-            switch (clientMessage[0]) {
-                case "LOGIN_VALID": {
-                    controller.loginValid();
-                    break;
+            if(!textMode){
+                switch (clientMessage[0]) {
+                    case "LOGIN_VALID": {
+                        controller.loginValid();
+                        break;
+                    }
+                    case "LOGIN_INVALID": {
+                        controller.loginInvalid();
+                        break;
+                    }
+                    case "CLIENT_DATA": {
+                        System.out.println(Arrays.toString(clientMessage));
+                        controller.updatePlayerStats(clientMessage[1], clientMessage[2], clientMessage[3], clientMessage[4],
+                                clientMessage[5], clientMessage[6], clientMessage[7], clientMessage[8], clientMessage[9]);
+                        break;
+                    }
+                    case "SIGNUP_VALID": {
+                        controller.signUpValid();
+                        break;
+                    }
+                    case "SIGNUP_INVALID": {
+                        controller.signUpInvalid();
+                        break;
+                    }
+                    case "GAME_START": {
+                        letters = clientMessage[1];
+                        controller.gameStart();
+                        break;
+                    }
+                    case "GAME_END": {
+                        gameResults = clientMessage;
+                        controller.endGame();
+                        break;
+                    }
+                    case "GUESS_RESULT" :{
+                        controller.guessResult(Integer.parseInt(clientMessage[1]));
+                    }
                 }
-                case "LOGIN_INVALID": {
-                    controller.loginInvalid();
-                    break;
-                }
-                case "CLIENT_DATA": {
-                    controller.updatePlayerStats(clientMessage[1], clientMessage[2], clientMessage[3], clientMessage[4],
-                            clientMessage[5], clientMessage[6], clientMessage[7], clientMessage[8], clientMessage[9]);
-                    break;
-                }
-                case "SIGNUP_VALID": {
-                    controller.signUpValid();
-                    break;
-                }
-                case "SIGNUP_INVALID": {
-                    controller.signUpInvalid();
-                    break;
-                }
-                case "GAME_START": {
-                    controller.loginValid();
-                    break;
+            } else{
+                switch (clientMessage[0]) {
+                    case "LOGIN_VALID": {
+                        loggedIn = true;
+                        break;
+                    }
+                    case "CLIENT_DATA": {
+                        System.out.println(Arrays.toString(clientMessage));
+                        controller.updatePlayerStats(clientMessage[1], clientMessage[2], clientMessage[3], clientMessage[4],
+                                clientMessage[5], clientMessage[6], clientMessage[7], clientMessage[8], clientMessage[9]);
+                        break;
+                    }
+                    case "SIGNUP_VALID": {
+                        loggedIn = true;
+                        break;
+                    }
+                    case "GAME_START": {
+                        letters = clientMessage[1];
+                        controller.gameStart();
+                        break;
+                    }
+                    case "GAME_END": {
+                        gameResults = clientMessage;
+                        controller.endGame();
+                        break;
+                    }
+                    case "GUESS_RESULT" :{
+                        controller.guessResult(Integer.parseInt(clientMessage[1]));
+                    }
                 }
             }
         }
     }
+
 
     public enum sendMessage {
         LOGIN_VALID,   // username/password incorrect
@@ -101,5 +167,8 @@ class Client implements Runnable {
         SIGNUP_INVALID, //
         GAME_START, //
         GUESS_RESULT,   // [1] -> score received from guess
+        GAME_END,        // [1] -> (bool)hasWon, winningUsername,
+        TIMER_UPDATE,
+        PLAYER_COUNT_UPDATE // [1] -> numPlayers in match
     }
 }
