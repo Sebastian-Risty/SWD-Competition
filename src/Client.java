@@ -106,6 +106,7 @@ class Client implements Runnable {
         }
     }
 
+
     public enum sendMessage {
         LOGIN_VALID,   // username/password incorrect
         LOGIN_INVALID,  //

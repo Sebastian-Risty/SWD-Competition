@@ -144,7 +144,7 @@ class Server {
                                         }
                                     }
                                     if (client.currentLobby == null) { // create lobby if none were found
-                                        System.out.println("Created New BAttlE_ROYALE Lobby");
+                                        System.out.println("Created New BATTlE_ROYALE Lobby");
                                         Game temp;
                                         if(scrambleFile != null){
                                             temp = new BattleRoyale(scrambleFile, fileIndex);
