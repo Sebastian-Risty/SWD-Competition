@@ -87,9 +87,9 @@
                      <font>
                         <Font name="System Bold Italic" size="20.0" />
                      </font></Label>
-                  <JFXTextArea fx:id="guessWordField" onKeyPressed="#enterPressed" prefHeight="24.0" prefWidth="225.0" GridPane.rowIndex="1">
+                  <JFXTextArea fx:id="guessWordField" maxHeight="-Infinity" minHeight="-Infinity" onKeyPressed="#enterPressed" prefHeight="30.0" prefWidth="225.0" GridPane.rowIndex="1">
                      <GridPane.margin>
-                        <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
+                        <Insets bottom="60.0" left="50.0" right="50.0" top="60.0" />
                      </GridPane.margin>
                      <font>
                         <Font name="System Italic" size="18.0" />

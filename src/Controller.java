@@ -1,7 +1,9 @@
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.net.URL;
@@ -124,37 +126,35 @@ public class Controller {
         stage.setTitle(sceneTitle);
         stage.setX(getxPos());
         stage.setY(getyPos());
+
+        getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                System.out.println("Closing Client");
+                if(!stage.getTitle().equals("Log In")) {
+                    getClient().sendMessage(String.format("%s\n", Server.sendMessage.CLIENT_DISCONNECT));
+                }
+                System.exit(-1);
+            }
+        });
+
         getStage().show();
 
         temp2.close();
     }
 
-    public void loginInvalid() {
-    }
-
-    public void loginValid() {
-    }
-
-    public void signUpValid() {
-    }
-
-    public void signUpInvalid() {
-    }
-
     public void updateTimer(int time) {
     }
+    public void loginInvalid() {}
+    public void loginValid() {}
+    public void signUpValid() {}
+    public void signUpInvalid() {}
+    public void gameStart(){}
+    public void endGame(){}
+    public void displayResults(String[] clientMessage){}
+    public void guessResult(int score){}
+    public void updatePlayerStatsScreen() {}
 
-    public void gameStart() {
-    }
-
-    public void endGame() {
-    }
-
-    public void displayResults(String[] clientMessage) {
-    }
-
-    public void guessResult(int score) {
-    }
 
     public void updatePlayerStats(String username, String totalWins, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,
                                   String BRWins, String BRGamesPlayed, String tournamentWins, String tournamentsPlayed) {
@@ -167,9 +167,6 @@ public class Controller {
         player.setBRGamesPlayed(BRGamesPlayed);
         player.setTournamentWins(tournamentWins);
         player.setTournamentsPlayed(tournamentsPlayed);
-    }
-
-    public void updatePlayerStatsScreen() {
     }
 
     public void updateTSLeader(String rank, String username, String tournamentWins, String tournamentGamesLeft) {
