@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -10,6 +11,7 @@ import java.util.concurrent.Executors;
 
 class Server {
     private static ServerSocket server;
+    private static File scrambleFile = null;
 
     private static final List<ConnectedClient> clients = Collections.synchronizedList(new ArrayList<>());
     //    private static final List lobbies = Collections.synchronizedList(new ArrayList<Game>());
@@ -35,10 +37,20 @@ class Server {
         BATTLE_ROYAL
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) { // args[0] port, args[1] file name/path
         server = null;
         try {
-            server = new ServerSocket(23704);
+            switch (args.length){
+                case 1:
+                    server = new ServerSocket(Integer.parseInt(args[0]));
+                    break;
+                case 2:
+                    server = new ServerSocket(Integer.parseInt(args[0]));
+                    scrambleFile = new File(String.format("./%s", args[1])); // handle file not found
+                    break;
+                default:
+                    server = new ServerSocket(23704);
+            }
             server.setReuseAddress(true);
 
             executorService.execute(new AcceptPlayers());
@@ -91,7 +103,12 @@ class Server {
                                     }
                                     if (client.currentLobby == null) { // create lobby if none were found
                                         System.out.println("Created New ONE_VS_ONE Lobby");
-                                        Game temp = new OneVsOne();
+                                        Game temp;
+                                        if(scrambleFile != null){
+                                            temp = new OneVsOne(scrambleFile);
+                                        } else{
+                                            temp = new OneVsOne();
+                                        }
                                         executorService.execute(temp);
                                         lobbies.put(temp, Collections.synchronizedList(new ArrayList<ConnectedClient>() {{
                                             add(client);
@@ -115,7 +132,13 @@ class Server {
                                         }
                                     }
                                     if (client.currentLobby == null) { // create lobby if none were found
-                                        Game temp = new BattleRoyale();
+                                        System.out.println("Created New BAttlE_ROYALE Lobby");
+                                        Game temp;
+                                        if(scrambleFile != null){
+                                            temp = new BattleRoyale(scrambleFile);
+                                        } else{
+                                            temp = new BattleRoyale();
+                                        }
                                         executorService.execute(temp);
                                         lobbies.put(temp, Collections.synchronizedList(new ArrayList<ConnectedClient>() {{
                                             add(client);
