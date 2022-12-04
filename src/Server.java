@@ -394,6 +394,7 @@ class Server {
 }
 
 // TODO
-// add lobby type field to game class if getting by object type isnt possible
-// lobby cleanup once match ends or too many clients leave
+// text GUI
+// game display timer
+// handle file to be read
 //
