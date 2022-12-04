@@ -19,7 +19,15 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
     private boolean endFlag = false;
     private boolean startFlag = false;
     private int numConnectedClients = 0;
+    private int countDownTime;
 
+    public void setCountDownTime(int countDownTime) {
+        this.countDownTime = countDownTime;
+    }
+
+    public int getCountDownTime() {
+        return countDownTime;
+    }
 
     public boolean isInProgress() {
         return progressFlag;

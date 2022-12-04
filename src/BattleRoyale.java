@@ -36,7 +36,7 @@ public class BattleRoyale extends Game {
             if (getNumConnectedClients() == 3) {
                 preGameLobbyFlag = true;
                 lobbyStartTime = System.currentTimeMillis();
-                while (((System.currentTimeMillis() - lobbyStartTime) / 1000) < 30) ;
+                while (((System.currentTimeMillis() - lobbyStartTime) / 1000) < getCountDownTime()) ;
                 changeProgressFlag();
             }
         }
@@ -46,8 +46,13 @@ public class BattleRoyale extends Game {
     public void startGame() {
         preGameLobbyFlag = false;
         long startTime = System.currentTimeMillis();
-        while (((System.currentTimeMillis() - startTime) / 1000) < 30) ;
+        while (((System.currentTimeMillis() - startTime) / 1000) < 69) ;
         changeProgressFlag();
         changeEndFlag();
     }
 }
+// TODO
+// when adding player to lobby, send to client numPLayers connected
+// if pregame flag is false, dont send time
+// if true, send lobbyStartTime
+//
