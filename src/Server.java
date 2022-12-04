@@ -30,7 +30,10 @@ class Server {
         LEADERBOARD,        // requests leaderboard update
         REGISTER_REQUEST,    // [1] -> username, [2] -> password
 
-        CLIENT_DATA_REQUEST
+        CLIENT_DATA_REQUEST,
+        CANCEL_MM,
+        LOGOUT_REQUEST,
+        CLIENT_DISCONNECT
     }
 
     public enum gameMode {
@@ -302,26 +305,36 @@ class Server {
                     String[] clientMessage = receivedData.split(",");
                     try{
                         switch (clientMessage[0]){
-                            case "MODE_SELECTION":{
+                            case "MODE_SELECTION":
                                 requestedGame = clientMessage[1];
                                 break;
-                            }
-                            case "CLIENT_DATA_REQUEST" :{
+
+                            case "CLIENT_DATA_REQUEST" :
                                 output.format(String.format("%s,%s\n", Client.sendMessage.CLIENT_DATA, getStatString())); // send client data
                                 output.flush();
                                 break;
-                            }
-                            case "GUESS":{
-                                if(currentLobby != null && currentLobby.isInProgress()){
+
+                            case "GUESS":
+                                if(currentLobby != null && currentLobby.isInProgress()) {
                                     int tempScore = currentLobby.guess(clientMessage[1]);
                                     currentScore += tempScore;
                                     output.format(String.format("%s,%s\n", Client.sendMessage.GUESS_RESULT, tempScore));
                                     output.flush();
                                 }
                                 break;
+                            case "LOGOUT_REQUEST":
+                                // TODO: upload client data to db
+                                System.out.println("CLIENT LOG OUT");
+                                clients.remove(this);
+                                this.username = null;
+                                init();
+                                break;
+                            case "CLIENT_DISCONNECT":
+
+                                break;
                             }
                         } // TODO: on window close send command to server saying it close and then flip flag inside this run to then break form loop d then hit finally block so account is removed or smthn
-                    } catch(Exception e){
+                     catch(Exception e){
                         System.out.println("BAD INPUT RECEIVED");
                     }
                 }
