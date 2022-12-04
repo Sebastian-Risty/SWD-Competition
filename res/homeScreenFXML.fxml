@@ -138,7 +138,7 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <JFXButton fx:id="logOutButton" onAction="#logOutListener" text="Logout" />
+                  <JFXButton fx:id="logOutButton" onAction="#logOutListener" text="Log Out" />
                   <JFXButton fx:id="logoutConfirmationNo" onAction="#logOutConfirmationNoListener" text=" " GridPane.rowIndex="1" />
                   <JFXButton fx:id="logoutConfirmationYes" onAction="#logOutConfirmationYesListener" text=" " GridPane.rowIndex="2" />
                </children>

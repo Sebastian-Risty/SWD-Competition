@@ -100,6 +100,7 @@ public class HomeScreenController extends Controller {
             // send cancel message to server
             getClient().sendMessage(String.format("%s\n", Server.sendMessage.CANCEL_MM));
             readyUp.setText("Ready Up!");
+            logOutButton.setText("Logout");
             readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
             h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
             battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
@@ -111,6 +112,7 @@ public class HomeScreenController extends Controller {
     @FXML
     void h2hListener() {
         if(!readiedUp) {
+            logOutButton.setText("");
             gameModeFeedback.setText("");
             battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
             h2hMode.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
@@ -121,6 +123,7 @@ public class HomeScreenController extends Controller {
     void battleRoyaleListener() {
         if(!readiedUp) {
             gameModeFeedback.setText("");
+            logOutButton.setText("");
             h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
             battleRoyale.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
         }
@@ -128,10 +131,12 @@ public class HomeScreenController extends Controller {
 
     @FXML
     void logOutListener() {
-      logout = true;
-      logOutButton.setText("Are You Sure?");
-      logoutConfirmationNo.setText("No");
-      logoutConfirmationYes.setText("Yes");
+        if(!readiedUp) {
+            logout = true;
+            logOutButton.setText("Are You Sure?");
+            logoutConfirmationNo.setText("No");
+            logoutConfirmationYes.setText("Yes");
+        }
     }
 
     @FXML
@@ -140,7 +145,7 @@ public class HomeScreenController extends Controller {
             try {
                 getClient().sendMessage(String.format("%s\n", Server.sendMessage.LOGOUT_REQUEST));
                 setPlayer(null);
-                switchScene("LoginFXML.fxml", "Login");
+                switchScene("LoginFXML.fxml", "Log In");
             }
             catch(IOException e) {
                 e.printStackTrace();
@@ -150,7 +155,7 @@ public class HomeScreenController extends Controller {
     @FXML
     void logOutConfirmationNoListener() {
         if(logout) {
-            logOutButton.setText("Logout");
+            logOutButton.setText("Log Out");
             logoutConfirmationNo.setText("");
             logoutConfirmationYes.setText("");
             logout = false;

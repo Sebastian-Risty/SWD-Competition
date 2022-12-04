@@ -108,7 +108,7 @@ public class ClientDriver extends Application {
         Parent root = FXMLLoader.load(fxmlFile);
 
         Scene scene = new Scene(root);
-        primaryStage.setTitle("Word Game");
+        primaryStage.setTitle("Log In");
         primaryStage.setScene(scene);
 
         controller.setRoot(root);
