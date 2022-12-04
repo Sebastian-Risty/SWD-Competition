@@ -404,9 +404,20 @@ class Server {
                     String[] clientMessage = receivedData.split(",");
                     switch(clientMessage[0]){
                         case "LOGIN_REQUEST":
-                            if(Database.validLogin(clientMessage[1],clientMessage[2])){
+                            boolean good = true;
+                            synchronized (clients){
+                                for (ConnectedClient client : clients){
+                                    if(client.username.equals(clientMessage[1])){
+                                        System.out.println("Client Already Logged In, LOGIN FAILED");
+                                        output.format(String.format("%s\n", Client.sendMessage.LOGIN_INVALID));
+                                        output.flush();
+                                        good = false;
+                                    }
+                                }
+                            }
+                            if(Database.validLogin(clientMessage[1],clientMessage[2]) && good){
                                 System.out.println("LOGIN GOOD");
-                                Database.setTable("accounts");
+                                Database.setTable("Accounts");
                                 acceptAccountData(Database.getInfo(clientMessage[1]));
                                 output.format(String.format("%s\n", Client.sendMessage.LOGIN_VALID));
                                 output.flush();
