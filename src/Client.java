@@ -127,6 +127,7 @@ class Client implements Runnable {
                     }
                     case "GUESS_RESULT" :{
                         controller.guessResult(Integer.parseInt(clientMessage[1]));
+                        break;
                     }
                     case "SHUTDOWN":
                         clientExecutor.shutdown();
@@ -168,6 +169,7 @@ class Client implements Runnable {
                     }
                     case "GUESS_RESULT" :{
                         controller.guessResult(Integer.parseInt(clientMessage[1]));
+                        break;
                     }
                     case "SHUTDOWN":
                         clientExecutor.shutdown();
