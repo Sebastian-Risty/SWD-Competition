@@ -1,26 +1,6 @@
 import java.io.File;
 
 public class BattleRoyale extends Game {
-
-    private boolean preGameLobbyFlag = false;
-    private long lobbyStartTime;
-
-    public boolean getPreGameLobbyFlag() {
-        return preGameLobbyFlag;
-    }
-
-    public void setPreGameLobbyFlag(boolean preGameLobbyFlag) {
-        this.preGameLobbyFlag = preGameLobbyFlag;
-    }
-
-    public long getLobbyStartTime() {
-        return lobbyStartTime;
-    }
-
-    public void setLobbyStartTime(long lobbyStartTime) {
-        this.lobbyStartTime = lobbyStartTime;
-    }
-
     public BattleRoyale(File filePath, int fileIndex) {
         super(filePath, fileIndex);
         setGamemode("BattleRoyale");
@@ -31,28 +11,29 @@ public class BattleRoyale extends Game {
     }
 
     @Override
-    public void pregameLobby() {
+    public void pregameLobby() throws InterruptedException {
         while (!isInProgress()) {
+            Thread.sleep(10);
             if (getNumConnectedClients() == 3) {
-                preGameLobbyFlag = true;
-                lobbyStartTime = System.currentTimeMillis();
-                while (((System.currentTimeMillis() - lobbyStartTime) / 1000) < getCountDownTime()) ;
+                System.out.println("ENOUGH PlAYErS FOUND, STARTING COUNTDOWN TIMER");
+                setPreGameLobbyFlag(true);
+                setLobbyStartTime(System.currentTimeMillis());
+                while (((System.currentTimeMillis() - getLobbyStartTime()) / 1000) < getCountDownTime()) ;
+                System.out.println("TIMER FINISHED");
                 changeProgressFlag();
+                changeStartFlag();
+                startGame();
             }
         }
     }
 
     @Override
     public void startGame() {
-        preGameLobbyFlag = false;
+        setPreGameLobbyFlag(false);
         long startTime = System.currentTimeMillis();
-        while (((System.currentTimeMillis() - startTime) / 1000) < 69) ;
-        changeProgressFlag();
+        System.out.println("STARTING GAME TIMER");
+        while (((System.currentTimeMillis() - startTime) / 1000) < getMatchTime()) ;
+        System.out.println("GAME FINISHED");
         changeEndFlag();
     }
 }
-// TODO
-// when adding player to lobby, send to client numPLayers connected
-// if pregame flag is false, dont send time
-// if true, send lobbyStartTime
-//

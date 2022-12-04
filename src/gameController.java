@@ -39,7 +39,8 @@ public class gameController extends Controller {
 
     @FXML
     void enterPressed(KeyEvent event) {
-        if (event.getEventType().equals(KeyEvent.KEY_PRESSED) && event.getCode().equals(KeyCode.ENTER) && !guessWordField.getText().equals("")) {
+        if (event.getEventType().equals(KeyEvent.KEY_PRESSED) && event.getCode().equals(KeyCode.ENTER) && guessWordField.getText() != null) {
+            System.out.println("ENTER PRESSED");
             lastGuess = guessWordField.getText();
             getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.GUESS, guessWordField.getText()));
             guessWordField.setText("");

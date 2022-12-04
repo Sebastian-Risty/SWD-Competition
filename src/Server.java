@@ -121,6 +121,7 @@ class Server {
                                             temp = new OneVsOne();
                                         }
                                         executorService.execute(temp);
+                                        temp.setMatchTime(30);
                                         lobbies.put(temp, Collections.synchronizedList(new ArrayList<ConnectedClient>() {{
                                             add(client);
                                         }}));
@@ -131,21 +132,35 @@ class Server {
                                     break;
                                 }
                                 case "BATTLE_ROYAL": {
-
                                     synchronized (lobbies) {
                                         for (Game game : lobbies.keySet()) {
                                             if (game.getGamemode().equals("BattleRoyale") && !game.isInProgress()) { // client joins open game if possible
                                                 // add client
                                                 lobbies.get(game).add(client);
-                                                System.out.println("ADDED CLIENT TO GAME");
+                                                System.out.println("ADDED CLIENT TO Existing Battle Royale Lobby");
                                                 client.currentLobby = game;
                                                 game.clientConnected();
+
+                                                for(ConnectedClient lobbyClient : lobbies.get(game)){
+                                                    lobbyClient.output.format(String.format("%s,%s\n", Client.sendMessage.PLAYER_COUNT_UPDATE, game.getNumConnectedClients()));
+                                                    lobbyClient.output.flush();
+                                                }
+
+                                                if (game.getNumConnectedClients() == 3){ // send lobby start time to the 3 connected clients
+                                                    for(ConnectedClient lobbyClient : lobbies.get(game)){
+                                                        lobbyClient.output.format(String.format("%s,%s\n", Client.sendMessage.TIMER_UPDATE, game.getLobbyStartTime()));
+                                                        lobbyClient.output.flush();
+                                                    }
+                                                } else if(game.getNumConnectedClients() > 3){ // send the remaining time to any new clients
+                                                    client.output.format(String.format("%s,%s\n", Client.sendMessage.TIMER_UPDATE, game.getLobbyStartTime()));
+                                                    client.output.flush();
+                                                }
                                                 break;
                                             }
                                         }
                                     }
                                     if (client.currentLobby == null) { // create lobby if none were found
-                                        System.out.println("Created New BAttlE_ROYALE Lobby");
+                                        System.out.println("Created New Battle Royale Lobby");
                                         Game temp;
                                         if(scrambleFile != null){
                                             temp = new BattleRoyale(scrambleFile, fileIndex);
@@ -154,14 +169,15 @@ class Server {
                                         }
                                         executorService.execute(temp);
                                         temp.setCountDownTime(30);
+                                        temp.setMatchTime(60);
                                         lobbies.put(temp, Collections.synchronizedList(new ArrayList<ConnectedClient>() {{
                                             add(client);
                                         }}));
                                         client.currentLobby = temp;
                                         temp.clientConnected();
+                                        client.output.format("%s,%s\n", Client.sendMessage.PLAYER_COUNT_UPDATE, temp.getNumConnectedClients());
                                         fileIndex++;
                                     }
-                                    System.out.println("Created New BATTLE_ROYAL Lobby");
                                     break;
                                 }
                             }
@@ -188,7 +204,7 @@ class Server {
                             lobby.changeStartFlag();
                         }
 
-                        if (lobby.isFinished()) {
+                        if (lobby.isFinished()) { // END GAME
                             List<ConnectedClient> sortedClients = lobbies.get(lobby);
                             Collections.sort(sortedClients);
 
@@ -284,26 +300,30 @@ class Server {
                     String receivedData = input.nextLine();
                     System.out.printf("Message Received: %s\n", receivedData);
                     String[] clientMessage = receivedData.split(",");
-                    switch (clientMessage[0]){
-                        case "MODE_SELECTION":{
-                            requestedGame = clientMessage[1];
-                            break;
-                        }
-                        case "CLIENT_DATA_REQUEST" :{
-                            output.format(String.format("%s,%s\n", Client.sendMessage.CLIENT_DATA, getStatString())); // send client data
-                            output.flush();
-                            break;
-                        }
-                        case "GUESS":{
-                            if(currentLobby != null && currentLobby.isInProgress()){
-                                int tempScore = currentLobby.guess(clientMessage[1]);
-                                currentScore += tempScore;
-                                output.format(String.format("%s,%s\n", Client.sendMessage.GUESS_RESULT, tempScore));
-                                output.flush();
+                    try{
+                        switch (clientMessage[0]){
+                            case "MODE_SELECTION":{
+                                requestedGame = clientMessage[1];
+                                break;
                             }
-                            break;
-                        }
-                    } // TODO: on window close send command to server saying it close and then flip flag inside this run to then break form loop d then hit finally block so account is removed or smthn
+                            case "CLIENT_DATA_REQUEST" :{
+                                output.format(String.format("%s,%s\n", Client.sendMessage.CLIENT_DATA, getStatString())); // send client data
+                                output.flush();
+                                break;
+                            }
+                            case "GUESS":{
+                                if(currentLobby != null && currentLobby.isInProgress()){
+                                    int tempScore = currentLobby.guess(clientMessage[1]);
+                                    currentScore += tempScore;
+                                    output.format(String.format("%s,%s\n", Client.sendMessage.GUESS_RESULT, tempScore));
+                                    output.flush();
+                                }
+                                break;
+                            }
+                        } // TODO: on window close send command to server saying it close and then flip flag inside this run to then break form loop d then hit finally block so account is removed or smthn
+                    } catch(Exception e){
+                        System.out.println("BAD INPUT RECEIVED");
+                    }
                 }
             } catch (IOException | SQLException e) {
                 e.printStackTrace();
@@ -330,7 +350,7 @@ class Server {
 
         private void init() throws IOException, SQLException {
             System.out.println("START INIT");
-            Database.initialize("login");
+            Database.initialize("Login");
             while(this.username == null){
                 if(input.hasNext()){
                     String receivedData = input.nextLine();
@@ -399,6 +419,6 @@ class Server {
 // text GUI
 // game display timer
 // handle file to be read
-// make sure BR works
 // tourney
 // save client data when their window closes
+// prevent account logging in  more than once
