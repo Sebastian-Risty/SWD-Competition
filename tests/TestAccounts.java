@@ -3,13 +3,10 @@ import org.junit.Test;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestAccounts {
-
-    private static final String KEY_NAME = "key";
 
     private void init() throws SQLException {
         Database.initialize("Test");
@@ -54,23 +51,58 @@ public class TestAccounts {
     @Test
     public void testDeleteAccount() throws SQLException, FileNotFoundException { // also tests addAcount() and validLogin()
         init();
+        Database.setTable("Test");
         Database.addAccount("Matt", "password4");
         Database.deleteAccount("Matt", "password4");
         assertFalse(Database.validLogin("Matt", "password4"));
     }
 
     @Test
-    public void testGetInfo() throws SQLException, FileNotFoundException {
+    public void testGetInfo() throws SQLException {
         init();
         Database.setTable("Test");
-
-        String[] keyInfo = Encryptor.getFileInfo(KEY_NAME);
-        if (Objects.equals(keyInfo[0], "Error: file \"" + KEY_NAME + "\" not found")) { // if the key is not found
-            System.out.println("Error: key \"" + KEY_NAME + "\" not found");
-            throw new FileNotFoundException();
-        }
-
-        String[] expected = new String[]{"Sebastian","password1","0"};
+        String[] expected = new String[]{"Sebastian", "password1", "0"};
         assertArrayEquals(expected, Database.getInfo("Sebastian"));
+    }
+
+    @Test
+    public void testGetKeyInfo() {
+        boolean passed = true;
+        try {
+            Database.getKeyInfo();
+        } catch (FileNotFoundException ex) {
+            passed = false;
+        }
+        assertTrue(passed);
+    }
+
+    @Test
+    public void testCreateAddToTournament() throws SQLException {
+        init();
+        Database.setTable("mastertournament");
+        Database.createTournament("mytournament3", 100);
+
+
+        Database.addToTournament("Sebastian", "mytournament3");
+        assertFalse(Database.addToTournament("Sebastian", "mytournament3")); // cannot add same account twice
+        assertFalse(Database.removeFromTournament("yourmom", "mytournament3")); // cannot remove account that's not there
+
+
+        Database.setTable("mytournament3");
+        System.out.println(Arrays.toString(Database.getInfo("Sebastian")));
+
+        // GOOD EXAMPLE OF HOW RANK WILL NEED TO BE UPDATED, SETTING RANK TO ROW ONLY WORKS FOR INITIAL VALUES
+        Database.addToTournament("Matt", "mytournament3");
+        Database.removeFromTournament("Sebastian", "mytournament3");
+        System.out.println(Arrays.toString(Database.getInfo("Matt")));
+
+        Database.deleteTournament("mytournament3");
+        assertTrue(Database.createTournament("mytournament3", 100)); // tournament deleted and then recreated successfully
+        Database.deleteTournament("mytournament3");
+
+        assertFalse(Database.deleteTournament("mytournament3"));
+        assertFalse(Database.deleteAccount("hey", "hi"));
+
+
     }
 }
