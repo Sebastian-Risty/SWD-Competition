@@ -36,15 +36,13 @@ public class gameResultsController extends Controller {
             @Override
             public void run() {
                 ObservableList<String> resultsList = FXCollections.observableArrayList();
-                for (int i = 2; i < results.length - 1; i += 2) {
+                resultsList.add("USERNAME  :  SCORE");
+
+                for (int i = 1; i < results.length - 1; i += 2) {
                     String name = results[i];
                     String score = results[i + 1];
                     resultsList.add(name + "  :  " + score);
-                    if (results[1].equals(name)) {
-                        positionLabel.setText("" + (i / 2));
-                        scoreLabel.setText("" + score);
-                    }
-                    leaderboardList = new ListView<>(resultsList);
+                    leaderboardList.setItems(resultsList);
                 }
             }
         });
