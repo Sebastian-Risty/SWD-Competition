@@ -246,7 +246,7 @@ public class HomeScreenController extends Controller {
             @Override
             public void run() {
                 try {
-                    switchScene("gameFXML.fxml", "Word Game");
+                    switchScene("StatsPage.fxml", "Tournament Home");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
