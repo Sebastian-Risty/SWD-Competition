@@ -144,7 +144,7 @@ class Server {
                     for (Game lobby : lobbies.keySet()) {
                         if(lobby.hasStarted()){ // START GAME
                             for(ConnectedClient client : lobbies.get(lobby)){
-                                client.output.format(String.format("%s,%s\n", Client.sendMessage.GAME_START, lobby.getLetters().toString()));
+                                client.output.format(String.format("%s,%s\n", Client.sendMessage.GAME_START, lobby.getLetters().toString().replaceAll("[], \\[]", "")));
                                 client.output.flush();
                             }
                             lobby.changeStartFlag();

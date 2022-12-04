@@ -119,7 +119,6 @@ public class Controller {
     }
 
     public void getLetters(String letters) {
-
     }
 
     public void updatePlayerStats(String username, String totalWins, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,
