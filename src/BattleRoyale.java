@@ -1,4 +1,11 @@
+import java.io.File;
+
 public class BattleRoyale extends Game {
+
+    public BattleRoyale(File filePath, int fileIndex) {
+        super(filePath, fileIndex);
+        setGamemode("BattleRoyale");
+    }
 
     public BattleRoyale() {
         setGamemode("BattleRoyale");

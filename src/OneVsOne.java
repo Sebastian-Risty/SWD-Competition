@@ -1,7 +1,13 @@
+import java.io.File;
+
 public class OneVsOne extends Game {
 
+    public OneVsOne(File filePath, int fileIndex) {
+        super(filePath, fileIndex);
+        setGamemode("OneVsOne");
+    }
+
     public OneVsOne() {
-        System.out.println("IN 1v1 CONSTRUCTOR");
         setGamemode("OneVsOne");
     }
 

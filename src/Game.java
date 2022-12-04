@@ -9,6 +9,8 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
     ArrayList<String> wordsToChooseFrom = new ArrayList<>();
     private String gamemode;
     private File filePath = null;
+    private int fileIndex;
+    private String selectedWord;
     private ArrayList<Character> letters = new ArrayList<>();
     private ArrayList<String> validWords = new ArrayList<>();// TODO: gen score value for each word, read rules from some other class
     private ArrayList<String> allWords = new ArrayList<>();
@@ -57,16 +59,16 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
         startFlag = !startFlag;
     }
 
-
-    public Game() {
-    }
-
     public void clientDisconnected() {
         numConnectedClients--;
     }
 
-    public Game(File filePath) {
+    public Game() {
+    }
+
+    public Game(File filePath, int fileIndex) {
         this.filePath = filePath;
+        this.fileIndex = fileIndex;
     }
 
     public void clientConnected() {
@@ -76,17 +78,34 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
     @Override
     public void run() {
         if (filePath == null) {
-
+            normalGame();
         } else {
-
+            TAGame();
         }
-        initializeGame();
         try {
             pregameLobby();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         startGame();
+    }
+
+    private void normalGame() {
+        readAllWords();
+        selectWord();
+        generateLetters();
+        addAdditionalLetters();
+        Collections.sort(letters);
+        findValidWords();
+    }
+
+    private void TAGame() {
+        readLetterFile();
+        readAllWords();
+        selectedWord = wordsToChooseFrom.get(fileIndex);
+        generateLetters();
+        Collections.sort(letters);
+        findValidWords();
     }
 
     private void readLetterFile() {
@@ -121,38 +140,27 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
         }
     }
 
-    private void findWordsToChooseFrom() {
+    private void selectWord() {
         for (String word : allWords) {
             if (word.length() < 6) {
                 wordsToChooseFrom.add(word);
             }
         }
+        int selectedIndex = (int) (Math.random() * wordsToChooseFrom.size());
+
+        selectedWord = wordsToChooseFrom.get(selectedIndex);
     }
 
-    private void selectWord() {
-
+    private void generateLetters() {
+        for (char letter : selectedWord.toCharArray()) {
+            letters.add(letter);
+        }
     }
 
-    private void initializeGame() {
-        BufferedReader reader;
-        try {
-            int selectedIndex = (int) (Math.random() * wordsToChooseFrom.size());
-
-            String selectedWord = wordsToChooseFrom.get(selectedIndex);
-            for (char letter : selectedWord.toCharArray()) {
-                letters.add(letter);
-            }
-
-            int numAddedLetters = (int) (Math.random() * 4);
-            for (int i = 0; i < numAddedLetters; i++) {
-                letters.add((char) ((Math.random() * 26) + 97));
-            }
-
-            Collections.sort(letters);
-            findValidWords();
-
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void addAdditionalLetters() {
+        int numAddedLetters = (int) (Math.random() * 4);
+        for (int i = 0; i < numAddedLetters; i++) {
+            letters.add((char) ((Math.random() * 26) + 97));
         }
     }
 
@@ -186,11 +194,9 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
         return freq;
     }
 
-    // reference to lobby stored in ConnectedClient object, no longer needed
-
     public int guess(String guess) {
         if (validWords.contains(guess.toLowerCase())) {
-            return 1; //TODO: calculate score of each word upon generation based on scoring method, return the value
+            return guess.length(); //TODO: calculate score of each word upon generation based on scoring method, return the value
         }
         return 0;
     }
