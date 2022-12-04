@@ -483,4 +483,3 @@ class Server {
 // handle file to be read
 // tourney
 // save client data when their window closes
-// prevent account logging in  more than once

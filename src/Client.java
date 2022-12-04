@@ -150,7 +150,7 @@ class Client implements Runnable {
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
-
+                        break;
                 }
             } else {
                 switch (clientMessage[0]) {
@@ -192,6 +192,7 @@ class Client implements Runnable {
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
+                        break;
                 }
             }
         }
