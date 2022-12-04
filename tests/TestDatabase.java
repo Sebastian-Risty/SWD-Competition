@@ -2,11 +2,10 @@ import org.junit.Test;
 
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestAccounts {
+public class TestDatabase {
 
     private void init() throws SQLException {
         Database.initialize("Test");
@@ -29,9 +28,8 @@ public class TestAccounts {
 
         String[] expected = new String[]{"Sam", "1000", "Cole", "500", "Sebastian", "0"};
         String[] actual = Database.getTopPlayers(10);
-        System.out.println(Arrays.toString(actual));
+        // System.out.println(Arrays.toString(actual));
         assertArrayEquals(expected, actual);
-        //assertTrue(Accounts.validLogin("Cole", "password10"));
     }
 
     @Test
@@ -89,12 +87,12 @@ public class TestAccounts {
 
 
         Database.setTable("mytournament3");
-        System.out.println(Arrays.toString(Database.getInfo("Sebastian")));
+        // System.out.println(Arrays.toString(Database.getInfo("Sebastian")));
 
         // GOOD EXAMPLE OF HOW RANK WILL NEED TO BE UPDATED, SETTING RANK TO ROW ONLY WORKS FOR INITIAL VALUES
         Database.addToTournament("Matt", "mytournament3");
         Database.removeFromTournament("Sebastian", "mytournament3");
-        System.out.println(Arrays.toString(Database.getInfo("Matt")));
+        // System.out.println(Arrays.toString(Database.getInfo("Matt")));
 
         Database.deleteTournament("mytournament3");
         assertTrue(Database.createTournament("mytournament3", 100)); // tournament deleted and then recreated successfully
