@@ -102,6 +102,9 @@ class Client implements Runnable {
                     controller.displayResults(clientMessage);
                     break;
                 }
+                case "GUESS_RESULT" :{
+                    controller.guessResult(Integer.parseInt(clientMessage[1]));
+                }
             }
         }
     }

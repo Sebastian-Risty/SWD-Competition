@@ -117,6 +117,10 @@ public class Controller {
 
     }
 
+    public void guessResult(int score) {
+
+    }
+
     public void getLetters(String letters) {
     }
 
