@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 
 class Server {
@@ -150,6 +151,11 @@ class Server {
                                                 }
 
                                                 if (game.getNumConnectedClients() == 3){ // send lobby start time to the 3 connected clients
+                                                    try {
+                                                        Thread.sleep(100);
+                                                    } catch (InterruptedException e) {
+                                                        throw new RuntimeException(e);
+                                                    }
                                                     for(ConnectedClient lobbyClient : lobbies.get(game)){
                                                         lobbyClient.output.format(String.format("%s,%s\n", Client.sendMessage.TIMER_UPDATE, game.getLobbyStartTime()));
                                                         lobbyClient.output.flush();
@@ -326,11 +332,38 @@ class Server {
                                 // TODO: upload client data to db
                                 System.out.println("CLIENT LOG OUT");
                                 clients.remove(this);
+                                if(this.currentLobby != null){
+                                    lobbies.get(this.currentLobby).remove(this); // TODO: may not need this here
+                                    this.currentLobby.clientDisconnected();
+                                    this.currentLobby = null;
+                                }
                                 this.username = null;
+                                this.requestedGame = null;
                                 init();
                                 break;
                             case "CLIENT_DISCONNECT":
+                                // TODO: upload client data to db
+                                System.out.println("CLIENT DISCONNECT");
+                                clients.remove(this);
+                                if(this.currentLobby != null){
+                                    lobbies.get(this.currentLobby).remove(this); // TODO: may need to sync
+                                    this.currentLobby.clientDisconnected();
+                                    this.currentLobby = null;
+                                }
+                                this.username = null;
+                                this.requestedGame = null;
 
+                                output.format("%s", Client.sendMessage.SHUTDOWN);
+                                output.flush();
+                                break;
+                            case "CANCEL_MM":
+                                System.out.println("CLIENT CANCELED MM");
+                                this.requestedGame = null;
+                                if(this.currentLobby != null){
+                                    lobbies.get(this.currentLobby).remove(this); // TODO: may need to put in sync blocks
+                                    this.currentLobby.clientDisconnected();
+                                    this.currentLobby = null;
+                                }
                                 break;
                             }
                         } // TODO: on window close send command to server saying it close and then flip flag inside this run to then break form loop d then hit finally block so account is removed or smthn
@@ -423,7 +456,7 @@ class Server {
         }
         @Override
         public int compareTo(ConnectedClient connectedClient) {
-            return this.currentScore - connectedClient.currentScore;
+            return connectedClient.currentScore - this.currentScore ;
         }
     }
 }

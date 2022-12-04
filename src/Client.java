@@ -3,7 +3,9 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 class Client implements Runnable {
     private boolean textMode = false;
@@ -16,6 +18,7 @@ class Client implements Runnable {
     private String letters;
     private String[] gameResults;
     private PlayerStats stats;
+    private final ExecutorService clientExecutor = Executors.newFixedThreadPool(1);
 
     // TEXTMODE STUFF
     private boolean loggedIn = false;
@@ -49,7 +52,7 @@ class Client implements Runnable {
         this.ip = ip;
         this.port = port;
         startClient();
-        Executors.newFixedThreadPool(1).execute(this); // add thread for client
+        clientExecutor.execute(this);
     }
 
     private void startClient() {
@@ -124,7 +127,19 @@ class Client implements Runnable {
                     }
                     case "GUESS_RESULT" :{
                         controller.guessResult(Integer.parseInt(clientMessage[1]));
+                        break;
                     }
+                    case "SHUTDOWN":
+                        clientExecutor.shutdown();
+                        try {
+                            if(!clientExecutor.awaitTermination(2, TimeUnit.SECONDS)){
+                                System.out.println("shutdown failed, forcing.");
+                                clientExecutor.shutdownNow();
+                            }
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+
                 }
             } else{
                 switch (clientMessage[0]) {
@@ -154,7 +169,18 @@ class Client implements Runnable {
                     }
                     case "GUESS_RESULT" :{
                         controller.guessResult(Integer.parseInt(clientMessage[1]));
+                        break;
                     }
+                    case "SHUTDOWN":
+                        clientExecutor.shutdown();
+                        try {
+                            if(!clientExecutor.awaitTermination(2, TimeUnit.SECONDS)){
+                                System.out.println("shutdown failed, forcing.");
+                                clientExecutor.shutdownNow();
+                            }
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                 }
             }
         }
@@ -171,6 +197,7 @@ class Client implements Runnable {
         GUESS_RESULT,   // [1] -> score received from guess
         GAME_END,        // [1] -> (bool)hasWon, winningUsername,
         TIMER_UPDATE,
-        PLAYER_COUNT_UPDATE // [1] -> numPlayers in match
+        PLAYER_COUNT_UPDATE, // [1] -> numPlayers in match
+        SHUTDOWN
     }
 }
