@@ -42,7 +42,7 @@ public class gameResultsController extends Controller {
                     String name = results[i];
 
                     if (name.equals(getPlayer().getUsername())) {
-                        positionLabel.setText(name);
+                        positionLabel.setText(String.valueOf((i/2) + 1));
                         scoreLabel.setText(results[i+1]);
                     }
 
