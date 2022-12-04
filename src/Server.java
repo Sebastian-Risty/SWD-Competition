@@ -329,7 +329,9 @@ class Server {
                                 }
                                 break;
                             case "LOGOUT_REQUEST":
-                                // TODO: upload client data to db
+                                Database.setTable("Accounts");
+                                Database.update(getStatString().split(","));
+
                                 System.out.println("CLIENT LOG OUT");
                                 clients.remove(this);
                                 if(this.currentLobby != null){
@@ -342,7 +344,9 @@ class Server {
                                 init();
                                 break;
                             case "CLIENT_DISCONNECT":
-                                // TODO: upload client data to db
+                                Database.setTable("Accounts");
+                                Database.update(getStatString().split(","));
+
                                 System.out.println("CLIENT DISCONNECT");
                                 clients.remove(this);
                                 if(this.currentLobby != null){
