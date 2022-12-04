@@ -204,7 +204,7 @@ class Server {
                             lobby.changeStartFlag();
                         }
 
-                        if (lobby.isFinished()) {
+                        if (lobby.isFinished()) { // END GAME
                             List<ConnectedClient> sortedClients = lobbies.get(lobby);
                             Collections.sort(sortedClients);
 
@@ -300,26 +300,30 @@ class Server {
                     String receivedData = input.nextLine();
                     System.out.printf("Message Received: %s\n", receivedData);
                     String[] clientMessage = receivedData.split(",");
-                    switch (clientMessage[0]){
-                        case "MODE_SELECTION":{
-                            requestedGame = clientMessage[1];
-                            break;
-                        }
-                        case "CLIENT_DATA_REQUEST" :{
-                            output.format(String.format("%s,%s\n", Client.sendMessage.CLIENT_DATA, getStatString())); // send client data
-                            output.flush();
-                            break;
-                        }
-                        case "GUESS":{
-                            if(currentLobby != null && currentLobby.isInProgress()){
-                                int tempScore = currentLobby.guess(clientMessage[1]);
-                                currentScore += tempScore;
-                                output.format(String.format("%s,%s\n", Client.sendMessage.GUESS_RESULT, tempScore));
-                                output.flush();
+                    try{
+                        switch (clientMessage[0]){
+                            case "MODE_SELECTION":{
+                                requestedGame = clientMessage[1];
+                                break;
                             }
-                            break;
-                        }
-                    } // TODO: on window close send command to server saying it close and then flip flag inside this run to then break form loop d then hit finally block so account is removed or smthn
+                            case "CLIENT_DATA_REQUEST" :{
+                                output.format(String.format("%s,%s\n", Client.sendMessage.CLIENT_DATA, getStatString())); // send client data
+                                output.flush();
+                                break;
+                            }
+                            case "GUESS":{
+                                if(currentLobby != null && currentLobby.isInProgress()){
+                                    int tempScore = currentLobby.guess(clientMessage[1]);
+                                    currentScore += tempScore;
+                                    output.format(String.format("%s,%s\n", Client.sendMessage.GUESS_RESULT, tempScore));
+                                    output.flush();
+                                }
+                                break;
+                            }
+                        } // TODO: on window close send command to server saying it close and then flip flag inside this run to then break form loop d then hit finally block so account is removed or smthn
+                    } catch(Exception e){
+                        System.out.println("BAD INPUT RECEIVED");
+                    }
                 }
             } catch (IOException | SQLException e) {
                 e.printStackTrace();
@@ -415,7 +419,6 @@ class Server {
 // text GUI
 // game display timer
 // handle file to be read
-// make sure BR works
 // tourney
 // save client data when their window closes
 // prevent account logging in  more than once
