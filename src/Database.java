@@ -1,6 +1,5 @@
 import java.io.*;
 import java.sql.*;
-import java.util.InputMismatchException;
 import java.util.Objects;
 
 
@@ -38,13 +37,14 @@ public class Database {
         // all accounts ordered by score from highest to lowest
         if (Objects.equals(table, "Accounts"))
             resultSet = statement.executeQuery("SELECT * FROM " + table + " ORDER BY totalwins DESC");
-        else if (Objects.equals(table, "Test")) {
+        else if (Objects.equals(table, "Test"))
             resultSet = statement.executeQuery("SELECT * FROM " + table + " ORDER BY score DESC");
-        } else if (Objects.equals(table, "Tournament"))
-            resultSet = statement.executeQuery("SELECT * FROM " + table + " ORDER BY wins DESC");
-        else
+        else if (Objects.equals(table, "mastertournament"))
+            resultSet = statement.executeQuery("SELECT * FROM " + table + " ORDER BY tournamentid DESC");
+        else if (Objects.equals(table, "Login"))
             resultSet = statement.executeQuery("SELECT * FROM " + table + " ORDER BY username ");
-
+        else // non-master tournament table
+            resultSet = statement.executeQuery("SELECT * FROM " + table + " ORDER BY wins DESC");
 
         metaData = resultSet.getMetaData();
     }
@@ -55,6 +55,14 @@ public class Database {
             table = "Login";
 
         resultSet = statement.executeQuery("SELECT COUNT(1) FROM " + table + " WHERE username = '" + username + "';");
+        return inDB(resultSet);
+    }
+
+    private static boolean tournamentTaken(String tournamentID) throws SQLException {
+        if (!Objects.equals(table, "Test")) // if you're not testing, table should be mastertournament
+            table = "mastertournament";
+
+        resultSet = statement.executeQuery("SELECT COUNT(1) FROM " + table + " WHERE tournamentid = '" + tournamentID + "';");
         return inDB(resultSet);
     }
 
@@ -95,9 +103,77 @@ public class Database {
         else {
             statement.executeUpdate("INSERT INTO Login (username, password) VALUES ('" + usernameInp + "', '" + encryptedPassword + "');");
             statement.executeUpdate("INSERT INTO accounts (username) VALUES ('" + usernameInp + "');");
-            statement.executeUpdate("INSERT INTO tournament (username) VALUES ('" + usernameInp + "');");
         }
 
+        updateData();
+        return true;
+    }
+
+    public static int countRows(String table) throws SQLException {
+        resultSet = statement.executeQuery("SELECT COUNT(*) FROM " + table);
+        metaData = resultSet.getMetaData();
+
+        int rows = 0;
+        while (resultSet.next()) {
+            for (int i = 1; i <= metaData.getColumnCount(); i++) {
+                rows = resultSet.getInt(i);
+            }
+        }
+        return rows;
+
+    }
+
+    // returns false if username is already in inputted tournament table, true if added successfully
+    public static boolean addToTournament(String usernameInp, String tournamentTable) throws SQLException {
+        table = tournamentTable;
+        resultSet = statement.executeQuery("SELECT COUNT(1) FROM " + table + " WHERE username = '" + usernameInp + "';");
+        if (!inDB(resultSet)) {
+            statement.executeUpdate("INSERT INTO " + table + "(username,wins,ranking) VALUES ('" + usernameInp + "', 0, '" + (countRows(tournamentTable) + 1) + "');");
+            updateData();
+            return true;
+        }
+        return false; // account already in tournament
+    }
+
+    // returns false if username was not in tournament table, true if removed successfully
+    public static boolean removeFromTournament(String usernameInp, String tournamentTable) throws SQLException {
+        table = tournamentTable;
+        resultSet = statement.executeQuery("SELECT COUNT(1) FROM " + table + " WHERE username = '" + usernameInp + "';");
+        if (inDB(resultSet)) {
+            statement.executeUpdate("DELETE FROM " + table + " WHERE " + table + ".username = '" + usernameInp + "'");
+            updateData();
+            return true;
+        }
+        return false; // wasn't in tournament in the first place
+    }
+
+    // returns false if table name is already in use
+    public static boolean createTournament(String tableName, int timeStarted) throws SQLException {
+        if (tournamentTaken(tableName))
+            return false;
+
+
+        statement.executeUpdate("CREATE TABLE " + tableName + "\n" +
+                "(\n" +
+                "    Username varchar(50) NOT NULL PRIMARY KEY ,\n" +
+                "    Wins int NOT NULL DEFAULT 0,\n" +
+                "    Ranking varchar(50) NOT NULL\n" +
+                ");");
+        statement.executeUpdate("INSERT INTO mastertournament (tournamentid, timestarted) VALUES ('" + tableName + "', " + timeStarted + ");");
+        table = "mastertournament";
+        updateData();
+        // create table and remove form master table
+        return true;
+    }
+
+    // returns false if table cannot be found
+    public static boolean deleteTournament(String tableName) throws SQLException {
+        if (!tournamentTaken(tableName))
+            return false;
+
+        statement.executeUpdate("DROP TABLE " + tableName);
+        statement.executeUpdate("DELETE FROM mastertournament WHERE tournamentid = '" + tableName + "';");
+        table = "mastertournament";
         updateData();
         return true;
     }
@@ -105,7 +181,10 @@ public class Database {
     // returns the info of the inputted username
     // should specify table before running (Accounts.setTable())
     public static String[] getInfo(String username) throws SQLException {
-        resultSet = statement.executeQuery("SELECT * FROM " + table + " WHERE username = '" + username + "';");
+        if (!Objects.equals(table, "mastertournament"))
+            resultSet = statement.executeQuery("SELECT * FROM " + table + " WHERE username = '" + username + "';");
+        else
+            resultSet = statement.executeQuery("SELECT * FROM " + table + " WHERE tournamentid = '" + username + "';");
         metaData = resultSet.getMetaData();
         int numColumns = metaData.getColumnCount();
 
@@ -136,11 +215,11 @@ public class Database {
                 if (Objects.equals(table, "Test")) // if testing
                     statement.executeUpdate("DELETE FROM " + table + " WHERE " + table + ".Username = '" + username + "' AND " + table + ".Password = '" + encryptedPassword + "'");
                 else { // if not testing
-                    statement.executeUpdate("DELETE FROM accounts WHERE accounts.Username = " + username);
-                    statement.executeUpdate("DELETE FROM tournament WHERE tournament.Username = " + username);
-                    statement.executeUpdate("DELETE FROM login WHERE login.Username = " + username);
+                    statement.executeUpdate("DELETE FROM accounts WHERE accounts.Username = '" + username + "'");
+                    // statement.executeUpdate("DELETE FROM tournament WHERE tournament.username = '" + username + "'");
+                    statement.executeUpdate("DELETE FROM login WHERE login.Username = '" + username + "'");
                 }
-                updateData();
+                //updateData();
                 return true;
             }
         } catch (FileNotFoundException ex) {
@@ -196,11 +275,16 @@ public class Database {
 //            System.out.println(data[i - 1]);
 //            System.out.println(data[0]);
 
-            if (i == 1) // changing the username
+
+            if (Objects.equals(table, "mastertournament") && i == 1) { // changing tournament id
+                statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = '" + data[i - 1] + "' WHERE tournamentid = '" + data[0] + "';");
+            } else if (Objects.equals(table, "mastertournament")) { // changing time started
+                statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = '" + Integer.parseInt(data[i - 1]) + "' WHERE tournamentid = '" + data[0] + "';");
+            } else if (i == 1) { // changing a username
                 statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = '" + data[i - 1] + "' WHERE username = '" + data[0] + "';");
-            else if ((Objects.equals(table, "Test") || Objects.equals(table, "login")) && i == 2) // changing the password
+            } else if ((Objects.equals(table, "Test") || Objects.equals(table, "login")) && i == 2) // changing a password
                 statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = '" + Encryptor.shiftMessage(data[i - 1], keyInfo, false) + "' WHERE username = '" + data[0] + "';");
-            else // changing any column other than the username or password
+            else // changing any column other than the username or password (all other columns are integers)
                 statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = " + Integer.parseInt(data[i - 1]) + " WHERE username = '" + data[0] + "';");
         }
         updateData();
@@ -209,17 +293,13 @@ public class Database {
     // returns an array in this format [user1,score1,user2,score2,...] where the user and their corresponding score
     // are in descending order (i.e. index 0 is the username for the player with the highest score, index 1 is their highest score)
     // should specify table before running (Accounts.setTable())
-    public static String[] getTopPlayers(int num) throws SQLException { // MAKE SURE TABLE IS SET TO ACCOUNTS !!!
+    public static String[] getTopPlayers(int num) throws SQLException { // MAKE SURE TABLE IS SET !!!
         StringBuilder output = new StringBuilder();
-        if (Objects.equals(table, "Accounts"))
+        if (Objects.equals(table, "Accounts") || Objects.equals(table, "Test"))
             resultSet = statement.executeQuery("SELECT Username, Score FROM " + table + " ORDER BY Score DESC");
-        else if (Objects.equals(table, "Tournament")) {
+        else  // getting from one of the tournament tables
             resultSet = statement.executeQuery("SELECT Username, Wins FROM " + table + " ORDER BY Wins DESC");
-        } else if (Objects.equals(table, "Test")) {
-            resultSet = statement.executeQuery("SELECT Username, Score FROM " + table + " ORDER BY Score DESC");
-        } else {
-            throw new InputMismatchException(); // if thrown, you need to set table to either accounts, tournament, or test before the function is called
-        }
+
         metaData = resultSet.getMetaData();
         int numColumns = metaData.getColumnCount();
 
@@ -241,6 +321,8 @@ public class Database {
     // should specify table before running (Accounts.setTable())
     public static void clearAll() throws SQLException {
         statement.executeUpdate("DELETE FROM " + table);
+        if (!Objects.equals(table, "Test")) // if not testing
+            table = "Accounts";
         updateData();
     }
 
