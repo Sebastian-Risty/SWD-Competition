@@ -1,10 +1,11 @@
 import com.jfoenix.controls.JFXTextArea;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-import java.awt.*;
+
 import java.io.IOException;
 
 public class gameController extends Controller {
