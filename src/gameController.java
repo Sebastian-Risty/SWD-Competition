@@ -1,16 +1,20 @@
 import com.jfoenix.controls.JFXTextArea;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.awt.*;
+import java.io.IOException;
 
 public class gameController extends Controller {
 
     @FXML
     private JFXTextArea wordPanel;
+
     @FXML
     private JFXTextArea guessWordField;
+
     @FXML
     private Label letters;
 
@@ -34,6 +38,16 @@ public class gameController extends Controller {
 
     @Override
     public void endGame() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    switchScene("gameResultsFXML.fxml", "Results");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 }

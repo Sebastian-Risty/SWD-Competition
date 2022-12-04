@@ -88,7 +88,12 @@ class Client implements Runnable {
                     break;
                 }
                 case "GAME_START": {
-                    controller.gameStart();
+                    controller.getLetters(clientMessage[1]);
+                    break;
+                }
+                case "GAME_END": {
+                    controller.endGame();
+                    controller.displayResults(clientMessage);
                     break;
                 }
             }
@@ -103,5 +108,6 @@ class Client implements Runnable {
         SIGNUP_INVALID, //
         GAME_START, //
         GUESS_RESULT,   // [1] -> score received from guess
+        GAME_END        // [1] -> (bool)hasWon, winningUsername,
     }
 }

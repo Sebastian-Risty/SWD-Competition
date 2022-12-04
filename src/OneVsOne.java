@@ -13,6 +13,7 @@ public class OneVsOne extends Game {
             if (getNumConnectedClients() == 2) {
                 System.out.println("CHANGED FLAG");
                 changeProgressFlag();
+                changeStartFlag();
                 startGame();
             }
         }

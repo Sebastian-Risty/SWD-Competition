@@ -1,11 +1,13 @@
+import java.io.*;
 import java.sql.*;
 import java.util.InputMismatchException;
 import java.util.Objects;
 
+
 // on executeUpdate vs executeQuery
 // https://stackoverflow.com/questions/21276059/no-results-returned-by-the-query-error-in-postgresql
 
-public class Accounts {
+public class Database {
     private static final String DATABASE_URL = "jdbc:postgresql://s-l112.engr.uiowa.edu/swd_db08";
     private static final String USERNAME = "swd_student08";
     private static final String PASSWORD = "engr-2022-08";
@@ -13,9 +15,19 @@ public class Accounts {
     private static ResultSetMetaData metaData;
     private static Statement statement;
     private static String table;
+    private static final String KEY_NAME = "key";
+    private static String[] keyInfo;
 
     public static void setTable(String table) {
-        Accounts.table = table;
+        Database.table = table;
+    }
+
+    public static void getKeyInfo() throws FileNotFoundException {
+        keyInfo = Encryptor.getFileInfo(KEY_NAME);
+        if (Objects.equals(keyInfo[0], "Error: file \"" + KEY_NAME + "\" not found")) { // if the key is not found
+            System.out.println("Error: key \"" + KEY_NAME + "\" not found");
+            throw new FileNotFoundException();
+        }
     }
 
     // refreshes database
@@ -37,6 +49,7 @@ public class Accounts {
         metaData = resultSet.getMetaData();
     }
 
+    // returns true if the username is already used, false if not
     private static boolean usernameTaken(String username) throws SQLException {
         if (!Objects.equals(table, "Test")) // if you're not testing, table should be login
             table = "Login";
@@ -48,11 +61,11 @@ public class Accounts {
 
     // checks that the user's login is valid. If the function runs without throwing an SQLException, the login is valid
     // if not, either the username or password is wrong
-    public static boolean validLogin(String username, String password) throws SQLException {
+    public static boolean validLogin(String username, String password) throws SQLException, FileNotFoundException {
         if (!Objects.equals(table, "Test")) // if you're not testing, table should be login
             table = "login";
 
-        resultSet = statement.executeQuery("SELECT COUNT(1) FROM " + table + " WHERE username = '" + username + "' AND password = '" + password + "';");
+        resultSet = statement.executeQuery("SELECT COUNT(1) FROM " + table + " WHERE username = '" + username + "' AND password = '" + Encryptor.shiftMessage(password, keyInfo, false) + "';");
         return inDB(resultSet);
     }
 
@@ -74,14 +87,16 @@ public class Accounts {
             // username in use
             return false;
         }
+
+        String encryptedPassword = Encryptor.shiftMessage(passwordInp, keyInfo, false);
+
         if (Objects.equals(table, "Test"))
-            statement.executeUpdate("INSERT INTO test (username, password, score) VALUES ('" + usernameInp + "', '" + passwordInp + "', 0);");
+            statement.executeUpdate("INSERT INTO test (username, password, score) VALUES ('" + usernameInp + "', '" + encryptedPassword + "', 0);");
         else {
-            statement.executeUpdate("INSERT INTO Login (username, password) VALUES ('" + usernameInp + "', '" + passwordInp + "');");
+            statement.executeUpdate("INSERT INTO Login (username, password) VALUES ('" + usernameInp + "', '" + encryptedPassword + "');");
             statement.executeUpdate("INSERT INTO accounts (username) VALUES ('" + usernameInp + "');");
             statement.executeUpdate("INSERT INTO tournament (username) VALUES ('" + usernameInp + "');");
         }
-
 
         updateData();
         return true;
@@ -97,7 +112,10 @@ public class Accounts {
         StringBuilder output = new StringBuilder();
         while (resultSet.next()) {
             for (int i = 1; i <= numColumns; i++) {
-                output.append(resultSet.getObject(i)).append(",");
+                if (Objects.equals(table, "Login") || Objects.equals(table, "Test") && (i == 2)) { // if working with the password column
+                    output.append(Encryptor.shiftMessage(resultSet.getObject(i).toString(), keyInfo, true)).append(",");
+                } else
+                    output.append(resultSet.getObject(i)).append(",");
             }
         }
         System.out.println(output);
@@ -111,16 +129,22 @@ public class Accounts {
         if (!Objects.equals(table, "Test"))
             table = "Login";
         // ensures the inputted username and password are valid, this may not be necessary depending on how we implement this function
-        if (validLogin(username, password)) {
-            if (Objects.equals(table, "Test"))
-                statement.executeUpdate("DELETE FROM " + table + " WHERE " + table + ".Username = '" + username + "' AND " + table + ".Password = '" + password + "'");
-            else {
-                statement.executeUpdate("DELETE FROM accounts WHERE accounts.Username = " + username);
-                statement.executeUpdate("DELETE FROM tournament WHERE tournament.Username = " + username);
-                statement.executeUpdate("DELETE FROM login WHERE login.Username = " + username);
+        try {
+            if (validLogin(username, password)) {
+                String encryptedPassword = Encryptor.shiftMessage(password, keyInfo, false);
+
+                if (Objects.equals(table, "Test")) // if testing
+                    statement.executeUpdate("DELETE FROM " + table + " WHERE " + table + ".Username = '" + username + "' AND " + table + ".Password = '" + encryptedPassword + "'");
+                else { // if not testing
+                    statement.executeUpdate("DELETE FROM accounts WHERE accounts.Username = " + username);
+                    statement.executeUpdate("DELETE FROM tournament WHERE tournament.Username = " + username);
+                    statement.executeUpdate("DELETE FROM login WHERE login.Username = " + username);
+                }
+                updateData();
+                return true;
             }
-            updateData();
-            return true;
+        } catch (FileNotFoundException ex) {
+            System.out.println("key not found");
         }
         return false;
     }
@@ -172,13 +196,14 @@ public class Accounts {
 //            System.out.println(data[i - 1]);
 //            System.out.println(data[0]);
 
-            if (i != 1) // not changing the username
-                statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = " + Integer.parseInt(data[i - 1]) + " WHERE username = '" + data[0] + "';");
-            else // changing the username
+            if (i == 1) // changing the username
                 statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = '" + data[i - 1] + "' WHERE username = '" + data[0] + "';");
+            else if ((Objects.equals(table, "Test") || Objects.equals(table, "login")) && i == 2) // changing the password
+                statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = '" + Encryptor.shiftMessage(data[i - 1], keyInfo, false) + "' WHERE username = '" + data[0] + "';");
+            else // changing any column other than the username or password
+                statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = " + Integer.parseInt(data[i - 1]) + " WHERE username = '" + data[0] + "';");
         }
         updateData();
-
     }
 
     // returns an array in this format [user1,score1,user2,score2,...] where the user and their corresponding score
@@ -193,7 +218,7 @@ public class Accounts {
         } else if (Objects.equals(table, "Test")) {
             resultSet = statement.executeQuery("SELECT Username, Score FROM " + table + " ORDER BY Score DESC");
         } else {
-            throw new InputMismatchException(); // if thrown, you need to set table to either accounts or tournament before the function is called
+            throw new InputMismatchException(); // if thrown, you need to set table to either accounts, tournament, or test before the function is called
         }
         metaData = resultSet.getMetaData();
         int numColumns = metaData.getColumnCount();
@@ -222,11 +247,15 @@ public class Accounts {
     public static void initialize(String table) {
         try {
 //            Class.forName("org.postgresql.Driver");
-            Accounts.table = table;
+            Database.table = table;
+            getKeyInfo(); // reads in and stores info from key file
+
             Connection connection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
             statement = connection.createStatement();
             updateData();
         } catch (SQLException e) { // | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (FileNotFoundException e) { // key file not found
             throw new RuntimeException(e);
         }
 //        catch (ClassNotFoundException e) {

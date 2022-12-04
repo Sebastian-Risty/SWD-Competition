@@ -1,7 +1,9 @@
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXHamburger;
+import com.jfoenix.transitions.hamburger.HamburgerSlideCloseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -74,6 +76,12 @@ public class HomeScreenController extends Controller {
     @FXML
     private JFXButton logOutButton;
 
+    JFXButton[] jfxButtons = {
+            new JFXButton("Some text"),
+            new JFXButton("Some text"),
+            new JFXButton("Some text"),};
+    private HamburgerSlideCloseTransition transition;
+
 
 //    private Background background;
 //    private BackgroundFill red;
@@ -135,7 +143,17 @@ public class HomeScreenController extends Controller {
 
     @FXML
     void hamburgerListener(MouseEvent event) {
-
+        transition.setRate(transition.getRate() * -1);
+        transition.play();
+        if (transition.getRate() == -1) {
+            for (JFXButton jfxButton : jfxButtons) {
+                jfxButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            }
+        } else {
+            for (JFXButton jfxButton : jfxButtons) {
+                jfxButton.setContentDisplay(ContentDisplay.RIGHT);
+            }
+        }
     }
 
     @FXML
@@ -192,6 +210,7 @@ public class HomeScreenController extends Controller {
         h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         tournamentMode.setBackground(new Background(new BackgroundFill(Color.LIGHTYELLOW, null, null)));
+//        transition = new HamburgerNextArrowBasicTransition(hamburger);
 //        totalWins.setText(getPlayer().getTotalWins());
 //        gamesPlayed.setText(getPlayer().getTotalGamesPlayed());
 //        h2hWins.setText(getPlayer().getOVOWins());
@@ -223,11 +242,15 @@ public class HomeScreenController extends Controller {
 
     @Override
     public void gameStart() {
-        try {
-            switchScene("gameFXML.fxml", "Word Game");
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    switchScene("gameFXML.fxml", "Word Game");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }
