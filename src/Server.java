@@ -236,6 +236,7 @@ class Server {
                                 client.output.flush();
 
                                 client.currentLobby = null;
+                                client.currentScore = 0;
                                 System.out.println("Set client cur lobby to null");
                                 client.totalGamesPlayed++;
 
@@ -454,6 +455,7 @@ class Server {
                 }
             }
         }
+
         private void acceptAccountData(String[] data){
             username = data[0];
             totalWins = Integer.parseInt(data[1]);

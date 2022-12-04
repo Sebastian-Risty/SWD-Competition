@@ -96,7 +96,6 @@ public class gameController extends Controller {
 
     @Override
     public void updateTimer(int time) {
-        System.out.println("CORRECT");
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
