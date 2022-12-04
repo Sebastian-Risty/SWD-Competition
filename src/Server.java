@@ -118,13 +118,13 @@ class Server {
                                     if (client.currentLobby == null) { // create lobby if none were found
                                         System.out.println("Created New ONE_VS_ONE Lobby");
                                         Game temp;
+                                        int MATCH_TIME = 30;
                                         if(scrambleFile != null){
-                                            temp = new OneVsOne(scrambleFile, fileIndex);
+                                            temp = new OneVsOne(MATCH_TIME, scrambleFile, fileIndex);
                                         } else{
-                                            temp = new OneVsOne();
+                                            temp = new OneVsOne(MATCH_TIME);
                                         }
                                         executorService.execute(temp);
-                                        temp.setMatchTime(30);
                                         lobbies.put(temp, Collections.synchronizedList(new ArrayList<ConnectedClient>() {{
                                             add(client);
                                         }}));
@@ -170,14 +170,14 @@ class Server {
                                     if (client.currentLobby == null) { // create lobby if none were found
                                         System.out.println("Created New Battle Royale Lobby");
                                         Game temp;
-                                        if(scrambleFile != null){
-                                            temp = new BattleRoyale(scrambleFile, fileIndex);
-                                        } else{
-                                            temp = new BattleRoyale();
+                                        int MATCH_TIME = 30;
+                                        int COUNTDOWN_TIME = 60;
+                                        if (scrambleFile != null) {
+                                            temp = new BattleRoyale(MATCH_TIME, COUNTDOWN_TIME, scrambleFile, fileIndex);
+                                        } else {
+                                            temp = new BattleRoyale(MATCH_TIME, COUNTDOWN_TIME);
                                         }
                                         executorService.execute(temp);
-                                        temp.setCountDownTime(30);
-                                        temp.setMatchTime(60);
                                         lobbies.put(temp, Collections.synchronizedList(new ArrayList<ConnectedClient>() {{
                                             add(client);
                                         }}));
@@ -205,8 +205,10 @@ class Server {
                 synchronized (lobbies){
                     for (Game lobby : lobbies.keySet()) {
                         if(lobby.hasStarted()){ // START GAME
-                            for(ConnectedClient client : lobbies.get(lobby)){
+                            for(ConnectedClient client : lobbies.get(lobby)) {
                                 client.output.format(String.format("%s,%s\n", Client.sendMessage.GAME_START, lobby.getLetters().toString().replaceAll("[], \\[]", "")));
+                                client.output.flush();
+                                client.output.format(String.format("%s,%s,%s\n", Client.sendMessage.TIMER_UPDATE, lobby.getLobbyStartTime(), lobby.getCountDownTime()));
                                 client.output.flush();
                             }
                             lobby.changeStartFlag();

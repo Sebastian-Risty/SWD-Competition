@@ -98,10 +98,12 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
         numConnectedClients--;
     }
 
-    public Game() {
+    public Game(int matchTime) {
+        this.matchTime = matchTime;
     }
 
-    public Game(File filePath, int fileIndex) {
+    public Game(int matchTime, File filePath, int fileIndex) {
+        this.matchTime = matchTime;
         this.filePath = filePath;
         this.fileIndex = fileIndex;
     }

@@ -1,12 +1,15 @@
 import java.io.File;
 
 public class BattleRoyale extends Game {
-    public BattleRoyale(File filePath, int fileIndex) {
-        super(filePath, fileIndex);
+    public BattleRoyale(int matchTime, int countDownTime, File filePath, int fileIndex) {
+        super(matchTime, filePath, fileIndex);
+        setCountDownTime(countDownTime);
         setGamemode("BattleRoyale");
     }
 
-    public BattleRoyale() {
+    public BattleRoyale(int matchTime, int countDownTime) {
+        super(matchTime);
+        setCountDownTime(countDownTime);
         setGamemode("BattleRoyale");
     }
 
