@@ -1,4 +1,3 @@
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXHamburger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -7,8 +6,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class gameResultsController extends Controller {
@@ -20,21 +19,11 @@ public class gameResultsController extends Controller {
     private JFXHamburger hamburger;
 
     @FXML
-    private JFXButton logoutConfirmationNo;
-
-    @FXML
-    private JFXButton logoutConfirmationYes;
-
-    @FXML
     private Label positionLabel;
 
     @FXML
     private Label scoreLabel;
 
-    @FXML
-    void hamburgerListener(MouseEvent event) {
-
-    }
 
     public void initialize() {
         getClient().setController(this);
@@ -63,5 +52,8 @@ public class gameResultsController extends Controller {
     @FXML
     void returnToMenuButton(KeyEvent event) throws IOException {
         switchScene("homeScreenFXML.fxml", "Main Menu");
+    }
+
+    public void hamburgerListener(MouseEvent mouseEvent) {
     }
 }

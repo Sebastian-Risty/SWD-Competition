@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXHamburger?>
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import javafx.geometry.Insets?>
@@ -47,20 +46,11 @@
                 <JFXHamburger fx:id="hamburger" onMouseClicked="#hamburgerListener" prefHeight="57.0" prefWidth="55.0"
                               GridPane.columnIndex="2"/>
                 <GridPane>
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                    </columnConstraints>
                     <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                     </rowConstraints>
-                    <children>
-                        <JFXButton fx:id="logoutConfirmationNo" onAction="#logOutConfirmationNoListener" text=" "
-                                   GridPane.rowIndex="1"/>
-                        <JFXButton fx:id="logoutConfirmationYes" onAction="#logOutConfirmationYesListener" text=" "
-                                   GridPane.rowIndex="2"/>
-                    </children>
                 </GridPane>
             </children>
         </GridPane>
