@@ -50,7 +50,7 @@ public class Database {
         if (!Objects.equals(table, "Test")) { // if you're not testing, table should be login
             table = "Login";
             resultSet = statement.executeQuery("SELECT COUNT(1) FROM login WHERE username = '" + username + "';");
-        } else{
+        } else {
             resultSet = statement.executeQuery("SELECT COUNT(1) FROM test WHERE username = '" + username + "';");
 
         }
@@ -183,8 +183,19 @@ public class Database {
         if (!Objects.equals(table, "mastertournament"))
             resultSet = statement.executeQuery("SELECT * FROM " + table + " WHERE username = '" + username + "';");
         else
-            resultSet = statement.executeQuery("SELECT * FROM mastertournament WHERE tournamentid = '" + username + "';");
+            resultSet = statement.executeQuery("SELECT * FROM mastertournament"); //  WHERE tournamentid = '" + username + "';
         metaData = resultSet.getMetaData();
+        return getHelper(metaData);
+
+    }
+
+    public static String[] getUsers(String tournament) throws SQLException {
+        resultSet = statement.executeQuery("SELECT username FROM " + tournament);
+        metaData = resultSet.getMetaData();
+        return getHelper(metaData);
+    }
+
+    private static String[] getHelper(ResultSetMetaData metaData) throws SQLException {
         int numColumns = metaData.getColumnCount();
 
         StringBuilder output = new StringBuilder();
@@ -199,7 +210,6 @@ public class Database {
         // System.out.println(output);
 
         return output.toString().split(",");
-
     }
 
     // returns true if account was successfully deleted, false if not

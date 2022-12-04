@@ -2,6 +2,7 @@ import org.junit.Test;
 
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
+import java.util.Arrays;
 //import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -92,6 +93,7 @@ public class TestDatabase {
         Database.addToTournament("Matt", "testtournament");
         Database.addToTournament("Sam", "testtournament");
         Database.addToTournament("Cole", "testtournament");
+        System.out.println(Arrays.toString(Database.getUsers("testtournament")));
         Database.removeFromTournament("Sebastian", "testtournament");
 //        System.out.println(Arrays.toString(Database.getInfo("Matt")));
 
