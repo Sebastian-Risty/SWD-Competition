@@ -15,6 +15,7 @@ class Client implements Runnable {
     private Controller controller;
     private String letters;
     private String[] gameResults;
+    private PlayerStats stats;
 
     // TEXTMODE STUFF
     private boolean loggedIn = false;
@@ -132,7 +133,7 @@ class Client implements Runnable {
                     }
                     case "CLIENT_DATA": {
                         System.out.println(Arrays.toString(clientMessage));
-                        controller.updatePlayerStats(clientMessage[1], clientMessage[2], clientMessage[3], clientMessage[4],
+                        stats = new PlayerStats(clientMessage[1], clientMessage[2], clientMessage[3], clientMessage[4],
                                 clientMessage[5], clientMessage[6], clientMessage[7], clientMessage[8], clientMessage[9]);
                         break;
                     }
