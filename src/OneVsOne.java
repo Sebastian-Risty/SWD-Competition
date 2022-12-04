@@ -30,7 +30,7 @@ public class OneVsOne extends Game {
         if(!isFinished()){
             System.out.println("STARTING MATCH TIMER");
             long startTime = System.currentTimeMillis();
-            while (((System.currentTimeMillis() - startTime) / 1000) < 60) ;
+            while (((System.currentTimeMillis() - startTime) / 1000) < getMatchTime()) ;
             System.out.println("MATCH ENDED");
             changeEndFlag();
         }

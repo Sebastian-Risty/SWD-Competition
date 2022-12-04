@@ -11,8 +11,9 @@ public class BattleRoyale extends Game {
     }
 
     @Override
-    public void pregameLobby() {
+    public void pregameLobby() throws InterruptedException {
         while (!isInProgress()) {
+            Thread.sleep(10);
             if (getNumConnectedClients() == 3) {
                 System.out.println("ENOUGH PlAYErS FOUND, STARTING COUNTDOWN TIMER");
                 setPreGameLobbyFlag(true);
@@ -20,6 +21,7 @@ public class BattleRoyale extends Game {
                 while (((System.currentTimeMillis() - getLobbyStartTime()) / 1000) < getCountDownTime()) ;
                 System.out.println("TIMER FINISHED");
                 changeProgressFlag();
+                changeStartFlag();
                 startGame();
             }
         }

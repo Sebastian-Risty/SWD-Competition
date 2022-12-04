@@ -136,7 +136,7 @@ class Server {
                                             if (game.getGamemode().equals("BattleRoyale") && !game.isInProgress()) { // client joins open game if possible
                                                 // add client
                                                 lobbies.get(game).add(client);
-                                                System.out.println("ADDED CLIENT TO GAME");
+                                                System.out.println("ADDED CLIENT TO Existing Battle Royale Lobby");
                                                 client.currentLobby = game;
                                                 game.clientConnected();
 
@@ -159,7 +159,7 @@ class Server {
                                         }
                                     }
                                     if (client.currentLobby == null) { // create lobby if none were found
-                                        System.out.println("Created New BAttlE_ROYALE Lobby");
+                                        System.out.println("Created New Battle Royale Lobby");
                                         Game temp;
                                         if(scrambleFile != null){
                                             temp = new BattleRoyale(scrambleFile, fileIndex);
@@ -177,7 +177,6 @@ class Server {
                                         client.output.format("%s,%s\n", Client.sendMessage.PLAYER_COUNT_UPDATE, temp.getNumConnectedClients());
                                         fileIndex++;
                                     }
-                                    System.out.println("Created New BATTLE_ROYAL Lobby");
                                     break;
                                 }
                             }
@@ -418,3 +417,4 @@ class Server {
 // make sure BR works
 // tourney
 // save client data when their window closes
+// prevent account logging in  more than once
