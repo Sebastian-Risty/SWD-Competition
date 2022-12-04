@@ -65,7 +65,16 @@ public class HomeScreenController extends Controller {
     @FXML
     private Label h2hWins;
 
+    @FXML
+    private JFXButton logoutConfirmationYes;
+    @FXML
+    private JFXButton logoutConfirmationNo;
+
     private boolean readiedUp;
+    private boolean logout;
+
+    @FXML
+    private JFXButton logOutButton;
 
     JFXButton[] jfxButtons = {
             new JFXButton("Some text"),
@@ -149,16 +158,33 @@ public class HomeScreenController extends Controller {
 
     @FXML
     void logOutListener() {
-        try {
-            switchScene("LoginFXML.fxml", "Login");
-            setPlayer(null);
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-
+      logout = true;
+      logOutButton.setText("Are You Sure?");
+      logoutConfirmationNo.setText("No");
+      logoutConfirmationYes.setText("Yes");
     }
 
+    @FXML
+    void logOutConfirmationYesListener() {
+        if(logout) {
+            try {
+                switchScene("LoginFXML.fxml", "Login");
+                setPlayer(null);
+            }
+            catch(IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    @FXML
+    void logOutConfirmationNoListener() {
+        if(logout) {
+            logOutButton.setText("Logout");
+            logoutConfirmationNo.setText("");
+            logoutConfirmationYes.setText("");
+            logout = false;
+        }
+    }
 
     @FXML
     void tournamentModeListener() {
@@ -176,6 +202,7 @@ public class HomeScreenController extends Controller {
 
     public void initialize() {
         readiedUp = false;
+        logout = false;
         getClient().setController(this);
         getClient().sendMessage(String.format("%s\n", Server.sendMessage.CLIENT_DATA_REQUEST));
         usernameLabel.setText(getPlayer().getUsername() + "'s Player Stats");
@@ -215,11 +242,15 @@ public class HomeScreenController extends Controller {
 
     @Override
     public void gameStart() {
-        try {
-            switchScene("gameFXML.fxml", "Word Game");
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    switchScene("gameFXML.fxml", "Word Game");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

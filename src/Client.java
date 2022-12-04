@@ -12,6 +12,11 @@ class Client implements Runnable {
     private Formatter output; // output to server
     private Socket serverSocket;
     private Controller controller;
+    private String letters;
+
+    public String getLetters() {
+        return letters;
+    }
 
     public void setController(Controller controller) {
         this.controller = controller;
@@ -88,7 +93,13 @@ class Client implements Runnable {
                     break;
                 }
                 case "GAME_START": {
+                    letters = clientMessage[1];
                     controller.gameStart();
+                    break;
+                }
+                case "GAME_END": {
+                    controller.endGame();
+                    controller.displayResults(clientMessage);
                     break;
                 }
             }

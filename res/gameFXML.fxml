@@ -45,7 +45,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label text="Letters to use" />
+                  <Label fx:id="letters" text="Letters to use" />
                </children>
             </GridPane>
             <GridPane GridPane.rowIndex="2">

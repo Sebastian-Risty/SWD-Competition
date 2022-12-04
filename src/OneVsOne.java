@@ -1,7 +1,13 @@
+import java.io.File;
+
 public class OneVsOne extends Game {
 
+    public OneVsOne(File filePath, int fileIndex) {
+        super(filePath, fileIndex);
+        setGamemode("OneVsOne");
+    }
+
     public OneVsOne() {
-        System.out.println("IN 1v1 CONSTRUCTOR");
         setGamemode("OneVsOne");
     }
 
@@ -24,7 +30,7 @@ public class OneVsOne extends Game {
         if(!isFinished()){
             System.out.println("STARTING MATCH TIMER");
             long startTime = System.currentTimeMillis();
-            while (((System.currentTimeMillis() - startTime) / 1000) < 5) ;
+            while (((System.currentTimeMillis() - startTime) / 1000) < 60) ;
             System.out.println("MATCH ENDED");
             changeEndFlag();
         }
