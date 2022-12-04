@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
@@ -28,6 +29,8 @@ public class gameController extends Controller {
     private Pane childPane;
     @FXML
     private Label scoreLabel;
+    @FXML
+    private GridPane gridPane;
 
     @FXML
     private Label timeLabel;
@@ -40,6 +43,7 @@ public class gameController extends Controller {
             lastGuess = guessWordField.getText();
             getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.GUESS, guessWordField.getText()));
             guessWordField.setText("");
+            parentPane.getChildren().remove(0);
             guessRippler = new JFXRippler(childPane);
             parentPane.getChildren().add(guessRippler);
         }
@@ -81,12 +85,12 @@ public class gameController extends Controller {
                     wordPanel.setText(wordPanel.getText() + lastGuess);
                     playerScore += score;
                     scoreLabel.setText("Score: " + playerScore);
-                    guessRippler.setRipplerFill(new Color(0, 1, 0, 10));
+                    guessRippler.setRipplerFill(new Color(0, 1, 0, 0));
 
                     guessRippler.createManualRipple();
                 }
                 else {
-                    guessRippler.setRipplerFill(new Color(1, 0, 0, 10));
+                    guessRippler.setRipplerFill(new Color(1, 0, 0, 0));
                     guessRippler.createManualRipple();
                 }
             }
