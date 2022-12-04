@@ -197,6 +197,7 @@ class Client implements Runnable {
                             throw new RuntimeException(e);
                         }
                         break;
+                    }
                 }
             }
         }
