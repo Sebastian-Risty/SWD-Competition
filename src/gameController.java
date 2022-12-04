@@ -15,10 +15,8 @@ public class gameController extends Controller {
 
     @FXML
     private JFXTextArea wordPanel;
-
     @FXML
     private JFXTextArea guessWordField;
-
     @FXML
     private Label letters;
     @FXML
@@ -29,9 +27,6 @@ public class gameController extends Controller {
     private Pane childPane;
     @FXML
     private Label scoreLabel;
-    @FXML
-    private GridPane gridPane;
-
     @FXML
     private Label timeLabel;
     private String lastGuess;

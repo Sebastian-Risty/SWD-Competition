@@ -88,6 +88,7 @@ public class Controller {
 
     public void switchScene(String fxmlUrl, String sceneTitle) throws IOException {
 
+        System.out.println(fxmlUrl);
         Stage temp2 = stage;
 
         Stage tempStage = new Stage();
