@@ -1,3 +1,4 @@
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.JFXTextField;
@@ -6,6 +7,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -23,11 +26,15 @@ public class LoginFXMLController extends Controller {
     private Pane pane;
     @FXML
     private GridPane gridPane;
+    @FXML
+    private JFXButton enterButton;
 
     public void initialize() {
         // create a client
         setClient(new Client(getIp(), getPort()));
         getClient().setController(this);
+
+        enterButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
 
         verifyRippler = new JFXRippler(pane);
         verifyRippler.setRipplerFill(new Color(1, 0, 0, 0));

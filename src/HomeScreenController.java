@@ -142,7 +142,7 @@ public class HomeScreenController extends Controller {
     }
 
     @FXML
-    void hamburgerListener(MouseEvent event) {
+    void hamburgerListener() {
         transition.setRate(transition.getRate() * -1);
         transition.play();
         if (transition.getRate() == -1) {
@@ -168,8 +168,9 @@ public class HomeScreenController extends Controller {
     void logOutConfirmationYesListener() {
         if(logout) {
             try {
-                switchScene("LoginFXML.fxml", "Login");
+                getClient().sendMessage(String.format("%s\n", Server.sendMessage.GUESS));
                 setPlayer(null);
+                switchScene("LoginFXML.fxml", "Login");
             }
             catch(IOException e) {
                 e.printStackTrace();
@@ -222,20 +223,18 @@ public class HomeScreenController extends Controller {
     }
 
     @Override
-    public void updatePlayerStats(String username, String totalWinsIn, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,
-                                  String BRWins, String BRGamesPlayed, String tournamentWins, String tournamentsPlayed) {
+    public void updatePlayerStatsScreen() {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                updatePlayerStatsHelper(username, totalWinsIn, totalGamesPlayed, OVOWins, OVOGamesPlayed, BRWins, BRGamesPlayed, tournamentWins, tournamentsPlayed);
-                totalWins.setText(totalWinsIn);
-                gamesPlayed.setText(totalGamesPlayed);
-                h2hWins.setText(OVOWins);
-                h2hGames.setText(OVOGamesPlayed);
-                brWins.setText(BRWins);
-                brPlayed.setText(BRGamesPlayed);
-                tourneyWins.setText(tournamentWins);
-                tourneysPlayed.setText(tournamentsPlayed);
+                totalWins.setText(getPlayer().getTotalWins());
+                gamesPlayed.setText(getPlayer().getTotalGamesPlayed());
+                h2hWins.setText(getPlayer().getOVOWins());
+                h2hGames.setText(getPlayer().getOVOGamesPlayed());
+                brWins.setText(getPlayer().getBRWins());
+                brPlayed.setText(getPlayer().getBRGamesPlayed());
+                tourneyWins.setText(getPlayer().getTournamentWins());
+                tourneysPlayed.setText(getPlayer().getTournamentsPlayed());
             }
         });
     }

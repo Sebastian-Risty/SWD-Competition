@@ -124,16 +124,10 @@ public class Controller {
     
     public void displayResults(String[] clientMessage){}
     
-    public void guessResult(int score){
-    }
+    public void guessResult(int score){}
 
     public void updatePlayerStats(String username, String totalWins, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,
                                   String BRWins, String BRGamesPlayed, String tournamentWins, String tournamentsPlayed) {
-        updatePlayerStatsHelper(username, totalWins, totalGamesPlayed, OVOWins, OVOGamesPlayed, BRWins, BRGamesPlayed, tournamentWins, tournamentsPlayed);
-    }
-
-    public void updatePlayerStatsHelper(String username, String totalWins, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,
-                                        String BRWins, String BRGamesPlayed, String tournamentWins, String tournamentsPlayed) {
         player.setUsername(username);
         player.setTotalWins(totalWins);
         player.setTotalGamesPlayed(totalGamesPlayed);
@@ -143,6 +137,9 @@ public class Controller {
         player.setBRGamesPlayed(BRGamesPlayed);
         player.setTournamentWins(tournamentWins);
         player.setTournamentsPlayed(tournamentsPlayed);
+    }
+
+    public void updatePlayerStatsScreen() {
     }
 
     public void updateTSLeader(String rank, String username, String tournamentWins, String tournamentGamesLeft) {
