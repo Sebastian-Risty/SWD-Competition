@@ -113,6 +113,7 @@ public class HomeScreenController extends Controller {
         }
         else {
             // send cancel message to server
+            getClient().sendMessage(String.format("%s\n", Server.sendMessage.CANCEL_MM));
             readyUp.setText("Ready Up!");
             readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
             h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
