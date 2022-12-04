@@ -55,17 +55,12 @@ public class gameResultsController extends Controller {
     }
 
     @FXML
-    void returnToMenuButton(KeyEvent event) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
+    void returnToMenuButtonListener() {
                 try {
                     switchScene("homeScreenFXML.fxml", "Home Screen");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
-        });
     }
 
     public void hamburgerListener(MouseEvent mouseEvent) {

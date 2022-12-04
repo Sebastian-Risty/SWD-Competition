@@ -80,7 +80,7 @@
                                 <Font size="18.0" />
                             </font>
                         </Label>
-                        <Button mnemonicParsing="false" onAction="#returnToMenuButton" onMouseClicked="#returnToMenuButton" text="Return To Menu" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                        <Button mnemonicParsing="false" onAction="#returnToMenuButtonListener" text="Return To Menu" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
                         <Label fx:id="positionLabel" GridPane.columnIndex="1">
                             <font>
                                 <Font size="18.0" />

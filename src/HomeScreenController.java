@@ -108,7 +108,6 @@ public class HomeScreenController extends Controller {
                 readyUp.setText("Cancel");
             } else {
                 gameModeFeedback.setText("Select a Game Mode");
-                //gameModeFeedback.setBackground(new Background(new BackgroundFill(Color.RED, null, null)));
                 gameModeFeedback.setTextFill(Color.RED);
             }
         }
@@ -142,7 +141,7 @@ public class HomeScreenController extends Controller {
     }
 
     @FXML
-    void hamburgerListener(MouseEvent event) {
+    void hamburgerListener() {
         transition.setRate(transition.getRate() * -1);
         transition.play();
         if (transition.getRate() == -1) {
@@ -168,8 +167,9 @@ public class HomeScreenController extends Controller {
     void logOutConfirmationYesListener() {
         if(logout) {
             try {
-                switchScene("LoginFXML.fxml", "Login");
+                getClient().sendMessage(String.format("%s\n", Server.sendMessage.LOGOUT_REQUEST));
                 setPlayer(null);
+                switchScene("LoginFXML.fxml", "Login");
             }
             catch(IOException e) {
                 e.printStackTrace();
@@ -188,15 +188,14 @@ public class HomeScreenController extends Controller {
 
     @FXML
     void tournamentModeListener() {
-        // ask server if user is in a tournament
-        // get response from server
 
         //getClient().sendMessage(String.format("%s,%s,%s\n",Server.sendMessage.MODE_SELECTION ,"Tournament", ""));
-
-        try {
-            switchScene("TournamentHomeFXML.fxml", "Tournament Home");
-        } catch (IOException e) {
-            gameModeFeedback.setText("Could not Open Tournament Mode");
+        if(!readiedUp) {
+            try {
+                switchScene("StatsPage.fxml", "Tournament Home");
+            } catch (IOException e) {
+                gameModeFeedback.setText("Could not Open Tournament Mode");
+            }
         }
     }
 
@@ -211,31 +210,21 @@ public class HomeScreenController extends Controller {
         battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         tournamentMode.setBackground(new Background(new BackgroundFill(Color.LIGHTYELLOW, null, null)));
 //        transition = new HamburgerNextArrowBasicTransition(hamburger);
-//        totalWins.setText(getPlayer().getTotalWins());
-//        gamesPlayed.setText(getPlayer().getTotalGamesPlayed());
-//        h2hWins.setText(getPlayer().getOVOWins());
-//        h2hGames.setText(getPlayer().getOVOGamesPlayed());
-//        brWins.setText(getPlayer().getBRWins());
-//        brPlayed.setText(getPlayer().getBRGamesPlayed());
-//        tourneyWins.setText(getPlayer().getTournamentWins());
-//        tourneysPlayed.setText(getPlayer().getTournamentsPlayed());
     }
 
     @Override
-    public void updatePlayerStats(String username, String totalWinsIn, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,
-                                  String BRWins, String BRGamesPlayed, String tournamentWins, String tournamentsPlayed) {
+    public void updatePlayerStatsScreen() {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                updatePlayerStatsHelper(username, totalWinsIn, totalGamesPlayed, OVOWins, OVOGamesPlayed, BRWins, BRGamesPlayed, tournamentWins, tournamentsPlayed);
-                totalWins.setText(totalWinsIn);
-                gamesPlayed.setText(totalGamesPlayed);
-                h2hWins.setText(OVOWins);
-                h2hGames.setText(OVOGamesPlayed);
-                brWins.setText(BRWins);
-                brPlayed.setText(BRGamesPlayed);
-                tourneyWins.setText(tournamentWins);
-                tourneysPlayed.setText(tournamentsPlayed);
+                totalWins.setText(getPlayer().getTotalWins());
+                gamesPlayed.setText(getPlayer().getTotalGamesPlayed());
+                h2hWins.setText(getPlayer().getOVOWins());
+                h2hGames.setText(getPlayer().getOVOGamesPlayed());
+                brWins.setText(getPlayer().getBRWins());
+                brPlayed.setText(getPlayer().getBRGamesPlayed());
+                tourneyWins.setText(getPlayer().getTournamentWins());
+                tourneysPlayed.setText(getPlayer().getTournamentsPlayed());
             }
         });
     }
@@ -246,7 +235,7 @@ public class HomeScreenController extends Controller {
             @Override
             public void run() {
                 try {
-                    switchScene("gameFXML.fxml", "Word Game");
+                    switchScene("gameFXML.fxml", "Game");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
