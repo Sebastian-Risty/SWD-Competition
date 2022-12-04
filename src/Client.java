@@ -13,6 +13,11 @@ class Client implements Runnable {
     private Socket serverSocket;
     private Controller controller;
     private String letters;
+    private String[] gameResults;
+
+    public String[] getGameResults() {
+        return gameResults;
+    }
 
     public String getLetters() {
         return letters;
@@ -98,8 +103,8 @@ class Client implements Runnable {
                     break;
                 }
                 case "GAME_END": {
+                    gameResults = clientMessage;
                     controller.endGame();
-                    controller.displayResults(clientMessage);
                     break;
                 }
                 case "GUESS_RESULT" :{

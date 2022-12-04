@@ -27,6 +27,7 @@ public class gameResultsController extends Controller {
 
     public void initialize() {
         getClient().setController(this);
+        displayResults(getClient().getGameResults());
     }
 
     @Override
@@ -35,7 +36,7 @@ public class gameResultsController extends Controller {
             @Override
             public void run() {
                 ObservableList<String> resultsList = FXCollections.observableArrayList();
-                for (int i = 2; i < results.length; i += 2) {
+                for (int i = 2; i < results.length - 1; i += 2) {
                     String name = results[i];
                     String score = results[i + 1];
                     resultsList.add(name + "  :  " + score);
@@ -50,8 +51,17 @@ public class gameResultsController extends Controller {
     }
 
     @FXML
-    void returnToMenuButton(KeyEvent event) throws IOException {
-        switchScene("homeScreenFXML.fxml", "Main Menu");
+    void returnToMenuButton(KeyEvent event) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    switchScene("homeScreenFXML.fxml", "Main Menu");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public void hamburgerListener(MouseEvent mouseEvent) {
