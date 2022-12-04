@@ -2,6 +2,7 @@ import org.junit.Test;
 
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
+//import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -78,27 +79,27 @@ public class TestDatabase {
     public void testCreateAddToTournament() throws SQLException {
         init();
         Database.setTable("mastertournament");
-        Database.createTournament("mytournament3", 100);
+        Database.createTournament("testtournament", 100);
 
+        Database.addToTournament("Sebastian", "testtournament");
+        assertFalse(Database.addToTournament("Sebastian", "testtournament")); // cannot add same account twice
+        assertFalse(Database.removeFromTournament("yourmom", "testtournament")); // cannot remove account that's not there
 
-        Database.addToTournament("Sebastian", "mytournament3");
-        assertFalse(Database.addToTournament("Sebastian", "mytournament3")); // cannot add same account twice
-        assertFalse(Database.removeFromTournament("yourmom", "mytournament3")); // cannot remove account that's not there
-
-
-        Database.setTable("mytournament3");
-        // System.out.println(Arrays.toString(Database.getInfo("Sebastian")));
+        Database.setTable("testtournament");
+//        System.out.println(Arrays.toString(Database.getInfo("Sebastian")));
 
         // GOOD EXAMPLE OF HOW RANK WILL NEED TO BE UPDATED, SETTING RANK TO ROW ONLY WORKS FOR INITIAL VALUES
-        Database.addToTournament("Matt", "mytournament3");
-        Database.removeFromTournament("Sebastian", "mytournament3");
-        // System.out.println(Arrays.toString(Database.getInfo("Matt")));
+        Database.addToTournament("Matt", "testtournament");
+        Database.addToTournament("Sam", "testtournament");
+        Database.addToTournament("Cole", "testtournament");
+        Database.removeFromTournament("Sebastian", "testtournament");
+//        System.out.println(Arrays.toString(Database.getInfo("Matt")));
 
-        Database.deleteTournament("mytournament3");
-        assertTrue(Database.createTournament("mytournament3", 100)); // tournament deleted and then recreated successfully
-        Database.deleteTournament("mytournament3");
+        Database.deleteTournament("testtournament");
+        assertTrue(Database.createTournament("testtournament", 100)); // tournament deleted and then recreated successfully
+        Database.deleteTournament("testtournament");
 
-        assertFalse(Database.deleteTournament("mytournament3"));
+        assertFalse(Database.deleteTournament("testtournament"));
         assertFalse(Database.deleteAccount("hey", "hi"));
 
 
