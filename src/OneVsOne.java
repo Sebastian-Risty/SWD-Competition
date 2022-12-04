@@ -2,12 +2,13 @@ import java.io.File;
 
 public class OneVsOne extends Game {
 
-    public OneVsOne(File filePath, int fileIndex) {
-        super(filePath, fileIndex);
+    public OneVsOne(int matchTime, File filePath, int fileIndex) {
+        super(matchTime, filePath, fileIndex);
         setGamemode("OneVsOne");
     }
 
-    public OneVsOne() {
+    public OneVsOne(int matchTime) {
+        super(matchTime);
         setGamemode("OneVsOne");
     }
 

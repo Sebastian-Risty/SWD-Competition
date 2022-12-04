@@ -88,11 +88,20 @@ public class gameController extends Controller {
                     guessRippler.setRipplerFill(new Color(0, 1, 0, 0));
 
                     guessRippler.createManualRipple();
-                }
-                else {
+                } else {
                     guessRippler.setRipplerFill(new Color(1, 0, 0, 0));
                     guessRippler.createManualRipple();
                 }
+            }
+        });
+    }
+
+    @Override
+    public void updateTimer(int time) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                timeLabel.setText("Time: " + time);
             }
         });
     }

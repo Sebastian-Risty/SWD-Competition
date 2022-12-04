@@ -9,10 +9,9 @@ import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("BooleanMethodIsAlwaysInverted")
 class Client implements Runnable {
+    private boolean textMode = false;
     private final String ip;
     private final int port;
-    private final ExecutorService clientExecutor = Executors.newFixedThreadPool(1);
-    private boolean textMode = false;
     private Scanner input; // input from server
     private Formatter output; // output to server
     private Socket serverSocket;
@@ -20,27 +19,27 @@ class Client implements Runnable {
     private String letters;
     private String[] gameResults;
     private PlayerStats stats;
+    private final ExecutorService clientExecutor = Executors.newCachedThreadPool();
+    private TimerHandler timerHandler = null;
+
     // TEXTMODE STUFF
     private boolean loggedIn = false;
+    private boolean gameStart = false;
 
-
-    public Client(String ip, int port) {
-        this.ip = ip;
-        this.port = port;
-        startClient();
-        clientExecutor.execute(this);
+    public boolean isGameStart() {
+        return gameStart;
     }
 
     public boolean isLoggedIn() {
         return loggedIn;
     }
 
-    public boolean isTextMode() {
-        return textMode;
-    }
-
     public void setTextMode(boolean textMode) {
         this.textMode = textMode;
+    }
+
+    public boolean isTextMode() {
+        return textMode;
     }
 
     public String[] getGameResults() {
@@ -58,6 +57,13 @@ class Client implements Runnable {
     public void sendMessage(String message) { // MUST END WITH NEWLINE
         output.format(message);
         output.flush();
+    }
+
+    public Client(String ip, int port) {
+        this.ip = ip;
+        this.port = port;
+        startClient();
+        clientExecutor.execute(this);
     }
 
     private void startClient() {
@@ -134,6 +140,13 @@ class Client implements Runnable {
                         controller.guessResult(Integer.parseInt(clientMessage[1]));
                         break;
                     }
+                    case "TIMER_UPDATE": {
+                        clientExecutor.execute(new TimerHandler(this, clientMessage[1], clientMessage[2]));
+                        break;
+                    }
+                    case "PLAYER_COUNT_UPDATE": {
+                        break;
+                    }
                     case "SHUTDOWN":
                         clientExecutor.shutdown();
                         try {
@@ -144,6 +157,7 @@ class Client implements Runnable {
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
+                        break;
                 }
             } else {
                 switch (clientMessage[0]) {
@@ -165,7 +179,7 @@ class Client implements Runnable {
                     }
                     case "GAME_END": {
                         gameResults = clientMessage;
-                        controller.endGame();
+                        gameStart = true;
                         break;
                     }
                     case "GUESS_RESULT": {
@@ -182,6 +196,36 @@ class Client implements Runnable {
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private static class TimerHandler implements Runnable {
+        private Client client;
+        private long startTime;
+        private int totalTime;
+
+        public TimerHandler(Client client, String startTime, String totalTime) {
+            System.out.println("TIMER CONSTRUCTOR");
+            this.client = client;
+            this.startTime = Long.parseLong(startTime);
+            this.totalTime = Integer.parseInt(totalTime);
+        }
+
+        @Override
+        public void run() {
+            System.out.println("TIMER RUN");
+            long elapsed;
+            while ((elapsed = (System.currentTimeMillis() - startTime)) < (totalTime * 1000L)) {
+                if ((elapsed % 1000) == 0) {
+                    client.controller.updateTimer((int) (totalTime - (elapsed / 1000)));
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
                     }
                 }
             }

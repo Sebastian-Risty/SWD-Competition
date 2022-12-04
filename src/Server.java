@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 
 class Server {
@@ -119,13 +118,13 @@ class Server {
                                     if (client.currentLobby == null) { // create lobby if none were found
                                         System.out.println("Created New ONE_VS_ONE Lobby");
                                         Game temp;
+                                        int MATCH_TIME = 30;
                                         if(scrambleFile != null){
-                                            temp = new OneVsOne(scrambleFile, fileIndex);
+                                            temp = new OneVsOne(MATCH_TIME, scrambleFile, fileIndex);
                                         } else{
-                                            temp = new OneVsOne();
+                                            temp = new OneVsOne(MATCH_TIME);
                                         }
                                         executorService.execute(temp);
-                                        temp.setMatchTime(30);
                                         lobbies.put(temp, Collections.synchronizedList(new ArrayList<ConnectedClient>() {{
                                             add(client);
                                         }}));
@@ -157,11 +156,11 @@ class Server {
                                                         throw new RuntimeException(e);
                                                     }
                                                     for(ConnectedClient lobbyClient : lobbies.get(game)){
-                                                        lobbyClient.output.format(String.format("%s,%s\n", Client.sendMessage.TIMER_UPDATE, game.getLobbyStartTime()));
+                                                        lobbyClient.output.format(String.format("%s,%s,%s\n", Client.sendMessage.TIMER_UPDATE, game.getLobbyStartTime(), game.getCountDownTime()));
                                                         lobbyClient.output.flush();
                                                     }
                                                 } else if(game.getNumConnectedClients() > 3){ // send the remaining time to any new clients
-                                                    client.output.format(String.format("%s,%s\n", Client.sendMessage.TIMER_UPDATE, game.getLobbyStartTime()));
+                                                    client.output.format(String.format("%s,%s,%s\n", Client.sendMessage.TIMER_UPDATE, game.getLobbyStartTime(), game.getCountDownTime()));
                                                     client.output.flush();
                                                 }
                                                 break;
@@ -171,14 +170,14 @@ class Server {
                                     if (client.currentLobby == null) { // create lobby if none were found
                                         System.out.println("Created New Battle Royale Lobby");
                                         Game temp;
-                                        if(scrambleFile != null){
-                                            temp = new BattleRoyale(scrambleFile, fileIndex);
-                                        } else{
-                                            temp = new BattleRoyale();
+                                        int MATCH_TIME = 30;
+                                        int COUNTDOWN_TIME = 60;
+                                        if (scrambleFile != null) {
+                                            temp = new BattleRoyale(MATCH_TIME, COUNTDOWN_TIME, scrambleFile, fileIndex);
+                                        } else {
+                                            temp = new BattleRoyale(MATCH_TIME, COUNTDOWN_TIME);
                                         }
                                         executorService.execute(temp);
-                                        temp.setCountDownTime(30);
-                                        temp.setMatchTime(60);
                                         lobbies.put(temp, Collections.synchronizedList(new ArrayList<ConnectedClient>() {{
                                             add(client);
                                         }}));
@@ -206,8 +205,10 @@ class Server {
                 synchronized (lobbies){
                     for (Game lobby : lobbies.keySet()) {
                         if(lobby.hasStarted()){ // START GAME
-                            for(ConnectedClient client : lobbies.get(lobby)){
+                            for(ConnectedClient client : lobbies.get(lobby)) {
                                 client.output.format(String.format("%s,%s\n", Client.sendMessage.GAME_START, lobby.getLetters().toString().replaceAll("[], \\[]", "")));
+                                client.output.flush();
+                                client.output.format(String.format("%s,%s,%s\n", Client.sendMessage.TIMER_UPDATE, System.currentTimeMillis(), lobby.getMatchTime()));
                                 client.output.flush();
                             }
                             lobby.changeStartFlag();
@@ -235,6 +236,7 @@ class Server {
                                 client.output.flush();
 
                                 client.currentLobby = null;
+                                client.currentScore = 0;
                                 System.out.println("Set client cur lobby to null");
                                 client.totalGamesPlayed++;
 
@@ -329,7 +331,9 @@ class Server {
                                 }
                                 break;
                             case "LOGOUT_REQUEST":
-                                // TODO: upload client data to db
+                                Database.setTable("Accounts");
+                                Database.update(getStatString().split(","));
+
                                 System.out.println("CLIENT LOG OUT");
                                 clients.remove(this);
                                 if(this.currentLobby != null){
@@ -342,7 +346,9 @@ class Server {
                                 init();
                                 break;
                             case "CLIENT_DISCONNECT":
-                                // TODO: upload client data to db
+                                Database.setTable("Accounts");
+                                Database.update(getStatString().split(","));
+
                                 System.out.println("CLIENT DISCONNECT");
                                 clients.remove(this);
                                 if(this.currentLobby != null){
@@ -404,9 +410,20 @@ class Server {
                     String[] clientMessage = receivedData.split(",");
                     switch(clientMessage[0]){
                         case "LOGIN_REQUEST":
-                            if(Database.validLogin(clientMessage[1],clientMessage[2])){
+                            boolean good = true;
+                            synchronized (clients){
+                                for (ConnectedClient client : clients){
+                                    if(client.username.equals(clientMessage[1])){
+                                        System.out.println("Client Already Logged In, LOGIN FAILED");
+                                        output.format(String.format("%s\n", Client.sendMessage.LOGIN_INVALID));
+                                        output.flush();
+                                        good = false;
+                                    }
+                                }
+                            }
+                            if(Database.validLogin(clientMessage[1],clientMessage[2]) && good){
                                 System.out.println("LOGIN GOOD");
-                                Database.setTable("accounts");
+                                Database.setTable("Accounts");
                                 acceptAccountData(Database.getInfo(clientMessage[1]));
                                 output.format(String.format("%s\n", Client.sendMessage.LOGIN_VALID));
                                 output.flush();
@@ -438,6 +455,7 @@ class Server {
                 }
             }
         }
+
         private void acceptAccountData(String[] data){
             username = data[0];
             totalWins = Integer.parseInt(data[1]);
@@ -467,4 +485,3 @@ class Server {
 // handle file to be read
 // tourney
 // save client data when their window closes
-// prevent account logging in  more than once

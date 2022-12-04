@@ -143,7 +143,11 @@ public class Controller {
         temp2.close();
     }
 
-    public void loginInvalid() {}
+    public void updateTimer(int time) {
+    }
+
+    public void loginInvalid() {
+    }
     public void loginValid() {}
     public void signUpValid() {}
     public void signUpInvalid() {}
@@ -152,6 +156,7 @@ public class Controller {
     public void displayResults(String[] clientMessage){}
     public void guessResult(int score){}
     public void updatePlayerStatsScreen() {}
+
 
     public void updatePlayerStats(String username, String totalWins, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,
                                   String BRWins, String BRGamesPlayed, String tournamentWins, String tournamentsPlayed) {
