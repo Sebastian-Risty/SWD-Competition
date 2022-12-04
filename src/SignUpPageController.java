@@ -59,11 +59,6 @@ public class SignUpPageController extends Controller {
             public void run() {
                 rippler.setRipplerFill(new Color(0, 0, 1, 0));
                 signUpFeedbackLabel.setText("Account Created\n Loading Home Page...");
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
 
                 try {
                     switchScene("homeScreenFXML.fxml", "Home Screen");

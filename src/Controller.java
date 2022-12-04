@@ -1,7 +1,9 @@
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.net.URL;
@@ -12,6 +14,29 @@ public class Controller {
 
     private static Client client;
 
+    private static PlayerStats player;
+
+    private static TournamentStats tournament;
+
+    public double getxPos() {
+        return xPos;
+    }
+
+    public void setxPos(double xPos) {
+        Controller.xPos = xPos;
+    }
+
+    public double getyPos() {
+        return yPos;
+    }
+
+    public void setyPos(double yPos) {
+        Controller.yPos = yPos;
+    }
+
+    private static double xPos;
+    private static double yPos;
+
     public static PlayerStats getPlayer() {
         return player;
     }
@@ -20,7 +45,15 @@ public class Controller {
         Controller.player = player;
     }
 
-    private static PlayerStats player;
+    public static TournamentStats getTournament() {
+        return tournament;
+    }
+
+    public static void setTournament(TournamentStats tournament) {
+        Controller.tournament = tournament;
+    }
+
+
 
     public void setIp(String ip) {
         Controller.ip = ip;
@@ -51,7 +84,7 @@ public class Controller {
     }
 
     public void setScene(Scene scene) {
-        this.scene = scene;
+        Controller.scene = scene;
     }
 
     public Stage getStage() {
@@ -59,7 +92,7 @@ public class Controller {
     }
 
     public void setStage(Stage stage) {
-        this.stage = stage;
+        Controller.stage = stage;
     }
 
     public Parent getRoot() {
@@ -67,7 +100,7 @@ public class Controller {
     }
 
     public void setRoot(Parent root) {
-        this.root = root;
+        Controller.root = root;
     }
 
     private static Scene scene;
@@ -78,6 +111,8 @@ public class Controller {
 
         Stage temp2 = stage;
 
+        setyPos(stage.getY());
+        setxPos(stage.getX());
         Stage tempStage = new Stage();
 
         setStage(tempStage);
@@ -89,39 +124,65 @@ public class Controller {
         getStage().setScene(getScene());
 
         stage.setTitle(sceneTitle);
+        stage.setX(getxPos());
+        stage.setY(getyPos());
+
+        getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                System.out.println("Closing Client");
+                if(!stage.getTitle().equals("Log In")) {
+                    getClient().sendMessage(String.format("%s\n", Server.sendMessage.CLIENT_DISCONNECT));
+                }
+                System.exit(-1);
+            }
+        });
+
         getStage().show();
 
         temp2.close();
     }
 
+    public void updateTimer(int time) {
+    }
+
     public void loginInvalid() {
     }
+    public void loginValid() {}
+    public void signUpValid() {}
+    public void signUpInvalid() {}
+    public void gameStart(){}
+    public void endGame(){}
+    public void displayResults(String[] clientMessage){}
+    public void guessResult(int score){}
+    public void updatePlayerStatsScreen() {}
 
-    public void loginValid() {
-    }
-
-    public void signUpValid() {
-    }
-
-    public void signUpInvalid() {
-    }
 
     public void updatePlayerStats(String username, String totalWins, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,
                                   String BRWins, String BRGamesPlayed, String tournamentWins, String tournamentsPlayed) {
-        updatePlayerStatsHelper(username, totalWins, totalGamesPlayed, OVOWins, OVOGamesPlayed, BRWins, BRGamesPlayed, tournamentWins, tournamentsPlayed);
+        player.setUsername(username);
+        player.setTotalWins(totalWins);
+        player.setTotalGamesPlayed(totalGamesPlayed);
+        player.setOVOWins(OVOWins);
+        player.setOVOGamesPlayed(OVOGamesPlayed);
+        player.setBRWins(BRWins);
+        player.setBRGamesPlayed(BRGamesPlayed);
+        player.setTournamentWins(tournamentWins);
+        player.setTournamentsPlayed(tournamentsPlayed);
     }
 
-    public void updatePlayerStatsHelper(String username, String totalWins, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,
-                                        String BRWins, String BRGamesPlayed, String tournamentWins, String tournamentsPlayed) {
-        player.setUsername(username);
-        player.setTotalWins(Integer.parseInt(totalWins));
-        player.setTotalGamesPlayed(Integer.parseInt(totalGamesPlayed));
-        player.setOVOWins(Integer.parseInt(OVOWins));
-        player.setOVOGamesPlayed(Integer.parseInt(OVOGamesPlayed));
-        player.setBRWins(Integer.parseInt(BRWins));
-        player.setBRGamesPlayed(Integer.parseInt(BRGamesPlayed));
-        player.setTournamentWins(Integer.parseInt(tournamentWins));
-        player.setTournamentsPlayed(Integer.parseInt(tournamentsPlayed));
+    public void updateTSLeader(String rank, String username, String tournamentWins, String tournamentGamesLeft) {
+        tournament.setRank(Integer.parseInt(rank));
+        tournament.setUsername(username);
+        tournament.setTournamentWins(Integer.parseInt(tournamentWins));
+        tournament.setTournamentGamesLeft(Integer.parseInt(tournamentGamesLeft));
+    }
+
+    public void updateTSUser(String rank, String username, String tournamentWins, String tournamentGamesLeft) {
+        tournament.setRank(Integer.parseInt(rank));
+        tournament.setUsername(username);
+        tournament.setTournamentWins(Integer.parseInt(tournamentWins));
+        tournament.setTournamentGamesLeft(Integer.parseInt(tournamentGamesLeft));
     }
 
 
