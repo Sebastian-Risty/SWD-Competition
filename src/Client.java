@@ -117,6 +117,8 @@ class Client implements Runnable {
         SIGNUP_INVALID, //
         GAME_START, //
         GUESS_RESULT,   // [1] -> score received from guess
-        GAME_END        // [1] -> (bool)hasWon, winningUsername,
+        GAME_END,        // [1] -> (bool)hasWon, winningUsername,
+        TIMER_UPDATE,
+        PLAYER_COUNT_UPDATE // [1] -> numPlayers in match
     }
 }

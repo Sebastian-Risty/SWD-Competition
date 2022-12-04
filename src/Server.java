@@ -125,12 +125,13 @@ class Server {
                                             add(client);
                                         }}));
                                         client.currentLobby = temp;
-                                        temp.clientConnected(); // TODO: still neeD?
+                                        temp.clientConnected();
                                         fileIndex++;
                                     }
                                     break;
                                 }
                                 case "BATTLE_ROYAL": {
+
                                     synchronized (lobbies) {
                                         for (Game game : lobbies.keySet()) {
                                             if (game.getGamemode().equals("BattleRoyale") && !game.isInProgress()) { // client joins open game if possible
@@ -152,6 +153,7 @@ class Server {
                                             temp = new BattleRoyale();
                                         }
                                         executorService.execute(temp);
+                                        temp.setCountDownTime(30);
                                         lobbies.put(temp, Collections.synchronizedList(new ArrayList<ConnectedClient>() {{
                                             add(client);
                                         }}));
@@ -192,7 +194,7 @@ class Server {
 
                             StringBuilder sb = new StringBuilder();
 
-                            sb.append(Client.sendMessage.GAME_END);
+                            sb.append(Client.sendMessage.GAME_END).append(',');
 
                             for(ConnectedClient client : sortedClients){
                                 sb.append(client.username).append(',').append(client.currentScore).append(',');
@@ -296,7 +298,7 @@ class Server {
                             if(currentLobby != null && currentLobby.isInProgress()){
                                 int tempScore = currentLobby.guess(clientMessage[1]);
                                 currentScore += tempScore;
-                                output.format(String.format("%s,%s\n", Client.sendMessage.GUESS_RESULT, this.currentScore));
+                                output.format(String.format("%s,%s\n", Client.sendMessage.GUESS_RESULT, tempScore));
                                 output.flush();
                             }
                             break;
@@ -394,6 +396,9 @@ class Server {
 }
 
 // TODO
-// add lobby type field to game class if getting by object type isnt possible
-// lobby cleanup once match ends or too many clients leave
-//
+// text GUI
+// game display timer
+// handle file to be read
+// make sure BR works
+// tourney
+// save client data when their window closes
