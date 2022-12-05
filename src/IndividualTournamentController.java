@@ -10,7 +10,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 public class IndividualTournamentController extends Controller {
 
@@ -42,7 +41,10 @@ public class IndividualTournamentController extends Controller {
         int j = 2;
         while(j<getTournamentData().length - 2) {
             if(getTournamentData()[j].equals(getPlayer().getUsername())) {
-                addToUserPane(String.valueOf(((j-1)/3)+1), getTournamentData()[j], getTournamentData()[j+1], getTournamentData()[j+2]);
+                addToUserPane(String.valueOf(((j - 1) / 3) + 1), getTournamentData()[j], getTournamentData()[j + 1], getTournamentData()[j + 2]);
+                if (getTournamentData()[j + 2].equals("0")) {
+                    readyUp.setDisable(true);
+                }
             }
             j+=3;
         }
