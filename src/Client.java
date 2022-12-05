@@ -58,6 +58,7 @@ class Client implements Runnable {
      * Temporary storage of the score received from the server after sending in a guess
      */
     private Integer guessResult = null;
+    private TimerHandler timerHandler;
 
     /**
      * TEXTMODE ONLY
@@ -98,11 +99,14 @@ class Client implements Runnable {
         this.controller = controller;
     }
 
+    public void stopTimer() {
+        timerHandler = null;
+    }
     /**
      * sends server a message command
      * @param message The message to be sent
      */
-    public void sendMessage(String message) {
+    public void sendMessage(String message) { // MUST END WITH NEWLINE
         output.format(message);
         output.flush();
     }
@@ -213,7 +217,7 @@ class Client implements Runnable {
                             break;
                         }
                         case "TIMER_UPDATE": {
-                            clientExecutor.execute(new TimerHandler(this, clientMessage[1], clientMessage[2]));
+                            clientExecutor.execute(timerHandler = new TimerHandler(this, clientMessage[1], clientMessage[2]));
                             break;
                         }
                         case "PLAYER_COUNT_UPDATE": {

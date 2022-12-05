@@ -10,7 +10,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 public class IndividualTournamentController extends Controller {
 
@@ -35,13 +34,17 @@ public class IndividualTournamentController extends Controller {
     private boolean readiedUp;
 
     public void initialize() {
+        getClient().setController(this);
         readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         mainMenuButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
 
         int j = 2;
         while(j<getTournamentData().length - 2) {
             if(getTournamentData()[j].equals(getPlayer().getUsername())) {
-                addToUserPane(String.valueOf(((j-1)/3)+1), getTournamentData()[j], getTournamentData()[j+1], getTournamentData()[j+2]);
+                addToUserPane(String.valueOf(((j - 1) / 3) + 1), getTournamentData()[j], getTournamentData()[j + 1], getTournamentData()[j + 2]);
+                if (getTournamentData()[j + 2].equals("0")) {
+                    readyUp.setDisable(true);
+                }
             }
             j+=3;
         }
@@ -51,10 +54,10 @@ public class IndividualTournamentController extends Controller {
             for (int i = 2; i < 30; i += 3) {
                 addToLeaderBoardPane(String.valueOf(((i - 1) / 3) + 1), getTournamentData()[i], getTournamentData()[i + 1], getTournamentData()[i + 2]);
             }
-        }
-        else {
-            for(int i = 2; i<getTournamentData().length-2; i+=3) {
-                addToLeaderBoardPane(String.valueOf(((i-1)/3)+1), getTournamentData()[i], getTournamentData()[i+1], getTournamentData()[i+2]);
+        } else {
+            for (int i = 2; i < getTournamentData().length - 2; i += 3) {
+                System.out.println(i);
+                addToLeaderBoardPane(String.valueOf(((i - 1) / 3) + 1), getTournamentData()[i], getTournamentData()[i + 1], getTournamentData()[i + 2]);
             }
         }
     }
@@ -64,6 +67,21 @@ public class IndividualTournamentController extends Controller {
         if (!readiedUp) {
             switchScene("homeScreenFXML.fxml", "Main Menu");
         }
+    }
+
+    @Override
+    public void gameStart() {
+        System.out.println("GAME START");
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    switchScene("gameFXML.fxml", "Game");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @FXML
