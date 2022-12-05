@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-@SuppressWarnings({"BooleanMethodIsAlwaysInverted", "InfiniteLoopStatement"})
+@SuppressWarnings({"BooleanMethodIsAlwaysInverted"})
 class Client implements Runnable {
     private boolean textMode = false;
     private final String ip;
@@ -152,7 +152,8 @@ class Client implements Runnable {
                         break;
                     }
                     case "SHUTDOWN":
-                        System.exit(0);
+                        System.out.println("CALLING SYS EXIT");
+                        System.exit(-1);
                         break;
                 }
             } else {

@@ -7,6 +7,7 @@ import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLOutput;
 
 public class Controller {
     private static String ip;
@@ -132,8 +133,15 @@ public class Controller {
             public void handle(WindowEvent windowEvent) {
                 System.out.println("Closing Client");
                 if(!stage.getTitle().equals("Log In")) {
+                    System.out.println("Sending Disconnect Message to Server");
                     getClient().sendMessage(String.format("%s\n", Server.sendMessage.CLIENT_DISCONNECT));
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
+                System.out.println("QUITTING");
                 System.exit(-1);
             }
         });

@@ -1,8 +1,10 @@
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -42,7 +44,7 @@ public class ClientDriver extends Application {
                 System.out.println("STARTING");
                 controller = new Controller();
                 controller.setIp(InetAddress.getLocalHost().getHostAddress());
-                controller.setPort(Integer.parseInt("23704"));
+                controller.setPort(Integer.parseInt("23720"));
                 launch();
         }
 
@@ -150,6 +152,14 @@ public class ClientDriver extends Application {
 
         controller.setRoot(root);
         controller.setStage(primaryStage);
+
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                System.out.println("Closing Client");
+                System.exit(-1);
+            }
+        });
 
         primaryStage.show();
     }

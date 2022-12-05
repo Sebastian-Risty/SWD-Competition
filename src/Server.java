@@ -63,7 +63,7 @@ class Server {
                     }
                     break;
                 default:
-                    server = new ServerSocket(23704);
+                    server = new ServerSocket(23720);
             }
             server.setReuseAddress(true);
 
@@ -343,18 +343,17 @@ class Server {
                                 Database.setTable("Accounts");
                                 Database.update(getStatString().split(","));
 
-                                System.out.println("CLIENT DISCONNECT");
+                                System.out.println("Removing Client from list");
                                 clients.remove(this);
                                 if(this.currentLobby != null){
-                                    lobbies.get(this.currentLobby).remove(this);
-                                    this.currentLobby.clientDisconnected();
-                                    this.currentLobby = null;
+                                    synchronized (lobbies){
+                                        lobbies.get(this.currentLobby).remove(this);
+                                        this.currentLobby.clientDisconnected();
+                                        this.currentLobby = null;
+                                    }
                                 }
                                 this.username = null;
                                 this.requestedGame = null;
-
-                                output.format("%s", Client.sendMessage.SHUTDOWN);
-                                output.flush();
                                 break;
                             case "CANCEL_MM":
                                 System.out.println("CLIENT CANCELED MM");
@@ -478,4 +477,3 @@ class Server {
 // java docs
 // wiki
 // GUI polish
-// bettter scoring method
