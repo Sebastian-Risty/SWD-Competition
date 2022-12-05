@@ -48,12 +48,8 @@ public class IndividualTournamentController extends Controller {
 
         boolean length = getTournamentData().length >= 17;
         if(length) {
-            for(int i = 2; i<15; i+=3) {
-                addToLeaderBoardPane(String.valueOf(((i-1)/3)), getTournamentData()[i], getTournamentData()[i+1], getTournamentData()[i+2]);
-        System.out.println(Arrays.toString(getTournamentData()));
-        if (length) {
             for (int i = 2; i < 15; i += 3) {
-                addToLeaderBoardPane(String.valueOf(((i - 1) / 3)), getTournamentData()[i], getTournamentData()[i + 1], getTournamentData()[i + 2]);
+                addToLeaderBoardPane(String.valueOf(((i - 1) / 3) + 1), getTournamentData()[i], getTournamentData()[i + 1], getTournamentData()[i + 2]);
             }
         }
         else {
@@ -62,7 +58,6 @@ public class IndividualTournamentController extends Controller {
             }
         }
     }
-
 
     @FXML
     void mainMenuButtonListener(ActionEvent event) throws IOException {
