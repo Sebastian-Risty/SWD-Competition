@@ -233,7 +233,7 @@ public class Database {
      * @return true if table was created successfully, false if a tournament with the same name is being used
      * @throws SQLException thrown if failed to write to database
      */
-    public static boolean createTournament(String tableName, int timeStarted) throws SQLException {
+    public static boolean createTournament(String tableName, String timeStarted) throws SQLException {
         if (tournamentTaken(tableName))
             return false;
 
@@ -370,7 +370,7 @@ public class Database {
 
         for (int i = 2; i <= metaData.getColumnCount(); i++) {
             if (Objects.equals(table, "mastertournament")) { // changing time started
-                statement.executeUpdate("UPDATE mastertournament SET " + metaData.getColumnName(i) + " = '" + Integer.parseInt(data[i - 1]) + "' WHERE tournamentid = '" + data[0] + "';");
+                statement.executeUpdate("UPDATE mastertournament SET " + metaData.getColumnName(i) + " = '" + data[i - 1] + "' WHERE tournamentid = '" + data[0] + "';");
             } else if ((Objects.equals(table, "Test") || Objects.equals(table, "Login")) && i == 2) // changing a password
                 statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = '" + Encryptor.shiftMessage(data[i - 1], keyInfo, false) + "' WHERE username = '" + data[0] + "';");
             else // changing any column other than the username or password (all other columns are integers)
