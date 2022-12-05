@@ -62,21 +62,42 @@ public class TournamentHomeController extends Controller {
     }
 
     @Override
-    public void joinTournament() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-           // TODO
-            }
-        });
+    public void joinTournament(String[] data) {
+        if(data[1].equals("true")) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    setTournamentData(data[2]);
+                    try {
+                        switchScene("IndividualTournament.fxml", "Tournament");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+        else {
+            // TODO rippler
+        }
     }
 
     @Override
-    public void createTournament() {
+    public void createTournament(String[] data) {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                //TODO
+                if(data[1].equals("true")) {
+                    try {
+                        setTournamentData(data[2]);
+                        switchScene("IndividualTournament.fxml", "Tournament");
+                    }
+                    catch(IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else {
+                    // TODO rippler
+                }
             }
         });
     }

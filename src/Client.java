@@ -156,10 +156,10 @@ class Client implements Runnable {
                         break;
                     }
                     case "CREATE_TOURNAMENT": {
-                        controller.createTournament();
+                        controller.createTournament(clientMessage);
                     }
                     case "JOIN_TOURNAMENT": {
-                        controller.joinTournament();
+                        controller.joinTournament(clientMessage);
                     }
                 }
             } else {
