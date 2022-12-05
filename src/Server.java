@@ -249,6 +249,38 @@ class Server {
                                     }
                                     break;
                                 }
+                                case "Tournament": {
+                                    synchronized (lobbies) {
+                                        for (Game game : lobbies.keySet()) {
+                                            if (game.getGamemode().equals("Tournament") && !game.isInProgress()) { // client joins open game if possible
+                                                // add client
+                                                lobbies.get(game).add(client);
+                                                System.out.println("ADDED CLIENT TO GAME");
+                                                client.currentLobby = game;
+                                                game.clientConnected();
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if (client.currentLobby == null) { // create lobby if none were found
+                                        System.out.println("Created New Tournament Lobby");
+                                        Game temp;
+                                        int MATCH_TIME = 30;
+                                        if (scrambleFile != null) {
+                                            temp = new OneVsOne(MATCH_TIME, scrambleFile, fileIndex);
+                                        } else {
+                                            temp = new OneVsOne(MATCH_TIME);
+                                        }
+                                        executorService.execute(temp);
+                                        lobbies.put(temp, Collections.synchronizedList(new ArrayList<ConnectedClient>() {{
+                                            add(client);
+                                        }}));
+                                        client.currentLobby = temp;
+                                        temp.clientConnected();
+                                        fileIndex++;
+                                    }
+                                    break;
+                                }
                             }
                             client.requestedGame = null; // set to null once client finds lobby
                         }
@@ -427,13 +459,17 @@ class Server {
                                         output.format(String.format("%s,%s\n", Client.sendMessage.CREATE_TOURNAMENT, false));
                                         output.flush();
                                     } else {
-                                        output.format(String.format("%s,%s\n", Client.sendMessage.CREATE_TOURNAMENT, true));
-                                        output.flush();
-                                        tournaments.put(new Tournament(clientMessage[1], String.valueOf(System.currentTimeMillis())), Collections.synchronizedList(
+                                        int startTime = (int) System.currentTimeMillis();
+                                        tournaments.put(new Tournament(clientMessage[1], String.valueOf(startTime)), Collections.synchronizedList(
                                                 new ArrayList<TournamentStats>() {{
                                                     add(new TournamentStats(username));
                                                 }}));
-                                        // TODO UPDATE DATABASE
+                                        Database.createTournament(clientMessage[1], startTime);
+                                        Thread.sleep(10);
+                                        Database.addToTournament(username, clientMessage[1]);
+                                        Thread.sleep(10);
+                                        output.format(String.format("%s,%s\n", Client.sendMessage.CREATE_TOURNAMENT, true, getTournamentPlayerData(clientMessage[1])));
+                                        output.flush();
                                     }
                                 }
                                 break;
@@ -444,10 +480,12 @@ class Server {
                                         names.add(tournament.getName());
                                     }
                                     if (names.contains(clientMessage[1])) {
+                                        Database.addToTournament(username, clientMessage[1]);
+                                        Thread.sleep(10);
                                         output.format(String.format("%s,%s,%s\n", Client.sendMessage.TOURNAMENT_PLAYER_DATA, true, getTournamentPlayerData(clientMessage[1])));
                                         output.flush();
                                     } else {
-                                        output.format(String.format("%s,%s,%s\n", Client.sendMessage.TOURNAMENT_PLAYER_DATA, false, ""));
+                                        output.format(String.format("%s,%s\n", Client.sendMessage.TOURNAMENT_PLAYER_DATA, false));
                                         output.flush();
                                     }
                                 }
