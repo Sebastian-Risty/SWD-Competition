@@ -242,11 +242,11 @@ public class Controller {
                     getClient().sendMessage(String.format("%s\n", Server.sendMessage.CLIENT_DISCONNECT));
                     try {
                         Thread.sleep(500);
+                        Thread.currentThread().interrupt();
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
                 }
-                System.out.println("QUITTING");
                 System.exit(-1);
             }
         });

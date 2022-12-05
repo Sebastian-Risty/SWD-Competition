@@ -32,24 +32,32 @@ class Server {
      * Synchronized map containing Game objects as keys with a list of clients in said game as the values
      */
     private static final Map<Game, List<ConnectedClient>> lobbies = Collections.synchronizedMap(new HashMap<>());
+    /**
+     * Synchronized map containing Tournament objects as keys with a list of TournamentStats as the values
+     */
     private static final Map<Tournament, List<TournamentStats>> tournaments = Collections.synchronizedMap(new HashMap<>());
 
 
     /**
-     * Creates threads for subclasses of Server
+     * Creates threads for subclasses of Server and for each ConnectedClient object
      * @see AcceptPlayers
      * @see LobbyHandler
      * @see MatchHandler
-     * Also creates threads
+     * @see TournamentHandler
+     * @see ConnectedClient
      */
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
 
+
+    /**
+     * Contains commands the server can receive from clients
+     */
     public enum sendMessage {
-        LOGIN_REQUEST,      // [1] -> username, [2] -> password
-        MODE_SELECTION,     // [1] -> name of game from gameMode enum
-        GUESS,              // [1] -> clients word guess
-        LEADERBOARD,        // requests leaderboard update
-        REGISTER_REQUEST,    // [1] -> username, [2] -> password
+        LOGIN_REQUEST,
+        MODE_SELECTION,
+        GUESS,
+        LEADERBOARD,
+        REGISTER_REQUEST,
 
         CLIENT_DATA_REQUEST,
         CREATE_TOURNAMENT,
@@ -60,12 +68,21 @@ class Server {
         CLIENT_DISCONNECT
     }
 
+    /**
+     * Contains an easy to see way to select which game mode a client is requesting to be placed into
+     */
     public enum gameMode {
         ONE_VS_ONE,
         BATTLE_ROYAL
     }
 
-    public static void main(String[] args) { // args[0] port, args[1] file directory path including file name
+    /**
+     * Initializes scramble file and server port if possible. Create threads for subclasses.
+     * @param args args[0] is the port to run the server on, args[1] is file directory path, including the file name.
+     *             If the file is at the root of the project directory, just the file name can be used.
+     * @see ExecutorService
+     */
+    public static void main(String[] args) {
         server = null;
         try {
             switch (args.length) {
@@ -103,6 +120,10 @@ class Server {
         }
     }
 
+    /**
+     * Creates a new thread for each Client connecting to the server
+     * @see Client
+     */
     private static class AcceptPlayers implements Runnable {
         @Override
         public void run() {
@@ -117,6 +138,7 @@ class Server {
             }
         }
     }
+
 
     private static void initializeTournaments() throws SQLException {
         Database.setTable("mastertournament");
@@ -175,6 +197,9 @@ class Server {
         }
     }
 
+    /**
+     * Handles the creation of lobbies and the placement of players into open lobbies
+     */
     private static class LobbyHandler implements Runnable {
         @Override
         public void run() {
@@ -202,7 +227,7 @@ class Server {
                                     if (client.currentLobby == null) { // create lobby if none were found
                                         System.out.println("Created New ONE_VS_ONE Lobby");
                                         Game temp;
-                                        int MATCH_TIME = 30;
+                                        int MATCH_TIME = 30; // how long each match should be in seconds
                                         if (scrambleFile != null) {
                                             temp = new OneVsOne(MATCH_TIME, scrambleFile, fileIndex);
                                         } else {
@@ -254,8 +279,8 @@ class Server {
                                     if (client.currentLobby == null) { // create lobby if none were found
                                         System.out.println("Created New Battle Royale Lobby");
                                         Game temp;
-                                        int MATCH_TIME = 30;
-                                        int COUNTDOWN_TIME = 60;
+                                        int MATCH_TIME = 30; // how long each match should be in seconds
+                                        int COUNTDOWN_TIME = 60; // how long the
                                         if (scrambleFile != null) {
                                             temp = new BattleRoyale(MATCH_TIME, COUNTDOWN_TIME, scrambleFile, fileIndex);
                                         } else {
@@ -313,6 +338,9 @@ class Server {
         }
     }
 
+    /**
+     *
+     */
     private static class MatchHandler implements Runnable {
         @Override
         public void run() {
@@ -465,7 +493,7 @@ class Server {
         public void run() {
             try {
                 init(); // verify login and load client data from db
-                while (!server.isClosed()) { // handle client messages
+                while (!Thread.currentThread().isInterrupted()) { // handle client messages
                     System.out.println("AWAITING CLIENT COMMAND");
                     String receivedData = input.nextLine();
                     System.out.printf("Message Received: %s\n", receivedData);
@@ -563,6 +591,7 @@ class Server {
                                 }
                                 this.username = null;
                                 this.requestedGame = null;
+                                Thread.currentThread().interrupt();
                                 break;
                             case "CANCEL_MM":
                                 System.out.println("CLIENT CANCELED MM");
@@ -688,3 +717,6 @@ class Server {
 // java docs
 // wiki
 // GUI polish
+// show connected clients as soon as lobby is created
+// stop showing timer when client cancels their lobby
+// player count is not decrementing when client cancel
