@@ -2,7 +2,6 @@ import org.junit.Test;
 
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
