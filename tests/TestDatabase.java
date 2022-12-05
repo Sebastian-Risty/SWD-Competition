@@ -79,7 +79,7 @@ public class TestDatabase {
     public void testCreateAddToTournament() throws SQLException {
         init();
         Database.setTable("mastertournament");
-        Database.createTournament("testtournament", 100);
+        Database.createTournament("testtournament", "100");
 
         Database.addToTournament("Sebastian", "testtournament");
         assertFalse(Database.addToTournament("Sebastian", "testtournament")); // cannot add same account twice
@@ -100,7 +100,7 @@ public class TestDatabase {
 //        System.out.println(Arrays.toString(Database.getInfo("Matt")));
 
         Database.deleteTournament("testtournament");
-        assertTrue(Database.createTournament("testtournament", 100)); // tournament deleted and then recreated successfully
+        assertTrue(Database.createTournament("testtournament", "100")); // tournament deleted and then recreated successfully
         Database.deleteTournament("testtournament");
 
         assertFalse(Database.deleteTournament("testtournament"));
