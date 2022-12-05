@@ -220,6 +220,7 @@ public class Controller {
         setyPos(stage.getY());
         setxPos(stage.getX());
         Stage tempStage = new Stage();
+
         setStage(tempStage);
 
         URL fxmlFile = getClass().getResource(path);
@@ -236,14 +237,22 @@ public class Controller {
             @Override
             public void handle(WindowEvent windowEvent) {
                 System.out.println("Closing Client");
-                if (!stage.getTitle().equals("Log In")) {
+                if(!stage.getTitle().equals("Log In")) {
+                    System.out.println("Sending Disconnect Message to Server");
                     getClient().sendMessage(String.format("%s\n", Server.sendMessage.CLIENT_DISCONNECT));
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
-                //System.exit(-1);
+                System.out.println("QUITTING");
+                System.exit(-1);
             }
         });
 
         getStage().show();
+
         temp2.close();
     }
 
