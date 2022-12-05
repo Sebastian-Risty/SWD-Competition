@@ -1,19 +1,33 @@
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
+/**
+ * Handles the creation of interfaces.
+ * If GUI, then a controller is made and the JavaFX launch() is called
+ * If text mode, the rest of the drivers main is used to handle user interaction
+ */
+@SuppressWarnings({"BusyWait", "InfiniteLoopStatement"})
 public class ClientDriver extends Application {
+    /**
+     * Controller used to switch scenes
+     */
     private static Controller controller;
+
+    /**
+     * Sets up controller or text mode depending on args
+     * Also creates connection to server from given args
+     * @param args [0]-> text mode ("text"), [1] -> server ip, [2] -> server port
+     * @throws UnknownHostException If server cannot be found
+     * @throws InterruptedException If thread is interrupted
+     */
 
     public static void main(String[] args) throws UnknownHostException, InterruptedException {
         Client textClient = null;
@@ -48,6 +62,7 @@ public class ClientDriver extends Application {
                 launch();
         }
 
+        // BEGIN TEXT MODE INTERFACE
         if(textClient != null){
             Scanner scanner = new Scanner(System.in);
             char input;
@@ -132,13 +147,18 @@ public class ClientDriver extends Application {
                         } else{
                             System.out.println("Not a word!");
                         }
+                        System.out.printf("LETTERS: %s\n", textClient.getLetters());
                     }
                 }
             }
         }
     }
 
-
+    /**
+     * Start method that launches the GUI and opens the login page
+     * @param primaryStage the Stage to open the scene on
+     * @throws IOException if file can't be loaded
+     */
     @Override
     public void start(Stage primaryStage) throws IOException {
         URL fxmlFile = getClass().getResource("LoginFXML.fxml");
@@ -153,12 +173,9 @@ public class ClientDriver extends Application {
         controller.setRoot(root);
         controller.setStage(primaryStage);
 
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent windowEvent) {
-                System.out.println("Closing Client");
-                System.exit(-1);
-            }
+        primaryStage.setOnCloseRequest(windowEvent -> {
+            System.out.println("Closing Client");
+            System.exit(-1);
         });
 
         primaryStage.show();

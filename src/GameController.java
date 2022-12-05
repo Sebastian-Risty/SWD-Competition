@@ -13,27 +13,67 @@ import javafx.scene.paint.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * GameController class that derives from Controller and controls the game screen
+ * @see Controller
+ */
 public class GameController extends Controller {
+    /**
+     * Member variable for the word panel of correctly guessed words
+     */
     @FXML
     private JFXTextArea wordPanel;
+    /**
+     * Member variable for the guess box field
+     */
     @FXML
     private JFXTextArea guessWordField;
+    /**
+     * Member variable for the letters to create words from label
+     */
     @FXML
     private Label letters;
+    /**
+     * Member variable for the parent pane of the rippler
+     */
     @FXML
     private Pane parentPane;
+    /**
+     * Member variable for the rippler that gives feedback on correct/incorrect guesses
+     */
     @FXML
     private JFXRippler guessRippler;
+    /**
+     * Member variable for the child pane that the rippler is in
+     */
     @FXML
     private Pane childPane;
+    /**
+     * Member variable for the score label
+     */
     @FXML
     private Label scoreLabel;
+    /**
+     * Member variable for the time label
+     */
     @FXML
     private Label timeLabel;
+    /**
+     * Member variable for the last guess
+     */
     private String lastGuess;
+    /**
+     * Member variable for the player score
+     */
     private int playerScore;
+    /**
+     * Member variable to store the correct guesses from the user
+     */
     private ArrayList<String> correctGuesses;
 
+    /**
+     * Initialize method for GameController that sets the client's controller to this and sets up the GUI components
+     */
     public void initialize() {
         getClient().setController(this);
         correctGuesses = new ArrayList<>();
@@ -45,7 +85,10 @@ public class GameController extends Controller {
         guessRippler = new JFXRippler(childPane);
         parentPane.getChildren().add(guessRippler);
     }
-
+    /**
+     * Listener for when enter is pressed in the guess word field that sends the guess to the server
+     * @param event the key event that caused triggered the listener
+     */
     @FXML
     void enterPressed(KeyEvent event) {
         if (event.getEventType().equals(KeyEvent.KEY_PRESSED) && event.getCode().equals(KeyCode.ENTER) && guessWordField.getText() != null) {
@@ -62,51 +105,49 @@ public class GameController extends Controller {
         }
     }
 
+    /**
+     * Method for the client to call to let the controller know the game is over. Overrides the controller's method
+     */
     @Override
     public void endGame() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    switchScene("gameResultsFXML.fxml", "Results");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        Platform.runLater(() -> {
+            try {
+                switchScene("gameResultsFXML.fxml", "Results");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
     }
-
+    /**
+     * Method for the client to give the controller the results of a guess. Overrides Controller's method
+     * @param score the score of the word
+     */
     @Override
     public void guessResult(int score) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println(score);
-                guessRippler.setEnabled(true);
+        Platform.runLater(() -> {
+            System.out.println(score);
+            guessRippler.setEnabled(true);
 
-                if(score>0 && !correctGuesses.contains(lastGuess)) {
-                    correctGuesses.add(lastGuess);
-                    wordPanel.setText(wordPanel.getText() + lastGuess);
-                    playerScore += score;
-                    scoreLabel.setText("Score: " + playerScore);
-                    guessRippler.setRipplerFill(new Color(0, 1, 0, 0));
+            if(score>0 && !correctGuesses.contains(lastGuess)) {
+                correctGuesses.add(lastGuess);
+                wordPanel.setText(wordPanel.getText() + lastGuess);
+                playerScore += score;
+                scoreLabel.setText("Score: " + playerScore);
+                guessRippler.setRipplerFill(new Color(0, 1, 0, 0));
 
-                    guessRippler.createManualRipple();
-                } else {
-                    guessRippler.setRipplerFill(new Color(1, 0, 0, 0));
-                    guessRippler.createManualRipple();
-                }
+                guessRippler.createManualRipple();
+            } else {
+                guessRippler.setRipplerFill(new Color(1, 0, 0, 0));
+                guessRippler.createManualRipple();
             }
         });
     }
-
+    /**
+     * Method for the client to call when the server updates the time. Overrides the Controller's method
+     * @param time the updated time from the client
+     */
     @Override
     public void updateTimer(int time) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                timeLabel.setText("Time: " + time);
-            }
-        });
+        Platform.runLater(() -> timeLabel.setText("Time: " + time));
     }
 }

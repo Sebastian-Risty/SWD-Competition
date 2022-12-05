@@ -119,6 +119,7 @@ public class TestDatabase {
         Database.setTable("mastertournament");
         Database.createTournament("testtournament", "100");
 
+        Database.setTable("testtournament");
         Database.addToTournament("Sebastian", "testtournament");
         assertFalse(Database.addToTournament("Sebastian", "testtournament")); // cannot add same account twice
         assertFalse(Database.removeFromTournament("yourmom", "testtournament")); // cannot remove account that's not there

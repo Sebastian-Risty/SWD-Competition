@@ -264,18 +264,15 @@ public class HomeScreenController extends Controller {
      */
     @Override
     public void updatePlayerStatsScreen() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                totalWins.setText(getPlayer().getTotalWins());
-                gamesPlayed.setText(getPlayer().getTotalGamesPlayed());
-                h2hWins.setText(getPlayer().getOVOWins());
-                h2hGames.setText(getPlayer().getOVOGamesPlayed());
-                brWins.setText(getPlayer().getBRWins());
-                brPlayed.setText(getPlayer().getBRGamesPlayed());
-                tourneyWins.setText(getPlayer().getTournamentWins());
-                tourneysPlayed.setText(getPlayer().getTournamentsPlayed());
-            }
+        Platform.runLater(() -> {
+            totalWins.setText(getPlayer().getTotalWins());
+            gamesPlayed.setText(getPlayer().getTotalGamesPlayed());
+            h2hWins.setText(getPlayer().getOVOWins());
+            h2hGames.setText(getPlayer().getOVOGamesPlayed());
+            brWins.setText(getPlayer().getBRWins());
+            brPlayed.setText(getPlayer().getBRGamesPlayed());
+            tourneyWins.setText(getPlayer().getTournamentWins());
+            tourneysPlayed.setText(getPlayer().getTournamentsPlayed());
         });
     }
     /**
@@ -284,48 +281,41 @@ public class HomeScreenController extends Controller {
      */
     @Override
     public void gameStart() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    switchScene("gameFXML.fxml", "Game");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        Platform.runLater(() -> {
+            try {
+                switchScene("gameFXML.fxml", "Game");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
     }
     /**
      * updatePlayersConnected method that overrides the controller method and updates the screen with the server data of
      * how many clients are connected
+     * @param numPlayers the number of players currently connected
      */
     @Override
     public void updatePlayersConnected(int numPlayers) {
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                if(readiedUp) {
-                    gameStatus.setText("Players connected: " + numPlayers);
-                    if(numPlayers < 3) {
-                        gameModeFeedback.setText("Waiting for players");
-                    }
+        Platform.runLater(() -> {
+            if(readiedUp) {
+                gameStatus.setText("Players connected: " + numPlayers);
+                if(numPlayers < 3) {
+                    gameModeFeedback.setText("Waiting for players");
                 }
             }
         });
     }
     /**
      * Method for updating the countdown to match label on the screen. Overrides the controller's method
+     * @param time the updated time
      */
     @Override
     public void updateTimer(int time) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                if(readiedUp) {
-                    gameModeFeedback.setText("Time: " + time);
+        Platform.runLater(() -> {
+            if(readiedUp) {
+                gameModeFeedback.setText("Time: " + time);
 
-                }
             }
         });
     }

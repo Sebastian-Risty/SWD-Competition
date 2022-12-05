@@ -8,7 +8,10 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
+/**
+ * Server handles client connections, matchmaking, match handling, and backing up data to database.
+ */
+@SuppressWarnings({"BusyWait"})
 class Server {
     /**
      * Network socket the server will use
@@ -84,7 +87,6 @@ class Server {
      * @see ExecutorService
      */
     public static void main(String[] args) {
-        // args[0] port, args[1] file directory path including file name
         Database.initialize("Accounts");
         Database.initialize("mastertournament");
         server = null;
@@ -288,8 +290,8 @@ class Server {
                                     if (client.currentLobby == null) { // create lobby if none were found
                                         System.out.println("Created New Battle Royale Lobby");
                                         Game temp;
-                                        int MATCH_TIME = 30; // how long each match should be in seconds
-                                        int COUNTDOWN_TIME = 60; // how long the
+                                        int MATCH_TIME = 10; // how long each match should be in seconds
+                                        int COUNTDOWN_TIME = 10; // how long the
                                         if (scrambleFile != null) {
                                             temp = new BattleRoyale(MATCH_TIME, COUNTDOWN_TIME, scrambleFile, fileIndex);
                                         } else {
