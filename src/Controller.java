@@ -244,7 +244,8 @@ public class Controller {
      */
     public void updateTimer(int time) {
     }
-    public void updateMatchCountDown(int time, int numPlayers) {}
+    public void updateMatchCountDown(int time) {}
+    public void updatePlayersConnected(int numPlayers){}
 
     public void loginInvalid() {
     }
