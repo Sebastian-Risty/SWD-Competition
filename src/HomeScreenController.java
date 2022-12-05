@@ -198,4 +198,8 @@ public class HomeScreenController extends Controller {
             }
         });
     }
+    @Override
+    public void updateMatchCountDown(int time, int numPlayers) {
+        gameModeFeedback.setText(time + " seconds until game starts " + numPlayers + " connected");
+    }
 }
