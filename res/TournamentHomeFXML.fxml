@@ -5,9 +5,10 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TournamentHomeController">
+<AnchorPane fx:id="parentPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TournamentHomeController">
    <children>
       <JFXTextField fx:id="joinField" layoutX="80.0" layoutY="40.0" />
       <JFXButton layoutX="74.0" layoutY="75.0" onAction="#joinButtonListener" prefHeight="34.0" prefWidth="167.0" text="Join Tournament">
@@ -40,5 +41,6 @@
             <Font name="System Bold" size="13.0" />
          </font>
       </JFXTextField>
+      <Pane fx:id="ripplerPane" layoutX="21.0" layoutY="6.0" prefHeight="34.0" prefWidth="561.0" />
    </children>
 </AnchorPane>

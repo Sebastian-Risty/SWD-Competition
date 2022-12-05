@@ -165,7 +165,7 @@ public class HomeScreenController extends Controller {
     void tournamentModeListener() {
         if(!readiedUp) {
             try {
-                switchScene("IndividualTournament.fxml", "Tournament Home");
+                switchScene("TournamentHomeFXML.fxml", "Tournament Home");
             } catch (IOException e) {
                 gameStatus.setText("Could not Open Tournament Mode");
             }

@@ -57,6 +57,16 @@ public class Controller {
      * Member variable for the root of the Stage
      */
     private static Parent root;
+
+    public static String getTournamentData() {
+        return tournamentData;
+    }
+
+    public static void setTournamentData(String tournamentData) {
+        Controller.tournamentData = tournamentData;
+    }
+
+    private static String tournamentData;
     /**
      * Getter method for playerStats
      * @return the playerStats reference
@@ -229,7 +239,7 @@ public class Controller {
                 if (!stage.getTitle().equals("Log In")) {
                     getClient().sendMessage(String.format("%s\n", Server.sendMessage.CLIENT_DISCONNECT));
                 }
-                System.exit(-1);
+                //System.exit(-1);
             }
         });
 
@@ -296,12 +306,11 @@ public class Controller {
      */
     public void guessResult(int score) {
     }
-    public void joinTournament() {
+    public void joinTournament(String[] data) {
     }
-    public void createTournament() {
+    public void createTournament(String[] data) {
     }
     public void updateTournament(String[] data) {
-
     }
     /**
      * Method for updating the player stats screen in the home page. HomeScreenController overrides this
