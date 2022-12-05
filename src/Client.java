@@ -128,6 +128,7 @@ class Client implements Runnable {
                     }
                     case "TOURNAMENT_DATA": {
                         controller.updateTournament(clientMessage);
+                        break;
                     }
                     case "GAME_START": {
                         letters = clientMessage[1];
