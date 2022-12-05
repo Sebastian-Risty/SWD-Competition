@@ -11,9 +11,10 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
     private File filePath = null;
     private int fileIndex;
     private String selectedWord;
-    private ArrayList<Character> letters = new ArrayList<>();
-    private ArrayList<String> validWords = new ArrayList<>();// TODO: gen score value for each word, read rules from some other class
-    private ArrayList<String> allWords = new ArrayList<>();
+    private final ArrayList<Character> letters = new ArrayList<>();
+    final static int[] alphabetScores = {1,3,3,2,1,4,2,4,1,8,5,1,3,1,1,3,10,1,1,1,1,4,4,8,4,10};
+    private ArrayList<String> validWords = new ArrayList<>();
+    private final ArrayList<String> allWords = new ArrayList<>();
     private int[] letterFreq = new int[26];
     private boolean progressFlag = false;
     private boolean endFlag = false;
@@ -26,14 +27,6 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
 
     public int getMatchTime() {
         return matchTime;
-    }
-
-    public void setMatchTime(int matchTime) {
-        this.matchTime = matchTime;
-    }
-
-    public boolean getPreGameLobbyFlag() {
-        return preGameLobbyFlag;
     }
 
     public void setPreGameLobbyFlag(boolean preGameLobbyFlag) {
@@ -110,7 +103,7 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
 
     public void clientConnected() {
         numConnectedClients++;
-    } //TODO may not need
+    }
 
     @Override
     public void run() {
@@ -233,7 +226,12 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
 
     public int guess(String guess) {
         if (validWords.contains(guess.toLowerCase())) {
-            return guess.length(); //TODO: calculate score of each word upon generation based on scoring method, return the value
+            int scoreSum = 0;
+            for (Character c: guess.toCharArray()) {
+                scoreSum += alphabetScores[Character.toUpperCase(c) - 65];
+            }
+            scoreSum += guess.length();
+            return scoreSum;
         }
         return 0;
     }

@@ -474,8 +474,8 @@ class Server {
 }
 
 // TODO
-// text GUI
-// game display timer
-// handle file to be read
 // tourney
-// save client data when their window closes
+// java docs
+// wiki
+// GUI polish
+// bettter scoring method
