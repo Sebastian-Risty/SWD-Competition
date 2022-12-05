@@ -289,6 +289,7 @@ public class HomeScreenController extends Controller {
     /**
      * updatePlayersConnected method that overrides the controller method and updates the screen with the server data of
      * how many clients are connected
+     * @param numPlayers the number of players currently connected
      */
     @Override
     public void updatePlayersConnected(int numPlayers) {
@@ -304,6 +305,7 @@ public class HomeScreenController extends Controller {
     }
     /**
      * Method for updating the countdown to match label on the screen. Overrides the controller's method
+     * @param time the updated time
      */
     @Override
     public void updateTimer(int time) {

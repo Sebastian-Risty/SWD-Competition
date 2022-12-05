@@ -170,7 +170,7 @@
                   <Font name="System Bold Italic" size="20.0" />
                </font>
                <GridPane.margin>
-                  <Insets left="100.0" />
+                  <Insets left="135.0" />
                </GridPane.margin>
             </Label>
          </children>

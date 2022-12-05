@@ -6,24 +6,49 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-
 import java.io.IOException;
-
+/**
+ * SignUpPageController that derives from Controller and controls the sign-up page scene
+ * @see Controller
+ */
 public class SignUpPageController extends Controller {
+    /**
+     * Member variable for the password field
+     */
     @FXML
     private JFXPasswordField signUpPasswordField;
+    /**
+     * Member variable for the confirm password field
+     */
     @FXML
     private JFXPasswordField signUpConfirmPassword;
+    /**
+     * Member variable for the sign-up feedback label
+     */
     @FXML
     private Label signUpFeedbackLabel;
+    /**
+     * Member variable for the bottom grid pane
+     */
     @FXML
     private GridPane bottomGridPane;
+    /**
+     * Member variable for the parent grid pane
+     */
     @FXML
     private GridPane parentGridPane;
+    /**
+     * Member variable for the username field
+     */
     @FXML
     private JFXTextField usernameField;
-    JFXRippler rippler;
-
+    /**
+     * Member variable for the rippler
+     */
+    private JFXRippler rippler;
+    /**
+     * Listener for the sign-up button that sends a message to the server requesting to sign up
+     */
     @FXML
     void signUpButtonListener() {
         String password = signUpPasswordField.getText();
@@ -42,14 +67,19 @@ public class SignUpPageController extends Controller {
             signUpFeedbackLabel.setText("Passwords do not match");
         }
     }
-
+    /**
+     * Initialize method for the SignUpPageController class that sets the Client's controller to this and sets up the
+     * GUI components
+     */
     public void initialize() {
         getClient().setController(this);
         rippler = new JFXRippler(bottomGridPane);
         rippler.setRipplerFill(new Color(1, 0, 0, 0));
         parentGridPane.getChildren().add(rippler);
     }
-
+    /**
+     * Method for the client to call when the sign-up is valid and switches the scene to the home screen
+     */
     @Override
     public void signUpValid() {
         setPlayer(new PlayerStats(usernameField.getText()));
@@ -65,7 +95,9 @@ public class SignUpPageController extends Controller {
             }
         });
     }
-
+    /**
+     * Method for the client to tell the controller that the sign-up was invalid
+     */
     @Override
     public void signUpInvalid() {
         Platform.runLater(() -> {

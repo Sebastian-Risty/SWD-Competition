@@ -70,23 +70,37 @@ class Client implements Runnable {
      * If the match has started
      */
     private boolean gameStart = false;
-
+    /**
+     * Getter method for the guess result
+     * @return the guess result
+     */
     public Integer getGuessResult() {
         return guessResult;
     }
-
+    /**
+     * isGameStart method that returns if the game is started
+     * @return gameStart
+     */
     public boolean isGameStart() {
         return gameStart;
     }
-
+    /**
+     * isLoggedOn method that returns if the cleint is logged on
+     * @return loggedIn
+     */
     public boolean isLoggedIn() {
         return loggedIn;
     }
-
+    /**
+     * Setter method for the text mode
+     * @param textMode the text mode
+     */
     public void setTextMode(boolean textMode) {
         this.textMode = textMode;
     }
-
+    /**
+     * Getter method for the game results
+     */
     public String[] getGameResults() {
         return gameResults;
     }
