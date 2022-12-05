@@ -426,6 +426,7 @@ class Server {
                                         for (TournamentStats stats : statsList) {
                                             if (stats.getUsername().equals(client.username)) {
                                                 stats.setTournamentGamesLeft(stats.getTournamentGamesLeft() - 1);
+                                                System.out.println(stats.getTournamentGamesLeft());
                                                 try {
                                                     Database.update(
                                                             new String[]{stats.getUsername(),
