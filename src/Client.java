@@ -246,6 +246,7 @@ class Client implements Runnable {
         GAME_START, //
         GUESS_RESULT, // [1] -> score received from guess
         TOURNAMENT_DATA,
+        TOURNAMENT_PLAYER_DATA,
         GAME_END,        // [1] -> (bool)hasWon, winningUsername,
         TIMER_UPDATE,
         PLAYER_COUNT_UPDATE, // [1] -> numPlayers in match
