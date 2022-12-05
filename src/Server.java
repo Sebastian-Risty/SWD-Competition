@@ -83,6 +83,9 @@ class Server {
      * @see ExecutorService
      */
     public static void main(String[] args) {
+        // args[0] port, args[1] file directory path including file name
+        Database.initialize("Accounts");
+        Database.initialize("mastertournament");
         server = null;
         try {
             switch (args.length) {
@@ -143,12 +146,14 @@ class Server {
     private static void initializeTournaments() throws SQLException {
         Database.setTable("mastertournament");
         String[] tournamentData = Database.getInfo("");
-        for (int i = 0; i < tournamentData.length; i += 2) {
-            Tournament tournament = new Tournament(tournamentData[i], tournamentData[i + 1]);
-            String[] userData = Database.getUserData(tournament.getName());
-            tournaments.put(tournament, Collections.synchronizedList(new ArrayList<>()));
-            for (int j = 0; j < userData.length; j += 3) {
-                tournaments.get(tournament).add(new TournamentStats(userData[j], userData[j + 1], userData[j + 2]));
+        if (tournamentData.length > 1) {
+            for (int i = 0; i < tournamentData.length; i += 2) {
+                Tournament tournament = new Tournament(tournamentData[i], tournamentData[i + 1]);
+                String[] userData = Database.getUserData(tournament.getName());
+                tournaments.put(tournament, Collections.synchronizedList(new ArrayList<>()));
+                for (int j = 0; j < userData.length; j += 3) {
+                    tournaments.get(tournament).add(new TournamentStats(userData[j], userData[j + 1], userData[j + 2]));
+                }
             }
         }
     }
@@ -601,12 +606,12 @@ class Server {
                                         output.format(String.format("%s,%s\n", Client.sendMessage.CREATE_TOURNAMENT, false));
                                         output.flush();
                                     } else {
-                                        int startTime = (int) System.currentTimeMillis();
+                                        long startTime = System.currentTimeMillis();
                                         tournaments.put(currentTournament = new Tournament(clientMessage[1], String.valueOf(startTime)), Collections.synchronizedList(
                                                 new ArrayList<TournamentStats>() {{
                                                     add(new TournamentStats(username));
                                                 }}));
-                                        Database.createTournament(clientMessage[1], startTime);
+                                        Database.createTournament(clientMessage[1], String.valueOf(startTime));
                                         Thread.sleep(10);
                                         Database.addToTournament(username, clientMessage[1]);
                                         Thread.sleep(10);
@@ -675,7 +680,7 @@ class Server {
                             }
                         }
                      catch(Exception e){
-                        System.out.println("BAD INPUT RECEIVED");
+                         e.printStackTrace();
                     }
                 }
             } catch (IOException | SQLException e) {

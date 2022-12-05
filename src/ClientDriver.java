@@ -44,7 +44,7 @@ public class ClientDriver extends Application {
                 System.out.println("STARTING");
                 controller = new Controller();
                 controller.setIp(InetAddress.getLocalHost().getHostAddress());
-                controller.setPort(Integer.parseInt("23720"));
+                controller.setPort(Integer.parseInt("23704"));
                 launch();
         }
 

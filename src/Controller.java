@@ -58,15 +58,15 @@ public class Controller {
      */
     private static Parent root;
 
-    public static String getTournamentData() {
+    public static String[] getTournamentData() {
         return tournamentData;
     }
 
-    public static void setTournamentData(String tournamentData) {
+    public static void setTournamentData(String[] tournamentData) {
         Controller.tournamentData = tournamentData;
     }
 
-    private static String tournamentData;
+    private static String[] tournamentData;
     /**
      * Getter method for playerStats
      * @return the playerStats reference
@@ -237,17 +237,22 @@ public class Controller {
             @Override
             public void handle(WindowEvent windowEvent) {
                 System.out.println("Closing Client");
-                if(!stage.getTitle().equals("Log In")) {
-                    System.out.println("Sending Disconnect Message to Server");
-                    getClient().sendMessage(String.format("%s\n", Server.sendMessage.CLIENT_DISCONNECT));
-                    try {
-                        Thread.sleep(500);
-                        Thread.currentThread().interrupt();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(!stage.getTitle().equals("Log In")) {
+                            System.out.println("Sending Disconnect Message to Server");
+                            getClient().sendMessage(String.format("%s\n", Server.sendMessage.CLIENT_DISCONNECT));
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                        System.out.println("QUITTING");
+                        System.exit(-1);
                     }
-                }
-                System.exit(-1);
+                });
             }
         });
 
