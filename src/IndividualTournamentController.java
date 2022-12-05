@@ -29,7 +29,7 @@ public class IndividualTournamentController extends Controller {
         String[] tourneyDataArray = getTournamentData().split(",");
 
         for(int i = 0; i<15; i++) {
-
+            //addToLeaderBoardPane(tourneyDataArray[i], );
         }
 
     }
