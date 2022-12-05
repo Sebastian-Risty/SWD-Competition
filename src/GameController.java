@@ -12,7 +12,7 @@ import javafx.scene.paint.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class gameController extends Controller {
+public class GameController extends Controller {
     @FXML
     private JFXTextArea wordPanel;
     @FXML

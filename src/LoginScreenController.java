@@ -13,7 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import java.io.IOException;
 
-public class LoginFXMLController extends Controller {
+public class LoginScreenController extends Controller {
     @FXML
     private JFXRippler verifyRippler;
     @FXML

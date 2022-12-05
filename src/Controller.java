@@ -10,10 +10,10 @@ import java.net.URL;
 /**
  * Controller class that all the controllers for each javaFX stage inherit from. Defines methods that are override in
  * the derived classes
- * @see LoginFXMLController
+ * @see LoginScreenController
  * @see HomeScreenController
- * @see gameController
- * @see gameResultsController
+ * @see GameController
+ * @see GameResultsController
  * @see SignUpPageController
  * @see TournamentModeController
  */
@@ -240,40 +240,79 @@ public class Controller {
 
     /**
      * updateTimer method that gameController overrides and uses to update the timer
-     * @
+     * @param time the time left in the game
      */
     public void updateTimer(int time) {
     }
+    /**
+     *
+     */
     public void updateMatchCountDown(int time) {}
+    /**
+     * updatePlayersConnected method for displaying the number of players connected in the main lobby while
+     * waiting for a game. HomeScreenController overrides and implements this
+     * @param numPlayers the current number of players in the game lobby
+     */
     public void updatePlayersConnected(int numPlayers){}
-
+    /**
+     * Method for the client to tell the controller that the login was invalid. LoginScreenController overrides
+     * this.
+     */
     public void loginInvalid() {
     }
-
+    /**
+     * Method for the client to tell the controller that the login was valid. LoginScreenController overrides this
+     */
     public void loginValid() {
     }
-
+    /**
+     * Method for the client to tell the Controller that the sign-up was valid. SignUpPageController overrides this
+     */
     public void signUpValid() {
     }
-
+    /**
+     * Method for the client to tell the controller that the sign-up was invalid. SignUpPageController overrides this
+     */
     public void signUpInvalid() {
     }
-
+    /**
+     * Method for the client to tell the controller that the game has started. HomeScreenController overrides this
+     */
     public void gameStart() {
     }
-
+    /**
+     * Method for the client to tell the controller that the game has ended. GameController overrides this
+     */
     public void endGame() {
     }
-
+    /**
+     * Method for displaying the results of the game. GameResultsController overrides this
+     * @param clientMessage the array of Strings of results of the game
+     */
     public void displayResults(String[] clientMessage) {
     }
-
+    /**
+     * Method for the client to tell the controller the results of the guess
+     * @param score the score of the last guess
+     */
     public void guessResult(int score) {
     }
-
+    /**
+     * Method for updating the player stats screen in the home page. HomeScreenController overrides this
+     */
     public void updatePlayerStatsScreen() {
     }
-
+    /**
+     * Method for the client to update the player information
+     * @param username the user's username
+     * @param totalWins the user's total wins
+     * @param totalGamesPlayed the user's total games played
+     * @param OVOWins the user's head to head wins
+     * @param OVOGamesPlayed the user's head to head games played
+     * @param BRWins the user's battle royale wins
+     * @param BRGamesPlayed the user's battle royale games played
+     *
+     */
     public void updatePlayerStats(String username, String totalWins, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,
                                   String BRWins, String BRGamesPlayed, String tournamentWins, String tournamentsPlayed) {
         player.setUsername(username);
