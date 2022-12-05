@@ -116,9 +116,31 @@ class Server {
                             List<TournamentStats> sortedClients = tournaments.get(tournament);
                             Collections.sort(sortedClients);
 
-                            List<String> users = tournaments.get(tournament);
-                            for (String user : users) {
-
+                            for (TournamentStats client : tournaments.get(tournament)) {
+                                String username = client.getUsername();
+                                Database.setTable("Accounts");
+                                String[] userInfo;
+                                try {
+                                    userInfo = Database.getInfo(username);
+                                    userInfo[8] = String.valueOf(Integer.parseInt(userInfo[8]) + 1);
+                                    Database.update(userInfo);
+                                } catch (SQLException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                            String[] winnerInfo;
+                            if (sortedClients.get(0).getTournamentWins() > sortedClients.get(1).getTournamentWins()) {
+                                try {
+                                    winnerInfo = Database.getInfo(sortedClients.get(0).getUsername());
+                                    winnerInfo[8] = String.valueOf(Integer.parseInt(winnerInfo[7]) + 1);
+                                    Database.update(winnerInfo);
+                                } catch (SQLException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                            synchronized (tournaments) {
+                                tournaments.remove(tournament);
+                                System.out.println("Removed match from current lobbies");
                             }
                         }
                     }

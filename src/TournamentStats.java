@@ -3,17 +3,6 @@ public class TournamentStats implements Comparable<TournamentStats> {
     private int tournamentGamesLeft;
     private int tournamentWins;
 
-    public int getRank() {
-        return rank;
-    }
-
-    public void setRank(int rank) {
-        this.rank = rank;
-    }
-
-    private int rank;
-
-
     public String getUsername() {
         return username;
     }
@@ -51,5 +40,12 @@ public class TournamentStats implements Comparable<TournamentStats> {
         this.tournamentGamesLeft = 0;
     }
 
-
+    @Override
+    public int compareTo(TournamentStats tournamentStats) {
+        if (this.tournamentWins == tournamentStats.tournamentWins) {
+            return tournamentStats.tournamentGamesLeft - this.tournamentGamesLeft;
+        } else {
+            return tournamentStats.tournamentWins - this.tournamentWins;
+        }
+    }
 }

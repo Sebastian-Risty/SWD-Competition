@@ -8,7 +8,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class HomeScreenController extends Controller {
     @FXML
@@ -213,6 +212,7 @@ public class HomeScreenController extends Controller {
         }
     }
 
+    @Override
     public void updateTimer(int time) {
         Platform.runLater(new Runnable() {
             @Override
