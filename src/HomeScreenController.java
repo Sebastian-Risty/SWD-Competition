@@ -6,6 +6,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+
 import java.io.IOException;
 
 public class HomeScreenController extends Controller {
@@ -47,6 +48,9 @@ public class HomeScreenController extends Controller {
     private JFXButton logoutConfirmationNo;
     @FXML
     private JFXButton logOutButton;
+    @FXML
+    private Label connectedPlayersLabel;
+
     private boolean readiedUp;
     private boolean logout;
 
@@ -69,20 +73,22 @@ public class HomeScreenController extends Controller {
 
         if(!readiedUp) {
             logOutButton.setText("");
-            if (battleRoyale.getBackground().getFills().get(0).getFill().equals(Color.GREEN)) {
+        if (battleRoyale.getBackground().getFills().get(0).getFill().equals(Color.LIGHTBLUE)) {
                 // Send client the mode the user selected
                 getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.MODE_SELECTION, Server.gameMode.BATTLE_ROYAL));
                 // Set the labels on the screen while waiting to connect to the game
                 gameStatus.setText("Connecting to Game...");
+                gameStatus.setText("Waiting for Players");
                 readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
                 readyUp.setText("Cancel");
 
                 readiedUp = true;
-            } else if (h2hMode.getBackground().getFills().get(0).getFill().equals(Color.GREEN)) {
+            } else if (h2hMode.getBackground().getFills().get(0).getFill().equals(Color.LIGHTBLUE)) {
                 // send user's mode selection to server
                 getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.MODE_SELECTION, Server.gameMode.ONE_VS_ONE));
                 // Edit the labels while waiting to connect to the game
                 gameStatus.setText("Connecting to Game...");
+                gameStatus.setText("Waiting for a Match");
                 readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
                 readyUp.setText("Cancel");
                 readiedUp = true;
@@ -97,10 +103,11 @@ public class HomeScreenController extends Controller {
             getClient().sendMessage(String.format("%s\n", Server.sendMessage.CANCEL_MM));
             readyUp.setText("Ready Up!");
             logOutButton.setText("Log Out");
-            readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+            readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, null, null)));
             h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
             battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
             gameStatus.setText("");
+            gameModeFeedback.setText("");
             readiedUp = false;
         }
     }
@@ -110,15 +117,16 @@ public class HomeScreenController extends Controller {
         if(!readiedUp) {
             gameModeFeedback.setText("");
             battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
-            h2hMode.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
+            h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
         }
     }
 
     @FXML
     void battleRoyaleListener() {
         if(!readiedUp) {
+            gameModeFeedback.setText("");
             h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
-            battleRoyale.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
+            battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
         }
     }
 
@@ -193,6 +201,23 @@ public class HomeScreenController extends Controller {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+    }
+
+    @Override
+    public void updatePlayersConnected(int numPlayers) {
+        if (numPlayers > 2) {
+            connectedPlayersLabel.setText("Players connected: " + numPlayers);
+        }
+    }
+
+    @Override
+    public void updateTimer(int time) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                gameModeFeedback.setText("Time: " + time);
             }
         });
     }

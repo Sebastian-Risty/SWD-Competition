@@ -1,19 +1,25 @@
 public class Tournament implements Runnable {
-
     private final long hoursLive = 2;
-    private long startTime;
+    private final String name;
+    private final long startTime;
     private boolean endFlag = false;
 
-    public boolean checkStatus() {
-        return endFlag;
+    public Tournament(String name, String startTime) {
+        this.name = name;
+        this.startTime = Long.parseLong(startTime);
     }
 
-    public Tournament(long startTime) {
-        this.startTime = startTime;
-    }
-
-    public Tournament() {
+    public Tournament(String name) {
+        this.name = name;
         startTime = System.currentTimeMillis();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean checkEndFlag() {
+        return endFlag;
     }
 
     @Override

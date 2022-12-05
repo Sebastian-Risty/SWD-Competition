@@ -1,13 +1,13 @@
 import java.io.File;
 
-public class OneVsOne extends Game {
+public class TournamentGame extends Game {
 
-    public OneVsOne(int matchTime, File filePath, int fileIndex) {
+    public TournamentGame(int matchTime, File filePath, int fileIndex) {
         super(matchTime, filePath, fileIndex);
         setGamemode("OneVsOne");
     }
 
-    public OneVsOne(int matchTime) {
+    public TournamentGame(int matchTime) {
         super(matchTime);
         setGamemode("OneVsOne");
     }
@@ -36,4 +36,5 @@ public class OneVsOne extends Game {
             changeEndFlag();
         }
     }
+
 }
