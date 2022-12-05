@@ -267,9 +267,9 @@ class Server {
                                         Game temp;
                                         int MATCH_TIME = 30;
                                         if (scrambleFile != null) {
-                                            temp = new TournamentGame(MATCH_TIME, scrambleFile, fileIndex);
+                                            temp = new TournamentGame(MATCH_TIME, scrambleFile, fileIndex, client.currentTournament.getName());
                                         } else {
-                                            temp = new TournamentGame(MATCH_TIME);
+                                            temp = new TournamentGame(MATCH_TIME, client.currentTournament.getName());
                                         }
                                         executorService.execute(temp);
                                         lobbies.put(temp, Collections.synchronizedList(new ArrayList<ConnectedClient>() {{
@@ -333,6 +333,13 @@ class Server {
                                     case "BattleRoyale":
                                         sortedClients.get(0).BRWins++;
                                         break;
+                                    case "Tournament":
+                                        List<TournamentStats> statsList = tournaments.get(sortedClients.get(0).currentTournament);
+                                        for (TournamentStats stats : statsList) {
+                                            if (sortedClients.get(0).username.equals(stats.getUsername())) {
+                                                stats.setTournamentWins(stats.getTournamentWins() + 1);
+                                            }
+                                        }
                                 }
                             }
 
@@ -353,7 +360,10 @@ class Server {
                                         client.BRGamesPlayed++;
                                         break;
                                     case "Tournament":
-                                        tournaments.get(lobby.getTournamentName());
+                                        List<TournamentStats> statsList = tournaments.get(client.currentTournament);
+                                        for (TournamentStats stats : statsList) {
+                                            stats.setTournamentGamesLeft(stats.getTournamentGamesLeft() - 1);
+                                        }
                                 }
                             }
 
@@ -373,6 +383,7 @@ class Server {
         private String username = null;
         private String requestedGame = null;
         private Game currentLobby = null;
+        private Tournament currentTournament = null;
         private int currentScore = 0;
         private int totalWins = 0;
         private int totalGamesPlayed = 0;
@@ -470,7 +481,7 @@ class Server {
                                         output.flush();
                                     } else {
                                         int startTime = (int) System.currentTimeMillis();
-                                        tournaments.put(new Tournament(clientMessage[1], String.valueOf(startTime)), Collections.synchronizedList(
+                                        tournaments.put(currentTournament = new Tournament(clientMessage[1], String.valueOf(startTime)), Collections.synchronizedList(
                                                 new ArrayList<TournamentStats>() {{
                                                     add(new TournamentStats(username));
                                                 }}));
@@ -494,6 +505,11 @@ class Server {
                                         Thread.sleep(10);
                                         output.format(String.format("%s,%s,%s\n", Client.sendMessage.TOURNAMENT_PLAYER_DATA, true, getTournamentPlayerData(clientMessage[1])));
                                         output.flush();
+                                        for (Tournament tournament : tournaments.keySet()) {
+                                            if (tournament.getName().equals(clientMessage[1])) {
+                                                currentTournament = tournament;
+                                            }
+                                        }
                                     } else {
                                         output.format(String.format("%s,%s\n", Client.sendMessage.TOURNAMENT_PLAYER_DATA, false));
                                         output.flush();
