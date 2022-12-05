@@ -489,7 +489,7 @@ class Server {
                                         Thread.sleep(10);
                                         Database.addToTournament(username, clientMessage[1]);
                                         Thread.sleep(10);
-                                        output.format(String.format("%s,%s\n", Client.sendMessage.CREATE_TOURNAMENT, true, getTournamentPlayerData(clientMessage[1])));
+                                        output.format(String.format("%s,%s,%s\n", Client.sendMessage.CREATE_TOURNAMENT, true, getTournamentPlayerData(clientMessage[1])));
                                         output.flush();
                                     }
                                 }
@@ -560,6 +560,7 @@ class Server {
                         }
                     } // TODO: on window close send command to server saying it close and then flip flag inside this run to then break form loop d then hit finally block so account is removed or smthn
                     catch (Exception e) {
+                        e.printStackTrace();
                         System.out.println("BAD INPUT RECEIVED");
                     }
                 }
