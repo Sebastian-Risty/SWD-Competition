@@ -282,8 +282,8 @@ class Server {
                                     synchronized (lobbies) {
                                         for (Game game : lobbies.keySet()) {
                                             if (game.getGamemode().equals("Tournament") && !game.isInProgress()) { // client joins open game if possible
-                                                // add client
-                                                lobbies.get(game).add(client);
+                                                if (lobbies.get(game)[0].)
+                                                    lobbies.get(game).add(client);
                                                 System.out.println("ADDED CLIENT TO GAME");
                                                 client.currentLobby = game;
                                                 game.clientConnected();
