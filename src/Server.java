@@ -402,7 +402,9 @@ class Server {
             for (Tournament tournament : tournaments.keySet()) {
                 sb.append(tournament.getName()).append(",");
             }
+
             sb.delete(sb.length() - 1, sb.length());
+
             return sb.toString();
         }
 
@@ -534,6 +536,7 @@ class Server {
                         }
                     } // TODO: on window close send command to server saying it close and then flip flag inside this run to then break form loop d then hit finally block so account is removed or smthn
                     catch (Exception e) {
+                        e.printStackTrace();
                         System.out.println("BAD INPUT RECEIVED");
                     }
                 }

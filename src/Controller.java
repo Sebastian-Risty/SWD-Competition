@@ -239,7 +239,7 @@ public class Controller {
                 if (!stage.getTitle().equals("Log In")) {
                     getClient().sendMessage(String.format("%s\n", Server.sendMessage.CLIENT_DISCONNECT));
                 }
-                System.exit(-1);
+                //System.exit(-1);
             }
         });
 
