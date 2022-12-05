@@ -46,9 +46,9 @@ public class IndividualTournamentController extends Controller {
             j+=3;
         }
 
-        boolean length = getTournamentData().length >= 17;
+        boolean length = getTournamentData().length >= 32;
         if(length) {
-            for (int i = 2; i < 15; i += 3) {
+            for (int i = 2; i < 30; i += 3) {
                 addToLeaderBoardPane(String.valueOf(((i - 1) / 3) + 1), getTournamentData()[i], getTournamentData()[i + 1], getTournamentData()[i + 2]);
             }
         }
@@ -106,7 +106,7 @@ public class IndividualTournamentController extends Controller {
 
 
     private void addToLeaderBoardPane(String rankIn, String usernameInp, String winIn, String gamesLeftInp) {
-        if (Integer.parseInt(rankIn) <= 5) { // only adds top 5 to leaderboard
+        if (Integer.parseInt(rankIn) <= 10) { // only adds top 5 to leaderboard
             final Label rank = new Label(rankIn);
             final Label username = new Label(usernameInp);
             final Label wins = new Label(winIn);

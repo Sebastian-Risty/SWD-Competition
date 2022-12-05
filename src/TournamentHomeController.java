@@ -14,6 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class TournamentHomeController extends Controller {
@@ -33,6 +34,8 @@ public class TournamentHomeController extends Controller {
     private JFXButton joinTourney;
     @FXML
     private JFXButton createTourney;
+    @FXML
+    private JFXButton mainMenuButton;
 
     public void initialize() {
         getClient().setController(this);
@@ -44,12 +47,9 @@ public class TournamentHomeController extends Controller {
                 parentPane.getChildren().add(verifyRippler);
                 joinTourney.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null,null)));
                 createTourney.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null,null)));
+                mainMenuButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
             }
         });
-    }
-
-    public void setUpTournamentData() {
-        // TODO add tournaments to scroll pane
     }
 
     @FXML
@@ -69,8 +69,17 @@ public class TournamentHomeController extends Controller {
     }
 
     @FXML
-    void menuButtonListener() throws IOException {
-        switchScene("homeScreen.fxml", "Home Screen");
+    void menuButtonListener() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    switchScene("homeScreenFXML.fxml", "Home Screen");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
@@ -79,9 +88,7 @@ public class TournamentHomeController extends Controller {
             @Override
             public void run() {
                 ObservableList<String> tempList = FXCollections.observableArrayList();
-                for (int i = 1; i < data.length; i++) {
-                    tempList.add(data[i]);
-                }
+                tempList.addAll(Arrays.asList(data).subList(1, data.length));
                 tournamentList.setItems(tempList);
             }
         });
@@ -109,7 +116,6 @@ public class TournamentHomeController extends Controller {
                 }
             }
         });
-
     }
 
     @Override
