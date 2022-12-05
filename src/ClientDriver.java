@@ -132,6 +132,7 @@ public class ClientDriver extends Application {
                         } else{
                             System.out.println("Not a word!");
                         }
+                        System.out.printf("LETTERS: %s\n", textClient.getLetters());
                     }
                 }
             }
