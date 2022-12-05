@@ -7,7 +7,6 @@ import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLOutput;
 
 public class Controller {
     private static String ip;

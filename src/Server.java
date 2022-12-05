@@ -8,19 +8,40 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
+/**
+ * Server handles commands from clients, creation of lobbies, and the communication of game stats and results to clients.
+ */
 class Server {
+    /**
+     * Network socket the server will use
+     */
     private static ServerSocket server;
+    /**
+     * Used to read letter combinations from a given file
+     */
     private static File scrambleFile = null;
+    /**\
+     * Incremented each time a scramble is used from scramble file
+     * Game objects will begin at start of file if index exceeds line length in scramble file
+     */
     private static Integer fileIndex = 0;
 
+    /**
+     * Synchronized list used to store clients connected to the server
+     */
     private static final List<ConnectedClient> clients = Collections.synchronizedList(new ArrayList<>());
-    //    private static final List lobbies = Collections.synchronizedList(new ArrayList<Game>());
+    /**
+     * Synchronized map containing Game objects as keys with a list of clients in said game as the values
+     */
     private static final Map<Game, List<ConnectedClient>> lobbies = Collections.synchronizedMap(new HashMap<>());
 
-//    private static final ArrayList<ConnectedClient> clients = new ArrayList<>();
-//    private static final ArrayList<Game> lobbies = new ArrayList<>();
-
+    /**
+     * Creates threads for subclasses of Server
+     * @see AcceptPlayers
+     * @see LobbyHandler
+     * @see MatchHandler
+     * Also creates threads
+     */
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
 
     public enum sendMessage {
