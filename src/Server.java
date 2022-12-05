@@ -485,7 +485,7 @@ class Server {
                                         output.format(String.format("%s,%s\n", Client.sendMessage.CREATE_TOURNAMENT, false));
                                         output.flush();
                                     } else {
-                                        int startTime = (int) System.currentTimeMillis();
+                                        long startTime = System.currentTimeMillis();
                                         tournaments.put(currentTournament = new Tournament(clientMessage[1], String.valueOf(startTime)), Collections.synchronizedList(
                                                 new ArrayList<TournamentStats>() {{
                                                     add(new TournamentStats(username));
@@ -558,7 +558,7 @@ class Server {
                             }
                         }
                      catch(Exception e){
-                        System.out.println("BAD INPUT RECEIVED");
+                         e.printStackTrace();
                     }
                 }
             } catch (IOException | SQLException e) {

@@ -233,7 +233,7 @@ public class Database {
      * @return true if table was created successfully, false if a tournament with the same name is being used
      * @throws SQLException thrown if failed to write to database
      */
-    public static boolean createTournament(String tableName, int timeStarted) throws SQLException {
+    public static boolean createTournament(String tableName, long timeStarted) throws SQLException {
         if (tournamentTaken(tableName))
             return false;
 
