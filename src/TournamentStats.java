@@ -38,7 +38,7 @@ public class TournamentStats implements Comparable<TournamentStats> {
     public TournamentStats(String username) {
         this.username = username;
         this.tournamentWins = 0;
-        this.tournamentGamesLeft = 0;
+        this.tournamentGamesLeft = 5;
     }
 
     /**
