@@ -29,6 +29,7 @@ class Server {
         REGISTER_REQUEST,    // [1] -> username, [2] -> password
 
         CLIENT_DATA_REQUEST,
+        TOURNAMENT_DATA,
         CANCEL_MM,
         LOGOUT_REQUEST,
         CLIENT_DISCONNECT
@@ -361,6 +362,16 @@ class Server {
             return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s", username, totalWins, totalGamesPlayed, OVOWins, OVOGamesPlayed, BRWins, BRGamesPlayed, tourneyWins, tourneyGamesPlayed);
         }
 
+        private String getTournamentData() {
+            StringBuilder sb = new StringBuilder();
+
+            for (Tournament tournament : tournaments.keySet()) {
+                sb.append(tournament.getName()).append(",");
+            }
+            sb.delete(sb.length() - 1, sb.length());
+            return sb.toString();
+        }
+
         @Override
         public void run() {
             try {
@@ -381,6 +392,10 @@ class Server {
                                 output.flush();
                                 break;
 
+                            case "TOURNAMENT_DATA":
+                                output.format(String.format("%s,%s\n", Client.sendMessage.TOURNAMENT_DATA, getTournamentData())); // send client data
+                                output.flush();
+                                break;
                             case "GUESS":
                                 if (currentLobby != null && currentLobby.isInProgress()) {
                                     int tempScore = currentLobby.guess(clientMessage[1]);

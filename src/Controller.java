@@ -4,6 +4,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
 import java.io.IOException;
 import java.net.URL;
 
@@ -274,6 +275,9 @@ public class Controller {
     public void updatePlayerStatsScreen() {
     }
 
+    public void updateTournament(String[] data) {
+    }
+
     public void updatePlayerStats(String username, String totalWins, String totalGamesPlayed, String OVOWins, String OVOGamesPlayed,
                                   String BRWins, String BRGamesPlayed, String tournamentWins, String tournamentsPlayed) {
         player.setUsername(username);
@@ -287,15 +291,13 @@ public class Controller {
         player.setTournamentsPlayed(tournamentsPlayed);
     }
 
-    public void updateTSLeader(String rank, String username, String tournamentWins, String tournamentGamesLeft) {
-        tournament.setRank(Integer.parseInt(rank));
+    public void updateTSLeader(String username, String tournamentWins, String tournamentGamesLeft) {
         tournament.setUsername(username);
         tournament.setTournamentWins(Integer.parseInt(tournamentWins));
         tournament.setTournamentGamesLeft(Integer.parseInt(tournamentGamesLeft));
     }
 
-    public void updateTSUser(String rank, String username, String tournamentWins, String tournamentGamesLeft) {
-        tournament.setRank(Integer.parseInt(rank));
+    public void updateTSUser(String username, String tournamentWins, String tournamentGamesLeft) {
         tournament.setUsername(username);
         tournament.setTournamentWins(Integer.parseInt(tournamentWins));
         tournament.setTournamentGamesLeft(Integer.parseInt(tournamentGamesLeft));
