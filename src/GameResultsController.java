@@ -22,23 +22,20 @@ public class GameResultsController extends Controller {
 
     @Override
     public void displayResults(String[] results) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                ObservableList<String> resultsList = FXCollections.observableArrayList();
-                System.out.println("Player " + getPlayer().getUsername());
-                for (int i = 1; i < results.length - 1; i += 2) {
-                    String name = results[i];
+        Platform.runLater(() -> {
+            ObservableList<String> resultsList = FXCollections.observableArrayList();
+            System.out.println("Player " + getPlayer().getUsername());
+            for (int i = 1; i < results.length - 1; i += 2) {
+                String name = results[i];
 
-                    if (name.equals(getPlayer().getUsername())) {
-                        positionLabel.setText(String.valueOf((i / 2) + 1));
-                        scoreLabel.setText(results[i + 1]);
-                    }
-
-                    String score = results[i + 1];
-                    resultsList.add(name + "  :  " + score);
-                    leaderboardList.setItems(resultsList);
+                if (name.equals(getPlayer().getUsername())) {
+                    positionLabel.setText(String.valueOf((i / 2) + 1));
+                    scoreLabel.setText(results[i + 1]);
                 }
+
+                String score = results[i + 1];
+                resultsList.add(name + "  :  " + score);
+                leaderboardList.setItems(resultsList);
             }
         });
     }

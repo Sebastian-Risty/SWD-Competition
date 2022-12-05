@@ -54,29 +54,23 @@ public class SignUpPageController extends Controller {
     public void signUpValid() {
         setPlayer(new PlayerStats(usernameField.getText()));
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                rippler.setRipplerFill(new Color(0, 0, 1, 0));
-                signUpFeedbackLabel.setText("Account Created\n Loading Home Page...");
+        Platform.runLater(() -> {
+            rippler.setRipplerFill(new Color(0, 0, 1, 0));
+            signUpFeedbackLabel.setText("Account Created\n Loading Home Page...");
 
-                try {
-                    switchScene("homeScreenFXML.fxml", "Home Screen");
-                } catch (IOException e) {
-                    signUpFeedbackLabel.setText("Home Screen Could Not Be Loaded");
-                }
+            try {
+                switchScene("homeScreenFXML.fxml", "Home Screen");
+            } catch (IOException e) {
+                signUpFeedbackLabel.setText("Home Screen Could Not Be Loaded");
             }
         });
     }
 
     @Override
     public void signUpInvalid() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                rippler.setRipplerFill(new Color(1, 0, 0, 0));
-                signUpFeedbackLabel.setText("Username Already Used");
-            }
+        Platform.runLater(() -> {
+            rippler.setRipplerFill(new Color(1, 0, 0, 0));
+            signUpFeedbackLabel.setText("Username Already Used");
         });
     }
 }

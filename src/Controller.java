@@ -1,10 +1,8 @@
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import java.io.IOException;
 import java.net.URL;
 
@@ -284,27 +282,21 @@ public class Controller {
         stage.setX(getxPos());
         stage.setY(getyPos());
 
-        getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent windowEvent) {
-                System.out.println("Closing Client");
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!stage.getTitle().equals("Log In")) {
-                            System.out.println("Sending Disconnect Message to Server");
-                            getClient().sendMessage(String.format("%s\n", Server.sendMessage.CLIENT_DISCONNECT));
-                            try {
-                                Thread.sleep(500);
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                        System.out.println("QUITTING");
-                        System.exit(-1);
+        getStage().setOnCloseRequest(windowEvent -> {
+            System.out.println("Closing Client");
+            Platform.runLater(() -> {
+                if (!stage.getTitle().equals("Log In")) {
+                    System.out.println("Sending Disconnect Message to Server");
+                    getClient().sendMessage(String.format("%s\n", Server.sendMessage.CLIENT_DISCONNECT));
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
                     }
-                });
-            }
+                }
+                System.out.println("QUITTING");
+                System.exit(-1);
+            });
         });
 
         getStage().show();

@@ -81,30 +81,24 @@ public class LoginScreenController extends Controller {
 
     @Override
     public void loginInvalid() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                loginFeedback.setText("Invalid Login or user is already logged in");
-                pane.getChildren().remove(0);
-                verifyRippler = new JFXRippler(pane);
-                parentPane.getChildren().add(verifyRippler);
-                verifyRippler.setRipplerFill(new Color(1, 0, 0, 0));
-                verifyRippler.createManualRipple();
-            }
+        Platform.runLater(() -> {
+            loginFeedback.setText("Invalid Login or user is already logged in");
+            pane.getChildren().remove(0);
+            verifyRippler = new JFXRippler(pane);
+            parentPane.getChildren().add(verifyRippler);
+            verifyRippler.setRipplerFill(new Color(1, 0, 0, 0));
+            verifyRippler.createManualRipple();
         });
     }
 
     @Override
     public void loginValid() {
         setPlayer(new PlayerStats(usernameField.getText()));
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    switchScene("homeScreenFXML.fxml", "Home Screen");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        Platform.runLater(() -> {
+            try {
+                switchScene("homeScreenFXML.fxml", "Home Screen");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
     }

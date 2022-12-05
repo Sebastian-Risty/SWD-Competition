@@ -60,49 +60,38 @@ public class GameController extends Controller {
 
     @Override
     public void endGame() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    switchScene("gameResultsFXML.fxml", "Results");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        Platform.runLater(() -> {
+            try {
+                switchScene("gameResultsFXML.fxml", "Results");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
     }
 
     @Override
     public void guessResult(int score) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println(score);
-                guessRippler.setEnabled(true);
+        Platform.runLater(() -> {
+            System.out.println(score);
+            guessRippler.setEnabled(true);
 
-                if(score>0 && !correctGuesses.contains(lastGuess)) {
-                    correctGuesses.add(lastGuess);
-                    wordPanel.setText(wordPanel.getText() + lastGuess);
-                    playerScore += score;
-                    scoreLabel.setText("Score: " + playerScore);
-                    guessRippler.setRipplerFill(new Color(0, 1, 0, 0));
+            if(score>0 && !correctGuesses.contains(lastGuess)) {
+                correctGuesses.add(lastGuess);
+                wordPanel.setText(wordPanel.getText() + lastGuess);
+                playerScore += score;
+                scoreLabel.setText("Score: " + playerScore);
+                guessRippler.setRipplerFill(new Color(0, 1, 0, 0));
 
-                    guessRippler.createManualRipple();
-                } else {
-                    guessRippler.setRipplerFill(new Color(1, 0, 0, 0));
-                    guessRippler.createManualRipple();
-                }
+                guessRippler.createManualRipple();
+            } else {
+                guessRippler.setRipplerFill(new Color(1, 0, 0, 0));
+                guessRippler.createManualRipple();
             }
         });
     }
 
     @Override
     public void updateTimer(int time) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                timeLabel.setText("Time: " + time);
-            }
-        });
+        Platform.runLater(() -> timeLabel.setText("Time: " + time));
     }
 }

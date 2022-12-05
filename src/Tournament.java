@@ -1,5 +1,4 @@
 public class Tournament implements Runnable {
-    private final long hoursLive = 2;
     private final String name;
     private final long startTime;
     private boolean endFlag = false;
@@ -24,6 +23,7 @@ public class Tournament implements Runnable {
 
     @Override
     public void run() {
+        long hoursLive = 2;
         while (((System.currentTimeMillis() - startTime) / 1000) < (hoursLive * 60 * 60)) ;
         endFlag = true;
     }
