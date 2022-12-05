@@ -39,11 +39,18 @@ public class IndividualTournamentController extends Controller {
         readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         mainMenuButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
 
-        boolean length = getTournamentData().length >= 17;
-        System.out.println(Arrays.toString(getTournamentData()));
-        if (length) {
-            for (int i = 2; i < 15; i += 3) {
-                addToLeaderBoardPane(String.valueOf(((i - 1) / 3)), getTournamentData()[i], getTournamentData()[i + 1], getTournamentData()[i + 2]);
+        int j = 2;
+        while(j<getTournamentData().length - 2) {
+            if(getTournamentData()[j].equals(getPlayer().getUsername())) {
+                addToUserPane(String.valueOf(((j-1)/3)+1), getTournamentData()[j], getTournamentData()[j+1], getTournamentData()[j+2]);
+            }
+            j+=3;
+        }
+
+        boolean length = getTournamentData().length >= 32;
+        if(length) {
+            for (int i = 2; i < 30; i += 3) {
+                addToLeaderBoardPane(String.valueOf(((i - 1) / 3) + 1), getTournamentData()[i], getTournamentData()[i + 1], getTournamentData()[i + 2]);
             }
         } else {
             for (int i = 2; i < getTournamentData().length - 2; i += 3) {
@@ -52,7 +59,6 @@ public class IndividualTournamentController extends Controller {
             }
         }
     }
-
 
     @FXML
     void mainMenuButtonListener(ActionEvent event) throws IOException {
@@ -116,7 +122,7 @@ public class IndividualTournamentController extends Controller {
 
 
     private void addToLeaderBoardPane(String rankIn, String usernameInp, String winIn, String gamesLeftInp) {
-        if (Integer.parseInt(rankIn) <= 5) { // only adds top 5 to leaderboard
+        if (Integer.parseInt(rankIn) <= 10) { // only adds top 5 to leaderboard
             final Label rank = new Label(rankIn);
             final Label username = new Label(usernameInp);
             final Label wins = new Label(winIn);

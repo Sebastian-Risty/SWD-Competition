@@ -23,7 +23,7 @@
             <Font name="System Bold" size="13.0" />
          </font>
       </JFXButton>
-      <JFXButton layoutX="389.0" layoutY="235.0" onAction="#menuButtonListener" text="Main Menu">
+      <JFXButton fx:id="mainMenuButton" layoutX="389.0" layoutY="235.0" onAction="#menuButtonListener" text="Main Menu">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
