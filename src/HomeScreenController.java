@@ -48,6 +48,9 @@ public class HomeScreenController extends Controller {
     private JFXButton logoutConfirmationNo;
     @FXML
     private JFXButton logOutButton;
+    @FXML
+    private Label connectedPlayersLabel;
+
     private boolean readiedUp;
     private boolean logout;
 
@@ -75,6 +78,7 @@ public class HomeScreenController extends Controller {
                 getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.MODE_SELECTION, Server.gameMode.BATTLE_ROYAL));
                 // Set the labels on the screen while waiting to connect to the game
                 gameStatus.setText("Connecting to Game...");
+                gameStatus.setText("Waiting for Players");
                 readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
                 readyUp.setText("Cancel");
 
@@ -84,6 +88,7 @@ public class HomeScreenController extends Controller {
                 getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.MODE_SELECTION, Server.gameMode.ONE_VS_ONE));
                 // Edit the labels while waiting to connect to the game
                 gameStatus.setText("Connecting to Game...");
+                gameStatus.setText("Waiting for a Match");
                 readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
                 readyUp.setText("Cancel");
                 readiedUp = true;
@@ -102,6 +107,7 @@ public class HomeScreenController extends Controller {
             h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
             battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
             gameStatus.setText("");
+            gameModeFeedback.setText("");
             readiedUp = false;
         }
     }
@@ -199,7 +205,13 @@ public class HomeScreenController extends Controller {
         });
     }
     @Override
-    public void updateMatchCountDown(int time, int numPlayers) {
-        gameModeFeedback.setText(time + " seconds until game starts " + numPlayers + " connected");
+    public void updateMatchCountDown(int time) {
+        gameModeFeedback.setText(time + " seconds until game starts");
+    }
+    @Override
+    public void updatePlayersConnected(int numPlayers) {
+        if(numPlayers > 2) {
+            connectedPlayersLabel.setText("Players connected: " + numPlayers);
+        }
     }
 }
