@@ -73,7 +73,8 @@ class Server {
      */
     public enum gameMode {
         ONE_VS_ONE,
-        BATTLE_ROYAL
+        BATTLE_ROYAL,
+        TOURNAMENT
     }
 
     /**
