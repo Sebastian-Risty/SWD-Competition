@@ -1,5 +1,6 @@
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -13,35 +14,56 @@ import java.io.IOException;
 public class IndividualTournamentController extends Controller {
 
     @FXML
-    private GridPane leaderboardPane;
+    private JFXButton readyUp;
+
     @FXML
-    private GridPane userPane;
+    private Label gameModeFeedback;
+
     @FXML
-    private JFXButton startButton;
+    private Label gameStatus;
+
     @FXML
     private JFXButton mainMenuButton;
 
-    public void initialize() {
-
-        startButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
-        mainMenuButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
-
-        String[] tourneyDataArray = getTournamentData().split(",");
-
-        for(int i = 0; i<15; i++) {
-
-        }
-
-    }
+    @FXML
+    private GridPane leaderboardPane;
 
     @FXML
-    public void startButtonListener(){
+    private GridPane userPane;
 
-    }
+    private boolean readiedUp;
 
     @FXML
-    public void menuButtonListener() throws IOException {
+    void mainMenuButtonListener(ActionEvent event) throws IOException {
         switchScene("homeScreenFXML.fxml", "Main Menu");
+    }
+
+    @FXML
+    void readyUpListener(ActionEvent event) {
+        if (!readiedUp) {
+            // Send client the mode the user selected
+            getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.MODE_SELECTION, Server.gameMode.TOURNAMENT));
+            // Set the labels on the screen while waiting to connect to the game
+            gameStatus.setText("Connecting to Game...");
+            gameModeFeedback.setText("Waiting for Player");
+            readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
+            readyUp.setText("Cancel");
+
+            readiedUp = true;
+        } else {
+            // send cancel message to server
+            getClient().sendMessage(String.format("%s\n", Server.sendMessage.CANCEL_MM));
+            readyUp.setText("Ready Up!");
+            readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, null, null)));
+            gameStatus.setText("");
+            gameModeFeedback.setText("");
+            readiedUp = false;
+        }
+    }
+
+    public void initialize() {
+        readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+        mainMenuButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
     }
 
     private int getNumOnLeaderboardPane() {

@@ -60,11 +60,6 @@ class Server {
         CLIENT_DISCONNECT
     }
 
-    public enum gameMode {
-        ONE_VS_ONE,
-        BATTLE_ROYAL
-    }
-
     public static void main(String[] args) {
         // args[0] port, args[1] file directory path including file name
         Database.initialize("Accounts");
@@ -90,7 +85,7 @@ class Server {
                     }
                     break;
                 default:
-                    server = new ServerSocket(23720);
+                    server = new ServerSocket(23704);
             }
             server.setReuseAddress(true);
 
@@ -104,6 +99,12 @@ class Server {
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public enum gameMode {
+        ONE_VS_ONE,
+        BATTLE_ROYAL,
+        TOURNAMENT
     }
 
     private static class AcceptPlayers implements Runnable {
