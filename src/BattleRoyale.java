@@ -43,7 +43,8 @@ public class BattleRoyale extends Game {
                 System.out.println("ENOUGH PlAYErS FOUND, STARTING COUNTDOWN TIMER");
                 setPreGameLobbyFlag(true);
                 setLobbyStartTime(System.currentTimeMillis());
-                while (((System.currentTimeMillis() - getLobbyStartTime()) / 1000) < getCountDownTime()) ;
+                while (((System.currentTimeMillis() - getLobbyStartTime()) / 1000) < getCountDownTime() && getPreGameLobbyFlag())
+                    ;
                 System.out.println("TIMER FINISHED");
                 changeProgressFlag();
                 changeStartFlag();

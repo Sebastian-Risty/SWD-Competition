@@ -73,9 +73,7 @@ public abstract class Game implements Runnable {
      * The time to wait to allow more clients to join before match starts
      */
     private int countDownTime;
-    /**
-     * The time the lobby timer started
-     */
+    private volatile boolean preGameLobbyFlag = false;
     private long lobbyStartTime;
     /**
      * The time to wait before ending a match after it starts
@@ -86,7 +84,12 @@ public abstract class Game implements Runnable {
         return matchTime;
     }
 
+    public boolean getPreGameLobbyFlag() {
+        return preGameLobbyFlag;
+    }
+
     public void setPreGameLobbyFlag(boolean preGameLobbyFlag) {
+        this.preGameLobbyFlag = preGameLobbyFlag;
     }
 
     public long getLobbyStartTime() {

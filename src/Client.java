@@ -59,6 +59,7 @@ class Client implements Runnable {
      */
     private Integer guessResult = null;
     private TimerHandler timerHandler;
+    private volatile boolean timerFlag;
 
     /**
      * TEXTMODE ONLY
@@ -114,7 +115,7 @@ class Client implements Runnable {
     }
 
     public void stopTimer() {
-        timerHandler = null;
+        timerFlag = false;
     }
     /**
      * sends server a message command
@@ -315,6 +316,7 @@ class Client implements Runnable {
             this.client = client;
             this.startTime = Long.parseLong(startTime);
             this.totalTime = Integer.parseInt(totalTime);
+            client.timerFlag = true;
         }
 
         /**
@@ -324,7 +326,7 @@ class Client implements Runnable {
         public void run() {
             System.out.println("TIMER RUN");
             long elapsed;
-            while ((elapsed = (System.currentTimeMillis() - startTime)) < (totalTime * 1000L)) {
+            while ((elapsed = (System.currentTimeMillis() - startTime)) < (totalTime * 1000L) && client.timerFlag) {
                 if ((elapsed % 1000) == 0) {
                     client.controller.updateTimer((int) (totalTime - (elapsed / 1000)));
                     try {
