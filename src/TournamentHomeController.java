@@ -42,7 +42,7 @@ public class TournamentHomeController extends Controller {
     public void joinButtonListener(){
         String tournament = joinField.getText();
         if (!tournament.equals("")){
-            getClient().sendMessage(String.format("%s\n", Server.sendMessage.JOIN_TOURNAMENT));
+            getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.JOIN_TOURNAMENT, tournament));
         }
     }
 
@@ -50,7 +50,7 @@ public class TournamentHomeController extends Controller {
     public void createButtonListener(){
         String tournament = createField.getText();
         if (!tournament.equals("")) {
-            getClient().sendMessage(String.format("%s\n", Server.sendMessage.CREATE_TOURNAMENT));
+            getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.CREATE_TOURNAMENT, tournament));
         }
     }
 

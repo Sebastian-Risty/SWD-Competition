@@ -489,7 +489,7 @@ class Server {
                                         Thread.sleep(10);
                                         Database.addToTournament(username, clientMessage[1]);
                                         Thread.sleep(10);
-                                        output.format(String.format("%s,%s\n", Client.sendMessage.CREATE_TOURNAMENT, true, getTournamentPlayerData(clientMessage[1])));
+                                        output.format(String.format("%s,%s,%s\n", Client.sendMessage.CREATE_TOURNAMENT, true, getTournamentPlayerData(clientMessage[1])));
                                         output.flush();
                                     }
                                 }
