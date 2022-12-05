@@ -9,6 +9,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class IndividualTournamentController extends Controller {
 
@@ -26,11 +27,21 @@ public class IndividualTournamentController extends Controller {
         startButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         mainMenuButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
 
-        String[] tourneyDataArray = getTournamentData().split(",");
-
-        for(int i = 0; i<15; i++) {
-            //addToLeaderBoardPane(tourneyDataArray[i], );
+        boolean length = getTournamentData().length >= 17;
+        System.out.println(Arrays.toString(getTournamentData()));
+        if(length) {
+            for(int i = 2; i<15; i+=3) {
+                addToLeaderBoardPane(String.valueOf(((i-1)/3)), getTournamentData()[i], getTournamentData()[i+1], getTournamentData()[i+2]);
+            }
         }
+        else {
+            for(int i = 2; i<getTournamentData().length-2; i+=3) {
+                System.out.println(i);
+                addToLeaderBoardPane(String.valueOf(((i-1)/3)+1), getTournamentData()[i], getTournamentData()[i+1], getTournamentData()[i+2]);
+            }
+        }
+
+        // username, wins, gamesleft
 
     }
 

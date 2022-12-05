@@ -94,7 +94,7 @@ public class TournamentHomeController extends Controller {
             @Override
             public void run() {
                 if (data[1].equals("true")) {
-                    setTournamentData(data[2]);
+                    setTournamentData(data);
                     try {
                         switchScene("IndividualTournament.fxml", "Tournament");
                     } catch (IOException e) {
@@ -119,7 +119,7 @@ public class TournamentHomeController extends Controller {
             public void run() {
                 if (data[1].equals("true")) {
                     try {
-                        setTournamentData(data[2]);
+                        setTournamentData(data);
                         switchScene("IndividualTournament.fxml", "Tournament");
                     } catch (IOException e) {
                         e.printStackTrace();
