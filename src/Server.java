@@ -29,6 +29,8 @@ class Server {
         REGISTER_REQUEST,    // [1] -> username, [2] -> password
 
         CLIENT_DATA_REQUEST,
+        CREATE_TOURNAMENT,
+        JOIN_TOURNAMENT,
         TOURNAMENT_DATA,
         CANCEL_MM,
         LOGOUT_REQUEST,
@@ -372,6 +374,17 @@ class Server {
             return sb.toString();
         }
 
+        private String getTournamentPlayerData(String name) throws SQLException {
+            String[] data = Database.getUserData(name);
+            StringBuilder sb = new StringBuilder();
+
+            for (String s : data) {
+                sb.append(s).append(",");
+            }
+            sb.delete(sb.length() - 1, sb.length());
+            return sb.toString();
+        }
+
         @Override
         public void run() {
             try {
@@ -402,6 +415,24 @@ class Server {
                                     currentScore += tempScore;
                                     output.format(String.format("%s,%s\n", Client.sendMessage.GUESS_RESULT, tempScore));
                                     output.flush();
+                                }
+                                break;
+                            case "CREATE_TOURNAMENT":
+
+                                break;
+                            case "JOIN_TOURNAMENT":
+                                synchronized (tournaments) {
+                                    ArrayList<String> names = new ArrayList<>();
+                                    for (Tournament tournament : tournaments.keySet()) {
+                                        names.add(tournament.getName());
+                                    }
+                                    if (names.contains(clientMessage[1])) {
+                                        output.format(String.format("%s,%s,%s\n", Client.sendMessage.TOURNAMENT_PLAYER_DATA, true, getTournamentPlayerData(clientMessage[1])));
+                                        output.flush();
+                                    } else {
+                                        output.format(String.format("%s,%s,%s\n", Client.sendMessage.TOURNAMENT_PLAYER_DATA, false, ""));
+                                        output.flush();
+                                    }
                                 }
                                 break;
                             case "LOGOUT_REQUEST":
