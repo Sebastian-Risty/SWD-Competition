@@ -8,8 +8,9 @@ public class OneVsOne extends Game {
 
     /**
      * OneVsOne constructor
+     *
      * @param matchTime How long each match should last
-     * @param filePath File object path
+     * @param filePath  File object path
      * @param fileIndex Index to read from file
      *                  Calls super constructor
      */
@@ -20,6 +21,7 @@ public class OneVsOne extends Game {
 
     /**
      * OneVsOne constructor
+     *
      * @param matchTime How long the match should be
      *                  Calls super constructor
      */
@@ -30,6 +32,7 @@ public class OneVsOne extends Game {
 
     /**
      * Starts the match once 2 clients are connected
+     *
      * @throws InterruptedException If thread is interrupted
      */
     @Override

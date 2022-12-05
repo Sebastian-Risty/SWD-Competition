@@ -7,11 +7,12 @@ import java.io.File;
 public class BattleRoyale extends Game {
     /**
      * BattleRoyale constructor
-     * @param matchTime How long each match should last
+     *
+     * @param matchTime     How long each match should last
      * @param countDownTime How long the lobby should wait for additional clients to join
-     * @param filePath File object path
-     * @param fileIndex Index to read from file
-     *                  Calls super constructor
+     * @param filePath      File object path
+     * @param fileIndex     Index to read from file
+     *                      Calls super constructor
      */
     public BattleRoyale(int matchTime, int countDownTime, File filePath, int fileIndex) {
         super(matchTime, filePath, fileIndex);
@@ -21,9 +22,10 @@ public class BattleRoyale extends Game {
 
     /**
      * OneVsOne constructor
-     * @param matchTime How long the match should be
+     *
+     * @param matchTime     How long the match should be
      * @param countDownTime How long the lobby should wait for additional clients to join
-     *                  Calls super constructor
+     *                      Calls super constructor
      */
     public BattleRoyale(int matchTime, int countDownTime) {
         super(matchTime);
@@ -33,6 +35,7 @@ public class BattleRoyale extends Game {
 
     /**
      * Starts lobby countdown once 3 clients connect, once countdown finishes match starts
+     *
      * @throws InterruptedException If thread is interrupted
      */
     @Override
@@ -40,12 +43,10 @@ public class BattleRoyale extends Game {
         while (!isInProgress()) {
             Thread.sleep(10);
             if (getNumConnectedClients() == 3) {
-                System.out.println("ENOUGH PlAYErS FOUND, STARTING COUNTDOWN TIMER");
                 setPreGameLobbyFlag(true);
                 setLobbyStartTime(System.currentTimeMillis());
                 while (((System.currentTimeMillis() - getLobbyStartTime()) / 1000) < getCountDownTime() && getPreGameLobbyFlag())
                     ;
-                System.out.println("TIMER FINISHED");
                 changeProgressFlag();
                 changeStartFlag();
                 startGame();

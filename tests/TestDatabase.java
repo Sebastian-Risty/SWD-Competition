@@ -7,12 +7,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Used to test the functionality of the database class
+ *
  * @author mddutton
  */
 public class TestDatabase {
 
     /**
      * Used to initialize the Test table
+     *
      * @throws SQLException // thrown if failed to write to database
      */
     private void init() throws SQLException {
@@ -27,6 +29,7 @@ public class TestDatabase {
 
     /**
      * Used to test the Database update method (also tests getTopPlayers)
+     *
      * @throws SQLException thrown if failed to write to database
      */
     @Test
@@ -46,7 +49,8 @@ public class TestDatabase {
 
     /**
      * Tests the valid login function
-     * @throws SQLException thrown if failed to write to the database
+     *
+     * @throws SQLException          thrown if failed to write to the database
      * @throws FileNotFoundException thrown if key file not found
      */
     @Test
@@ -57,7 +61,8 @@ public class TestDatabase {
 
     /**
      * Test the addAccount function (also tests validLogin)
-     * @throws SQLException thrown if failed to write to database
+     *
+     * @throws SQLException          thrown if failed to write to database
      * @throws FileNotFoundException thrown if key file not found
      */
     @Test
@@ -70,7 +75,8 @@ public class TestDatabase {
 
     /**
      * Test deleteAccount(), also tests addAccount and validLogin
-     * @throws SQLException thrown if failed to write to database
+     *
+     * @throws SQLException          thrown if failed to write to database
      * @throws FileNotFoundException thrown if key file not found
      */
     @Test
@@ -84,6 +90,7 @@ public class TestDatabase {
 
     /**
      * tests getInfo()
+     *
      * @throws SQLException thrown if failed to write to database
      */
     @Test
@@ -111,6 +118,7 @@ public class TestDatabase {
     /**
      * Tests various methods related to creating leaderboard tables, most notably: createTournament(), deleteTournament(),
      * addToTournament(), and removeFromTournament()
+     *
      * @throws SQLException thrown if failed to write to database
      */
     @Test

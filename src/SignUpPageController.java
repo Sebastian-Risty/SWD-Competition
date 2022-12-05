@@ -6,9 +6,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+
 import java.io.IOException;
+
 /**
  * SignUpPageController that derives from Controller and controls the sign-up page scene
+ *
  * @see Controller
  */
 public class SignUpPageController extends Controller {
@@ -46,6 +49,7 @@ public class SignUpPageController extends Controller {
      * Member variable for the rippler
      */
     private JFXRippler rippler;
+
     /**
      * Listener for the sign-up button that sends a message to the server requesting to sign up
      */
@@ -67,6 +71,7 @@ public class SignUpPageController extends Controller {
             signUpFeedbackLabel.setText("Passwords do not match");
         }
     }
+
     /**
      * Initialize method for the SignUpPageController class that sets the Client's controller to this and sets up the
      * GUI components
@@ -77,6 +82,7 @@ public class SignUpPageController extends Controller {
         rippler.setRipplerFill(new Color(1, 0, 0, 0));
         parentGridPane.getChildren().add(rippler);
     }
+
     /**
      * Method for the client to call when the sign-up is valid and switches the scene to the home screen
      */
@@ -95,6 +101,7 @@ public class SignUpPageController extends Controller {
             }
         });
     }
+
     /**
      * Method for the client to tell the controller that the sign-up was invalid
      */

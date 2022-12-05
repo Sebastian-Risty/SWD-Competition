@@ -11,8 +11,10 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+
 import java.io.IOException;
 import java.util.Arrays;
+
 /**
  * TournamentHomeController class that derives from Controller and controls the Tournament home screen
  */
@@ -62,6 +64,7 @@ public class TournamentHomeController extends Controller {
      */
     @FXML
     private JFXButton mainMenuButton;
+
     /**
      * TournamentHomeController class controller that sets the client's controller to this and initializes all the
      * GUI components
@@ -73,11 +76,12 @@ public class TournamentHomeController extends Controller {
         Platform.runLater(() -> {
             verifyRippler = new JFXRippler(ripplerPane);
             parentPane.getChildren().add(verifyRippler);
-            joinTourney.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null,null)));
-            createTourney.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null,null)));
+            joinTourney.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+            createTourney.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
             mainMenuButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         });
     }
+
     /**
      * Listener method for the join button that sends a message to the server to join a tournament
      */
@@ -88,6 +92,7 @@ public class TournamentHomeController extends Controller {
             getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.JOIN_TOURNAMENT, tournament));
         }
     }
+
     /**
      * Listener method for the create tourney button that sends a message to the server
      */
@@ -98,6 +103,7 @@ public class TournamentHomeController extends Controller {
             getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.CREATE_TOURNAMENT, tournament));
         }
     }
+
     /**
      * listener method for the menu button that sends it back to the home screen
      */
@@ -111,8 +117,10 @@ public class TournamentHomeController extends Controller {
             }
         });
     }
+
     /**
      * Method for the client to update the tournaments. Overrides the Controller's method
+     *
      * @param data the tournament data from the server
      */
     @Override
@@ -123,9 +131,11 @@ public class TournamentHomeController extends Controller {
             tournamentList.setItems(tempList);
         });
     }
+
     /**
      * Method for the client to tell the controller they can join a tournament and switches the scene to the
      * tournament individual screen
+     *
      * @param data the tournament data
      */
     @Override
@@ -148,8 +158,10 @@ public class TournamentHomeController extends Controller {
             }
         });
     }
+
     /**
      * Method for the server to tell the controller it can enter the tournament it created
+     *
      * @param data the tournament data
      */
     @Override

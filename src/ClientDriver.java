@@ -3,6 +3,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
@@ -24,11 +25,11 @@ public class ClientDriver extends Application {
     /**
      * Sets up controller or text mode depending on args
      * Also creates connection to server from given args
+     *
      * @param args [0]-> text mode ("text"), [1] -> server ip, [2] -> server port
      * @throws UnknownHostException If server cannot be found
      * @throws InterruptedException If thread is interrupted
      */
-
     public static void main(String[] args) throws UnknownHostException, InterruptedException {
         Client textClient = null;
         switch (args.length) {
@@ -55,7 +56,6 @@ public class ClientDriver extends Application {
                 }
                 break;
             default:
-                System.out.println("STARTING");
                 controller = new Controller();
                 controller.setIp(InetAddress.getLocalHost().getHostAddress());
                 controller.setPort(Integer.parseInt("23704"));
@@ -63,7 +63,7 @@ public class ClientDriver extends Application {
         }
 
         // BEGIN TEXT MODE INTERFACE
-        if(textClient != null){
+        if (textClient != null) {
             Scanner scanner = new Scanner(System.in);
             char input;
 
@@ -71,9 +71,9 @@ public class ClientDriver extends Application {
             System.out.println("Please select to log in or Register");
             System.out.println("[1] Log In");
             System.out.println("[2] Register");
-            do{
+            do {
                 input = scanner.nextLine().charAt(0);
-                String username ;
+                String username;
                 switch (input) {
 
                     case '1': // login
@@ -90,13 +90,13 @@ public class ClientDriver extends Application {
                         break;
                 }
                 Thread.sleep(100);
-                if(!textClient.isLoggedIn() && input == '1' || input == '2'){
+                if (!textClient.isLoggedIn() && input == '1' || input == '2') {
                     System.out.println("login failed, please try again or register first\n");
                     System.out.println("Please select to log in or Register");
                     System.out.println("[1] Log In");
                     System.out.println("[2] Register");
                 }
-            } while(!textClient.isLoggedIn());
+            } while (!textClient.isLoggedIn());
 
             // run text mode loop
             System.out.println("Please Select Mode");
@@ -104,9 +104,9 @@ public class ClientDriver extends Application {
             System.out.println("[2] BR");
 
             // select mode
-            do{
+            do {
                 input = scanner.nextLine().charAt(0);
-                switch (input){
+                switch (input) {
                     case '1': // 1v1
                         textClient.sendMessage(String.format("%s,%s\n", Server.sendMessage.MODE_SELECTION, Server.gameMode.ONE_VS_ONE));
                         break;
@@ -116,9 +116,9 @@ public class ClientDriver extends Application {
                 }
                 Thread.sleep(100);
                 System.out.println("waiting for match to start, press 3 to cancel");
-                while(!textClient.isGameStart() && input == '1' || input == '2'){
-                    if(scanner.hasNext()){
-                        if(scanner.nextLine().charAt(0) == '3'){
+                while (!textClient.isGameStart() && input == '1' || input == '2') {
+                    if (scanner.hasNext()) {
+                        if (scanner.nextLine().charAt(0) == '3') {
                             textClient.sendMessage(String.format("%s\n", Server.sendMessage.CANCEL_MM));
                             System.out.println("Please Select Mode");
                             System.out.println("[1] 1 V 1");
@@ -127,24 +127,24 @@ public class ClientDriver extends Application {
                         }
                     }
                 }
-            } while(!textClient.isGameStart());
+            } while (!textClient.isGameStart());
 
             System.out.println("Enter Guesses!");
             // play game
-            while(true){
+            while (true) {
                 System.out.printf("LETTERS: %s\n", textClient.getLetters());
 
-                while(scanner.hasNextLine()){
+                while (scanner.hasNextLine()) {
                     System.out.println("GUESS RECEIVED!");
                     String guess = scanner.nextLine();
                     textClient.sendMessage(String.format("%s,%s\n", Server.sendMessage.GUESS, guess));
 
                     Thread.sleep(100);
 
-                    if(textClient.getGuessResult() != null){
-                        if(textClient.getGuessResult() > 0){
-                            System.out.printf("Scored %s\n", textClient.getGuessResult() );
-                        } else{
+                    if (textClient.getGuessResult() != null) {
+                        if (textClient.getGuessResult() > 0) {
+                            System.out.printf("Scored %s\n", textClient.getGuessResult());
+                        } else {
                             System.out.println("Not a word!");
                         }
                         System.out.printf("LETTERS: %s\n", textClient.getLetters());
@@ -156,6 +156,7 @@ public class ClientDriver extends Application {
 
     /**
      * Start method that launches the GUI and opens the login page
+     *
      * @param primaryStage the Stage to open the scene on
      * @throws IOException if file can't be loaded
      */
@@ -174,7 +175,6 @@ public class ClientDriver extends Application {
         controller.setStage(primaryStage);
 
         primaryStage.setOnCloseRequest(windowEvent -> {
-            System.out.println("Closing Client");
             System.exit(-1);
         });
 

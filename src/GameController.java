@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 /**
  * GameController class that derives from Controller and controls the game screen
+ *
  * @see Controller
  */
 public class GameController extends Controller {
@@ -85,14 +86,16 @@ public class GameController extends Controller {
         guessRippler = new JFXRippler(childPane);
         parentPane.getChildren().add(guessRippler);
     }
+
     /**
      * Listener for when enter is pressed in the guess word field that sends the guess to the server
+     *
      * @param event the key event that caused triggered the listener
      */
     @FXML
     void enterPressed(KeyEvent event) {
         if (event.getEventType().equals(KeyEvent.KEY_PRESSED) && event.getCode().equals(KeyCode.ENTER) && guessWordField.getText() != null) {
-            System.out.println("ENTER PRESSED");
+
 
             lastGuess = guessWordField.getText();
             if (!correctGuesses.contains(lastGuess)) {
@@ -118,17 +121,18 @@ public class GameController extends Controller {
             }
         });
     }
+
     /**
      * Method for the client to give the controller the results of a guess. Overrides Controller's method
+     *
      * @param score the score of the word
      */
     @Override
     public void guessResult(int score) {
         Platform.runLater(() -> {
-            System.out.println(score);
             guessRippler.setEnabled(true);
 
-            if(score>0 && !correctGuesses.contains(lastGuess)) {
+            if (score > 0 && !correctGuesses.contains(lastGuess)) {
                 correctGuesses.add(lastGuess);
                 wordPanel.setText(wordPanel.getText() + lastGuess);
                 playerScore += score;
@@ -142,8 +146,10 @@ public class GameController extends Controller {
             }
         });
     }
+
     /**
      * Method for the client to call when the server updates the time. Overrides the Controller's method
+     *
      * @param time the updated time from the client
      */
     @Override

@@ -21,11 +21,16 @@ class Server {
      * Used to read letter combinations from a given file
      */
     private static File scrambleFile = null;
-    /**\
-     * Incremented each time a scramble is used from scramble file
-     * Game objects will begin at start of file if index exceeds line length in scramble file
+    /**
+     * Creates threads for subclasses of Server and for each ConnectedClient object
+     *
+     * @see AcceptPlayers
+     * @see LobbyHandler
+     * @see MatchHandler
+     * @see TournamentHandler
+     * @see ConnectedClient
      */
-    private static Integer fileIndex = 0;
+    private static final ExecutorService executorService = Executors.newCachedThreadPool();
 
     /**
      * Synchronized list used to store clients connected to the server
@@ -39,17 +44,12 @@ class Server {
      * Synchronized map containing Tournament objects as keys with a list of TournamentStats as the values
      */
     private static final Map<Tournament, List<TournamentStats>> tournaments = Collections.synchronizedMap(new HashMap<>());
-
-
     /**
-     * Creates threads for subclasses of Server and for each ConnectedClient object
-     * @see AcceptPlayers
-     * @see LobbyHandler
-     * @see MatchHandler
-     * @see TournamentHandler
-     * @see ConnectedClient
+     * \
+     * Incremented each time a scramble is used from scramble file
+     * Game objects will begin at start of file if index exceeds line length in scramble file
      */
-    private static final ExecutorService executorService = Executors.newCachedThreadPool();
+    private static Integer fileIndex = 0;
 
 
     /**
@@ -82,6 +82,7 @@ class Server {
 
     /**
      * Initializes scramble file and server port if possible. Create threads for subclasses.
+     *
      * @param args args[0] is the port to run the server on, args[1] is file directory path, including the file name.
      *             If the file is at the root of the project directory, just the file name can be used.
      * @see ExecutorService
@@ -128,19 +129,18 @@ class Server {
 
     /**
      * Creates a new thread for each Client connecting to the server
+     *
      * @see Client
      */
     private static class AcceptPlayers implements Runnable {
         @Override
         public void run() {
-            System.out.println("AP START");
             try {
                 while (!server.isClosed()) {
                     new Thread(new ConnectedClient(server.accept())).start();
-                    System.out.println("Client Connection Accepted!");
                 }
             } catch (IOException e) {
-                System.out.println("ERROR");
+                e.printStackTrace();
             }
         }
     }
@@ -164,7 +164,6 @@ class Server {
     private static class TournamentHandler implements Runnable {
         @Override
         public void run() {
-            System.out.println("TH START");
             while (!server.isClosed()) {
                 synchronized (tournaments) {
                     for (Tournament tournament : tournaments.keySet()) {
@@ -196,7 +195,6 @@ class Server {
                             }
                             synchronized (tournaments) {
                                 tournaments.remove(tournament);
-                                System.out.println("Removed match from current lobbies");
                             }
                         }
                     }
@@ -211,14 +209,10 @@ class Server {
     private static class LobbyHandler implements Runnable {
         @Override
         public void run() {
-            System.out.println("LH START");
             while (!server.isClosed()) {
                 // loop through client list
                 synchronized (clients) {
                     for (ConnectedClient client : clients) {
-//                        System.out.println("USERNAME: " + client.username);
-//                        System.out.println("RG: " + client.requestedGame);
-//                        System.out.println("CL: " + client.currentLobby);
                         // HANDLE LOBBY REQUESTS
                         if (client.requestedGame != null) {
                             switch (client.requestedGame) {
@@ -228,7 +222,6 @@ class Server {
                                             if (game.getGamemode().equals("OneVsOne") && !game.isInProgress()) { // client joins open game if possible
                                                 // add client
                                                 lobbies.get(game).add(client);
-                                                System.out.println("ADDED CLIENT TO GAME");
                                                 client.currentLobby = game;
                                                 game.clientConnected();
                                                 break;
@@ -236,7 +229,6 @@ class Server {
                                         }
                                     }
                                     if (client.currentLobby == null) { // create lobby if none were found
-                                        System.out.println("Created New ONE_VS_ONE Lobby");
                                         Game temp;
                                         int MATCH_TIME = 30; // how long each match should be in seconds
                                         if (scrambleFile != null) {
@@ -260,7 +252,6 @@ class Server {
                                             if (game.getGamemode().equals("BattleRoyale") && !game.isInProgress()) { // client joins open game if possible
                                                 // add client
                                                 lobbies.get(game).add(client);
-                                                System.out.println("ADDED CLIENT TO Existing Battle Royale Lobby");
                                                 client.currentLobby = game;
                                                 game.clientConnected();
 
@@ -288,7 +279,6 @@ class Server {
                                         }
                                     }
                                     if (client.currentLobby == null) { // create lobby if none were found
-                                        System.out.println("Created New Battle Royale Lobby");
                                         Game temp;
                                         int MATCH_TIME = 10; // how long each match should be in seconds
                                         int COUNTDOWN_TIME = 10; // how long the
@@ -309,13 +299,11 @@ class Server {
                                     break;
                                 }
                                 case "TOURNAMENT": {
-                                    System.out.println("IN TOURNAMENT CREATOR");
                                     synchronized (lobbies) {
                                         for (Game game : lobbies.keySet()) {
                                             if (game.getGamemode().equals("Tournament") && !game.isInProgress()) { // client joins open game if possible
                                                 if (lobbies.get(game).get(0).currentTournament == client.currentTournament) {
                                                     lobbies.get(game).add(client);
-                                                    System.out.println("ADDED CLIENT TO GAME");
                                                     client.currentLobby = game;
                                                     game.clientConnected();
                                                     break;
@@ -324,7 +312,6 @@ class Server {
                                         }
                                     }
                                     if (client.currentLobby == null) { // create lobby if none were found
-                                        System.out.println("Created New Tournament Lobby");
                                         Game temp;
                                         int MATCH_TIME = 30;
                                         if (scrambleFile != null) {
@@ -352,16 +339,14 @@ class Server {
     }
 
     /**
-     *  Handles game state and communicates it with clients within said game
+     * Handles game state and communicates it with clients within said game
      */
     private static class MatchHandler implements Runnable {
         @Override
         public void run() {
-            System.out.println("FMH START");
             while (!server.isClosed()) {
                 synchronized (lobbies) {
                     for (Game lobby : lobbies.keySet()) {
-                        System.out.println(lobby);
                         if (lobby.getNumConnectedClients() == 0) {
                             lobby.setPreGameLobbyFlag(false);
                             lobbies.remove(lobby);
@@ -391,8 +376,6 @@ class Server {
                                 sb.delete(sb.length() - 1, sb.length()).append("\n");
 
                                 String temp = sb.toString();
-
-                                System.out.println(temp);
 
                                 if (sortedClients.get(0).currentScore > sortedClients.get(1).currentScore) {
                                     sortedClients.get(0).totalWins++;
@@ -435,7 +418,6 @@ class Server {
                                             for (TournamentStats stats : statsList) {
                                                 if (stats.getUsername().equals(client.username)) {
                                                     stats.setTournamentGamesLeft(stats.getTournamentGamesLeft() - 1);
-                                                    System.out.println(stats.getTournamentGamesLeft());
                                                     try {
                                                         Database.update(
                                                                 new String[]{stats.getUsername(),
@@ -452,7 +434,6 @@ class Server {
 
                                 synchronized (lobbies) {
                                     lobbies.remove(lobby);
-                                    System.out.println("Removed match from current lobbies");
                                 }
                             }
                         }
@@ -465,7 +446,6 @@ class Server {
     /**
      * Server representation of a connected client, contains temporary stats before uploading to database.
      * Handles input and output streams for communication between server and client.
-     *
      */
     private static class ConnectedClient implements Runnable, Comparable<ConnectedClient> {
         /**
@@ -530,18 +510,21 @@ class Server {
         private TournamentStats tournamentStats;
         /**
          * Used to send message commands to the Clients
+         *
          * @see Client
          */
 
         private Formatter output;
         /**
          * Used to accept message commands from Clients
+         *
          * @see Client
          */
         private Scanner input;
 
         /**
          * Creates input and output streams to Client
+         *
          * @param socket The clients socket
          * @see Client
          */
@@ -597,9 +580,7 @@ class Server {
             try {
                 init(); // verify login and load client data from db
                 while (!Thread.currentThread().isInterrupted()) { // handle client messages
-                    System.out.println("AWAITING CLIENT COMMAND");
                     String receivedData = input.nextLine();
-                    System.out.printf("Message Received: %s\n", receivedData);
                     String[] clientMessage = receivedData.split(",");
                     try {
                         switch (clientMessage[0]) {
@@ -674,7 +655,6 @@ class Server {
                                 Database.setTable("Accounts");
                                 Database.update(getStatString().split(","));
 
-                                System.out.println("CLIENT LOG OUT");
                                 clients.remove(this);
                                 this.username = null;
                                 init();
@@ -683,10 +663,9 @@ class Server {
                                 Database.setTable("Accounts");
                                 Database.update(getStatString().split(","));
 
-                                System.out.println("Removing Client from list");
                                 clients.remove(this);
-                                if(this.currentLobby != null){
-                                    synchronized (lobbies){
+                                if (this.currentLobby != null) {
+                                    synchronized (lobbies) {
                                         lobbies.get(this.currentLobby).remove(this);
                                         this.currentLobby.clientDisconnected();
                                         this.currentLobby = null;
@@ -698,7 +677,6 @@ class Server {
                                 break;
                             case "CANCEL_MM":
                                 synchronized (lobbies) {
-                                    System.out.println("CLIENT CANCELED MM");
                                     this.requestedGame = null;
                                     for (ConnectedClient client : lobbies.get(this.currentLobby)) {
                                         if (client != this) {
@@ -711,16 +689,14 @@ class Server {
                                 }
                                 break;
                         }
-                        }
-                     catch(Exception e){
-                         e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             } catch (IOException | SQLException e) {
                 e.printStackTrace();
             } finally {
                 try {
-                    System.out.println("Sending Client Data to DB");
                     sendAccountData();
                     synchronized (clients) {
                         clients.remove(this);
@@ -741,16 +717,15 @@ class Server {
 
         /**
          * Waits until a log in request is received before loading client data and allowing access to main menu
+         *
          * @throws IOException  If there are thread interrupts.
          * @throws SQLException If there are database errors.
          */
         private void init() throws IOException, SQLException {
-            System.out.println("START INIT");
             Database.initialize("Login");
             while (this.username == null) {
                 if (input.hasNext()) {
                     String receivedData = input.nextLine();
-                    System.out.printf("Message Received: %s\n", receivedData);
                     String[] clientMessage = receivedData.split(",");
                     switch (clientMessage[0]) {
                         case "LOGIN_REQUEST":
@@ -758,7 +733,6 @@ class Server {
                             synchronized (clients) {
                                 for (ConnectedClient client : clients) {
                                     if (client.username.equals(clientMessage[1])) {
-                                        System.out.println("Client Already Logged In, LOGIN FAILED");
                                         output.format(String.format("%s\n", Client.sendMessage.LOGIN_INVALID));
                                         output.flush();
                                         good = false;
@@ -766,31 +740,25 @@ class Server {
                                 }
                             }
                             if (Database.validLogin(clientMessage[1], clientMessage[2]) && good) {
-                                System.out.println("LOGIN GOOD");
                                 Database.setTable("Accounts");
                                 acceptAccountData(Database.getInfo(clientMessage[1]));
                                 output.format(String.format("%s\n", Client.sendMessage.LOGIN_VALID));
                                 output.flush();
                                 clients.add(this);
-                                System.out.printf("Added Client %s to client list\n", this.username);
                             } else {
-                                System.out.println("LOGIN FAILED");
                                 output.format(String.format("%s\n", Client.sendMessage.LOGIN_INVALID));
                                 output.flush();
                             }
                             break;
                         case "REGISTER_REQUEST":
                             if (Database.addAccount(clientMessage[1], clientMessage[2])) {
-                                System.out.println("SUCCESSFULLY REGISTERED");
                                 this.username = clientMessage[1];
                                 output.format(String.format("%s\n", Client.sendMessage.SIGNUP_VALID));
                                 output.flush();
                                 output.format(String.format("%s,%s\n", Client.sendMessage.CLIENT_DATA, getStatString())); // send client data
                                 output.flush();
                                 clients.add(this);
-                                System.out.printf("Client %s successfully registered and logged in!\n", this.username);
                             } else {
-                                System.out.println("FAILED TO REGISTERED");
                                 output.format(String.format("%s\n", Client.sendMessage.SIGNUP_INVALID));
                                 output.flush();
                             }
@@ -802,6 +770,7 @@ class Server {
 
         /**
          * Helper function that receives data from database and loads it into appropriate fields
+         *
          * @param data [1] -> userName, total wins, T GamePlayed, OVO wins, OVO GP, BR wins, BR GP, T wins, T GP
          */
         private void acceptAccountData(String[] data) {
@@ -818,7 +787,8 @@ class Server {
 
         /**
          * Sends account data to database to be stored. Utilizes getStatString() to get data.
-         * @throws SQLException If there is a database error
+         *
+         * @throws SQLException          If there is a database error
          * @throws FileNotFoundException If the connection to the database fails
          */
         private void sendAccountData() throws SQLException, FileNotFoundException {
@@ -828,6 +798,7 @@ class Server {
 
         /**
          * Used to order the results of game to later be sent to client to display
+         *
          * @param connectedClient The other client to compare to
          * @return The client with the greater current score
          */
@@ -837,12 +808,3 @@ class Server {
         }
     }
 }
-
-// TODO
-// tourney
-// java docs
-// wiki
-// GUI polish
-// show connected clients as soon as lobby is created
-// stop showing timer when client cancels their lobby
-// player count is not decrementing when client cancel

@@ -25,7 +25,6 @@ public class TournamentGame extends OneVsOne {
         while (!isInProgress()) {
             Thread.sleep(10);
             if (getNumConnectedClients() == 2) {
-                System.out.println("CHANGED FLAG");
                 changeProgressFlag();
                 changeStartFlag();
                 startGame();
@@ -36,10 +35,8 @@ public class TournamentGame extends OneVsOne {
     @Override
     public void startGame() {
         if (!isFinished()) {
-            System.out.println("STARTING MATCH TIMER");
             long startTime = System.currentTimeMillis();
             while (((System.currentTimeMillis() - startTime) / 1000) < getMatchTime()) ;
-            System.out.println("MATCH ENDED");
             changeEndFlag();
         }
     }

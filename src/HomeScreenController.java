@@ -11,6 +11,7 @@ import java.io.IOException;
 
 /**
  * HomeScreenController class that derives from Controller and controls the home screen JavaFX screen
+ *
  * @see Controller
  * Back ground image from https://www.pexels.com/photo/brown-wooden-parquet-flooring-129731/ Free for personal use license
  */
@@ -118,6 +119,7 @@ public class HomeScreenController extends Controller {
      * Member variable for the if the user clicked log-out
      */
     private boolean logout;
+
     /**
      * Initialize method for the HomeScreenController that sets the fill colors of buttons,
      * sets the client's controller to this controller and sets up some other GUI components
@@ -135,6 +137,7 @@ public class HomeScreenController extends Controller {
         battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         tournamentMode.setBackground(new Background(new BackgroundFill(Color.LIGHTYELLOW, null, null)));
     }
+
     /**
      * Listener for the ready up button that tells the server that the user is ready for a game and also switches the
      * text to cancel after readying up. It also tells the server which mode the user selected
@@ -184,6 +187,7 @@ public class HomeScreenController extends Controller {
             readiedUp = false;
         }
     }
+
     /**
      * Head-to-head mode listener for when the user clicks the head-to-head mode button
      */
@@ -195,6 +199,7 @@ public class HomeScreenController extends Controller {
             h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
         }
     }
+
     /**
      * Battle Royale mode listener for when the button is clicked by the user
      */
@@ -206,6 +211,7 @@ public class HomeScreenController extends Controller {
             battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
         }
     }
+
     /**
      * Listener for when the user clicks the log-out button that brings up the are you sure buttons
      */
@@ -218,6 +224,7 @@ public class HomeScreenController extends Controller {
             logoutConfirmationYes.setText("Yes");
         }
     }
+
     /**
      * Listener for the log-out confirmation yes button that logs out the user when visible and clicked
      */
@@ -233,6 +240,7 @@ public class HomeScreenController extends Controller {
             }
         }
     }
+
     /**
      * Listener for the log-out no confirmation button that resets the log-out button
      */
@@ -245,6 +253,7 @@ public class HomeScreenController extends Controller {
             logout = false;
         }
     }
+
     /**
      * Listener for the tournament mode button that switches the scene to the tournament home screen
      */
@@ -258,6 +267,7 @@ public class HomeScreenController extends Controller {
             }
         }
     }
+
     /**
      * Method that overrides the updatePlayerStatsScreen in controller that updates the stats on the screen when the
      * client gets new data from the server
@@ -275,6 +285,7 @@ public class HomeScreenController extends Controller {
             tourneysPlayed.setText(getPlayer().getTournamentsPlayed());
         });
     }
+
     /**
      * Method for the client to call to tell the controller the game has started and switches the scene to the game
      * screen
@@ -289,31 +300,35 @@ public class HomeScreenController extends Controller {
             }
         });
     }
+
     /**
      * updatePlayersConnected method that overrides the controller method and updates the screen with the server data of
      * how many clients are connected
+     *
      * @param numPlayers the number of players currently connected
      */
     @Override
     public void updatePlayersConnected(int numPlayers) {
 
         Platform.runLater(() -> {
-            if(readiedUp) {
+            if (readiedUp) {
                 gameStatus.setText("Players connected: " + numPlayers);
-                if(numPlayers < 3) {
+                if (numPlayers < 3) {
                     gameModeFeedback.setText("Waiting for players");
                 }
             }
         });
     }
+
     /**
      * Method for updating the countdown to match label on the screen. Overrides the controller's method
+     *
      * @param time the updated time
      */
     @Override
     public void updateTimer(int time) {
         Platform.runLater(() -> {
-            if(readiedUp) {
+            if (readiedUp) {
                 gameModeFeedback.setText("Time: " + time);
 
             }

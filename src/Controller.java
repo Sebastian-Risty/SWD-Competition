@@ -3,12 +3,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.net.URL;
 
 /**
  * Controller class that all the controllers for each javaFX stage inherit from. Defines methods that are override in
  * the derived classes
+ *
  * @see LoginScreenController
  * @see HomeScreenController
  * @see GameController
@@ -62,12 +64,14 @@ public class Controller {
      * Member variable for the tournament data
      */
     private static String[] tournamentData;
+
     /**
      * Getter method for tournament data
      */
     public static String[] getTournamentData() {
         return tournamentData;
     }
+
     /**
      * Setter method for the tournament data
      */
@@ -283,10 +287,8 @@ public class Controller {
         stage.setY(getyPos());
 
         getStage().setOnCloseRequest(windowEvent -> {
-            System.out.println("Closing Client");
             Platform.runLater(() -> {
                 if (!stage.getTitle().equals("Log In")) {
-                    System.out.println("Sending Disconnect Message to Server");
                     getClient().sendMessage(String.format("%s\n", Server.sendMessage.CLIENT_DISCONNECT));
                     try {
                         Thread.sleep(500);
@@ -294,7 +296,6 @@ public class Controller {
                         throw new RuntimeException(e);
                     }
                 }
-                System.out.println("QUITTING");
                 System.exit(-1);
             });
         });
@@ -373,6 +374,7 @@ public class Controller {
      */
     public void guessResult(int score) {
     }
+
     /**
      * Method for the client to tell the controller the tournament stats
      *
@@ -380,6 +382,7 @@ public class Controller {
      */
     public void joinTournament(String[] data) {
     }
+
     /**
      * Method for the client to tell the controller the results of a request to create a tourney
      *
@@ -387,6 +390,7 @@ public class Controller {
      */
     public void createTournament(String[] data) {
     }
+
     /**
      * Method for the client to update the controller's tournaments
      *
@@ -426,16 +430,26 @@ public class Controller {
     }
 
     /**
-     * TODO
+     * Method for updating the leader board
+     *
+     * @param rank           the user's rank
+     * @param username       the user's username
+     * @param winCount       the user's wins
+     * @param gamesLeftCount the user's games left to play in the tourney
      */
-    public void updateTSLeader(String rank, String username, String tournamentWins, String tournamentGamesLeft) {
+    public void updateTSLeader(String rank, String username, String winCount, String gamesLeftCount) {
         tournament.setUsername(username);
-        tournament.setTournamentWins(Integer.parseInt(tournamentWins));
-        tournament.setTournamentGamesLeft(Integer.parseInt(tournamentGamesLeft));
+        tournament.setTournamentWins(Integer.parseInt(winCount));
+        tournament.setTournamentGamesLeft(Integer.parseInt(gamesLeftCount));
     }
 
     /**
-     * TODO
+     * Method for updating the user's stats
+     *
+     * @param rank the user's rank
+     * @param username the user's username
+     * @param tournamentWins the user's wins
+     * @param tournamentGamesLeft the user's games left to play in the tourney
      */
     public void updateTSUser(String rank, String username, String tournamentWins, String tournamentGamesLeft) {
         tournament.setUsername(username);

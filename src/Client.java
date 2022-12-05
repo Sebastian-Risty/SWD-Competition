@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
@@ -51,6 +50,7 @@ class Client implements Runnable {
     private String[] gameResults;
     /**
      * Creates thread for the client Runnable which handles message commands from server, also creates thread for match timer
+     *
      * @see Runnable
      */
     private final ExecutorService clientExecutor = Executors.newCachedThreadPool();
@@ -71,64 +71,11 @@ class Client implements Runnable {
      * If the match has started
      */
     private boolean gameStart = false;
-    /**
-     * Getter method for the guess result
-     * @return the guess result
-     */
-    public Integer getGuessResult() {
-        return guessResult;
-    }
-    /**
-     * isGameStart method that returns if the game is started
-     * @return gameStart
-     */
-    public boolean isGameStart() {
-        return gameStart;
-    }
-    /**
-     * isLoggedOn method that returns if the cleint is logged on
-     * @return loggedIn
-     */
-    public boolean isLoggedIn() {
-        return loggedIn;
-    }
-    /**
-     * Setter method for the text mode
-     * @param textMode the text mode
-     */
-    public void setTextMode(boolean textMode) {
-        this.textMode = textMode;
-    }
-    /**
-     * Getter method for the game results
-     */
-    public String[] getGameResults() {
-        return gameResults;
-    }
-
-    public String getLetters() {
-        return letters;
-    }
-
-    public void setController(Controller controller) {
-        this.controller = controller;
-    }
-
-    public void stopTimer() {
-        timerFlag = false;
-    }
-    /**
-     * sends server a message command
-     * @param message The message to be sent
-     */
-    public void sendMessage(String message) { // MUST END WITH NEWLINE
-        output.format(message);
-        output.flush();
-    }
 
     /**
      * Client constructor, creates server connection and creates thread for the runnable
-     * @param ip Server ip
+     *
+     * @param ip   Server ip
      * @param port Server port
      */
     public Client(String ip, int port) {
@@ -136,6 +83,82 @@ class Client implements Runnable {
         this.port = port;
         startClient();
         clientExecutor.execute(this);
+    }
+
+    /**
+     * Getter method for the guess result
+     *
+     * @return the guess result
+     */
+    public Integer getGuessResult() {
+        return guessResult;
+    }
+
+    /**
+     * isGameStart method that returns if the game is started
+     *
+     * @return gameStart
+     */
+    public boolean isGameStart() {
+        return gameStart;
+    }
+
+    /**
+     * isLoggedOn method that returns if the cleint is logged on
+     *
+     * @return loggedIn
+     */
+    public boolean isLoggedIn() {
+        return loggedIn;
+    }
+
+    /**
+     * Getter method for the game results
+     */
+    public String[] getGameResults() {
+        return gameResults;
+    }
+
+    /**
+     * Setter method for the text mode
+     *
+     * @param textMode the text mode
+     */
+    public void setTextMode(boolean textMode) {
+        this.textMode = textMode;
+    }
+
+    /**
+     * Getter method for letters
+     */
+    public String getLetters() {
+        return letters;
+    }
+
+    /**
+     * Setter method for the controller
+     *
+     * @param controller the controller
+     */
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
+
+    /**
+     * flips timer flag to stop timer
+     */
+    public void stopTimer() {
+        timerFlag = false;
+    }
+
+    /**
+     * sends server a message command
+     *
+     * @param message The message to be sent
+     */
+    public void sendMessage(String message) { // MUST END WITH NEWLINE
+        output.format(message);
+        output.flush();
     }
 
     /**
@@ -162,13 +185,13 @@ class Client implements Runnable {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            System.out.println("RETRY CONNECTION");
             connectToServer();
         }
     }
 
     /**
      * Creates input and output streams to server
+     *
      * @throws IOException If creating streams fail
      */
     private void openConnection() throws IOException {
@@ -182,11 +205,9 @@ class Client implements Runnable {
      */
     @Override
     public void run() {
-        System.out.println("AWAITING SERVER DATA");
-        try{
+        try {
             while (!Thread.currentThread().isInterrupted()) {
                 String receivedData = input.nextLine();
-                System.out.printf("Message Received: %s\n", receivedData);
                 String[] clientMessage = receivedData.split(",");
                 if (!textMode) {
                     switch (clientMessage[0]) {
@@ -199,7 +220,6 @@ class Client implements Runnable {
                             break;
                         }
                         case "CLIENT_DATA": {
-                            System.out.println(Arrays.toString(clientMessage));
                             controller.updatePlayerStats(clientMessage[1], clientMessage[2], clientMessage[3], clientMessage[4],
                                     clientMessage[5], clientMessage[6], clientMessage[7], clientMessage[8], clientMessage[9]);
                             controller.updatePlayerStatsScreen();
@@ -267,8 +287,8 @@ class Client implements Runnable {
                         case "GAME_END": {
                             System.out.println("GAME OVER!");
                             gameResults = clientMessage;
-                            for (int i = 1; i < getGameResults().length; i+=2) {
-                                System.out.printf("Rank: %s | User: %s | Score: %s\n", (i / 2) + 1, getGameResults()[i], getGameResults()[i+1]);
+                            for (int i = 1; i < getGameResults().length; i += 2) {
+                                System.out.printf("Rank: %s | User: %s | Score: %s\n", (i / 2) + 1, getGameResults()[i], getGameResults()[i + 1]);
                             }
                             sendMessage(String.format("%s\n", Server.sendMessage.CLIENT_DISCONNECT));
                             System.exit(-1);
@@ -281,7 +301,7 @@ class Client implements Runnable {
                     }
                 }
             }
-        } catch(Exception e){
+        } catch (Exception e) {
             System.out.println("client closed successfully!");
         }
     }
@@ -307,12 +327,12 @@ class Client implements Runnable {
 
         /**
          * Time handler constructor
-         * @param client the client
+         *
+         * @param client    the client
          * @param startTime the starting time
          * @param totalTime the total time
          */
         public TimerHandler(Client client, String startTime, String totalTime) {
-            System.out.println("TIMER CONSTRUCTOR");
             this.client = client;
             this.startTime = Long.parseLong(startTime);
             this.totalTime = Integer.parseInt(totalTime);
@@ -324,7 +344,6 @@ class Client implements Runnable {
          */
         @Override
         public void run() {
-            System.out.println("TIMER RUN");
             long elapsed;
             while ((elapsed = (System.currentTimeMillis() - startTime)) < (totalTime * 1000L) && client.timerFlag) {
                 if ((elapsed % 1000) == 0) {

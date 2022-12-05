@@ -6,6 +6,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+
 import java.io.IOException;
 
 /**
@@ -73,7 +74,6 @@ public class IndividualTournamentController extends Controller {
             }
         } else {
             for (int i = 2; i < getTournamentData().length - 2; i += 3) {
-                System.out.println(i);
                 addToLeaderBoardPane(String.valueOf(((i - 1) / 3) + 1), getTournamentData()[i], getTournamentData()[i + 1], getTournamentData()[i + 2]);
             }
         }
@@ -93,7 +93,6 @@ public class IndividualTournamentController extends Controller {
      */
     @Override
     public void gameStart() {
-        System.out.println("GAME START");
         Platform.runLater(() -> {
             try {
                 switchScene("gameFXML.fxml", "Game");

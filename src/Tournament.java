@@ -1,5 +1,6 @@
 /**
  * Stores information related to tournament
+ *
  * @see java.lang.Runnable
  */
 public class Tournament implements Runnable {
@@ -18,7 +19,8 @@ public class Tournament implements Runnable {
 
     /**
      * Sets tournament name and start time
-     * @param name what name will be set to
+     *
+     * @param name      what name will be set to
      * @param startTime what startTime will be set to
      */
     public Tournament(String name, String startTime) {
@@ -28,6 +30,7 @@ public class Tournament implements Runnable {
 
     /**
      * Sets tournament name
+     *
      * @param name name's value
      */
     public Tournament(String name) {
@@ -37,6 +40,7 @@ public class Tournament implements Runnable {
 
     /**
      * returns name
+     *
      * @return name of tournament
      */
     public String getName() {
@@ -45,6 +49,7 @@ public class Tournament implements Runnable {
 
     /**
      * returns true if tournament is still running, false if not
+     *
      * @return endFlag endFlag value
      */
     public boolean checkEndFlag() {
@@ -52,7 +57,7 @@ public class Tournament implements Runnable {
     }
 
     /**
-     * TODO
+     * Run method waits from tournament start time until designated time, then ends tournament
      */
     @Override
     public void run() {

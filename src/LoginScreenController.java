@@ -11,9 +11,12 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+
 import java.io.IOException;
+
 /**
  * LoginScreenController class that derives from Controller and controls the login JavaFX screen
+ *
  * @see Controller
  */
 public class LoginScreenController extends Controller {
@@ -52,6 +55,7 @@ public class LoginScreenController extends Controller {
      */
     @FXML
     private JFXButton enterButton;
+
     /**
      * Initialize method for the LoginScreenController class that sets the client controller to this and sets up some
      * GUI stuff
@@ -66,26 +70,31 @@ public class LoginScreenController extends Controller {
         parentPane.getChildren().add(verifyRippler);
         usernameField.requestFocus();
     }
+
     /**
      * Listener for when enter is presses in the password field that automatically calls the enter button listener
+     *
      * @param event the key event that triggered the listener
      */
     @FXML
     void passwordFieldEnter(KeyEvent event) {
-        if(event.getEventType().equals(KeyEvent.KEY_PRESSED) && event.getCode().equals(KeyCode.ENTER)) {
+        if (event.getEventType().equals(KeyEvent.KEY_PRESSED) && event.getCode().equals(KeyCode.ENTER)) {
             enterButtonListener();
         }
     }
+
     /**
      * Listener for the username field that when enter is pressed automatically puts the focus on the password field
+     *
      * @param event the key event that triggered the listener
      */
     @FXML
     void usernameFieldEnter(KeyEvent event) {
-        if(event.getEventType().equals(KeyEvent.KEY_PRESSED) && event.getCode().equals(KeyCode.ENTER)) {
+        if (event.getEventType().equals(KeyEvent.KEY_PRESSED) && event.getCode().equals(KeyCode.ENTER)) {
             passwordField.requestFocus();
         }
     }
+
     /**
      * Listener for the sign-up button that switches the scene to the sign-up screen
      */
@@ -93,6 +102,7 @@ public class LoginScreenController extends Controller {
     void signUpButtonListener() throws IOException {
         switchScene("signUpScreen.fxml", "Sign Up");
     }
+
     /**
      * Listener for the enter button that sends a request to the server to login
      */
@@ -107,6 +117,7 @@ public class LoginScreenController extends Controller {
             getClient().sendMessage(String.format("%s,%s,%s\n", Server.sendMessage.LOGIN_REQUEST, username, password));
         }
     }
+
     /**
      * method for the client to call when it gets an invalid login request
      */
@@ -121,6 +132,7 @@ public class LoginScreenController extends Controller {
             verifyRippler.createManualRipple();
         });
     }
+
     /**
      * method for the client to call when it gets a valid log in request and switches the scene to the home page
      */

@@ -11,10 +11,9 @@ import java.util.Collections;
 
 public abstract class Game implements Runnable {
     /**
-     *  The list of words that can be used to generate the first part of letter scrambles.
-     *  If scrambles are read from a file, each line is stored as an element here.
+     * score corresponding to each letter position in alphabet
      */
-    ArrayList<String> wordsToChooseFrom = new ArrayList<>();
+    final static int[] alphabetScores = {1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10};
     /**
      * The name of the current game mode
      */
@@ -38,9 +37,10 @@ public abstract class Game implements Runnable {
      */
     private final ArrayList<Character> letters = new ArrayList<>();
     /**
-     * score corresponding to each letter position in alphabet
+     * The list of words that can be used to generate the first part of letter scrambles.
+     * If scrambles are read from a file, each line is stored as an element here.
      */
-    final static int[] alphabetScores = {1,3,3,2,1,4,2,4,1,8,5,1,3,1,1,3,10,1,1,1,1,4,4,8,4,10};
+    ArrayList<String> wordsToChooseFrom = new ArrayList<>();
     /**
      * List of words that can be created from generated letters
      */
@@ -114,11 +114,27 @@ public abstract class Game implements Runnable {
     public boolean isInProgress() {
         return progressFlag;
     }
-    public boolean isFinished(){
-        return endFlag;
+
+    /**
+     * Game constructor
+     *
+     * @param matchTime How long the match should be
+     */
+    public Game(int matchTime) {
+        this.matchTime = matchTime;
     }
-    public boolean hasStarted(){
-        return startFlag;
+
+    /**
+     * Game constructor
+     *
+     * @param matchTime How long the match should be
+     * @param filePath  File object for scramble file
+     * @param fileIndex Current index to read from scramble file
+     */
+    public Game(int matchTime, File filePath, int fileIndex) {
+        this.matchTime = matchTime;
+        this.filePath = filePath;
+        this.fileIndex = fileIndex;
     }
 
     public String getGamemode() {
@@ -153,24 +169,12 @@ public abstract class Game implements Runnable {
         numConnectedClients--;
     }
 
-    /**
-     * Game constructor
-     * @param matchTime How long the match should be
-     */
-    public Game(int matchTime) {
-        this.matchTime = matchTime;
+    public boolean isFinished() {
+        return endFlag;
     }
 
-    /**
-     * Game constructor
-     * @param matchTime How long the match should be
-     * @param filePath File object for scramble file
-     * @param fileIndex Current index to read from scramble file
-     */
-    public Game(int matchTime, File filePath, int fileIndex) {
-        this.matchTime = matchTime;
-        this.filePath = filePath;
-        this.fileIndex = fileIndex;
+    public boolean hasStarted() {
+        return startFlag;
     }
 
     /**
@@ -220,7 +224,6 @@ public abstract class Game implements Runnable {
         readAllWords();
         selectedWord = wordsToChooseFrom.get(fileIndex);
         generateLetters();
-        //Collections.sort(letters);
         findValidWords();
     }
 
@@ -311,7 +314,7 @@ public abstract class Game implements Runnable {
     }
 
     /**
-     * TODO
+     * Returns whether input word matches the chosen letters
      */
     private boolean findMatch(int[] tempFreq) {
         for (int i = 0; i < 26; i++) {
@@ -323,8 +326,9 @@ public abstract class Game implements Runnable {
         }
         return true;
     }
+
     /**
-     * TODO
+     * Creates an integer array that stores the frequency of the given string
      */
     private int[] findLetterFreq(String word) {
         int[] freq = new int[26];
@@ -336,6 +340,7 @@ public abstract class Game implements Runnable {
 
     /**
      * Used to calculate the score of a clients guess if it is valid
+     *
      * @param guess The clients guess
      * @return Integer value representing the score of the guess
      * Each letter has a score and the length of the word is accounted for
@@ -343,7 +348,7 @@ public abstract class Game implements Runnable {
     public int guess(String guess) {
         if (validWords.contains(guess.toLowerCase())) {
             int scoreSum = 0;
-            for (Character c: guess.toCharArray()) {
+            for (Character c : guess.toCharArray()) {
                 scoreSum += alphabetScores[Character.toUpperCase(c) - 65];
             }
             scoreSum += guess.length();
@@ -354,6 +359,7 @@ public abstract class Game implements Runnable {
 
     /**
      * Abstract method used to employ rule set for how clients should wait in lobby
+     *
      * @throws InterruptedException If thread is interrupted
      */
     public abstract void pregameLobby() throws InterruptedException;

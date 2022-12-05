@@ -62,7 +62,6 @@ public class Database {
     public static void getKeyInfo() throws FileNotFoundException {
         keyInfo = Encryptor.getFileInfo(KEY_NAME);
         if (Objects.equals(keyInfo[0], "Error: file \"" + KEY_NAME + "\" not found")) { // if the key is not found
-            System.out.println("Error: key \"" + KEY_NAME + "\" not found");
             throw new FileNotFoundException();
         }
     }
@@ -321,7 +320,6 @@ public class Database {
                     output.append(resultSet.getObject(i)).append(",");
             }
         }
-        // System.out.println(output);
         return output.toString().split(",");
     }
 
@@ -371,7 +369,7 @@ public class Database {
         for (int i = 2; i <= metaData.getColumnCount(); i++) {
             if (Objects.equals(table, "mastertournament")) { // updating timestarted
                 statement.executeUpdate("UPDATE mastertournament SET " + metaData.getColumnName(i) + " = '" + data[i - 1] + "' WHERE tournamentid = '" + data[0] + "';");
-            } else if (i == 3 && (!Objects.equals(table,"Accounts") && !Objects.equals(table,"Test") && !Objects.equals(table,"mastertournament") && !Objects.equals(table,"Login"))) { // changing gamesLeft
+            } else if (i == 3 && (!Objects.equals(table, "Accounts") && !Objects.equals(table, "Test") && !Objects.equals(table, "mastertournament") && !Objects.equals(table, "Login"))) { // changing gamesLeft
                 statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = '" + data[i - 1] + "' WHERE username = '" + data[0] + "';");
             } else if ((Objects.equals(table, "Test") || Objects.equals(table, "Login")) && i == 2) // changing a password
                 statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = '" + Encryptor.shiftMessage(data[i - 1], keyInfo, false) + "' WHERE username = '" + data[0] + "';");
