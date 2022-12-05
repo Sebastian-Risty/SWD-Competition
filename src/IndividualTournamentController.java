@@ -26,17 +26,28 @@ public class IndividualTournamentController extends Controller {
 
         startButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         mainMenuButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+        int j = 0;
+        while(j<getTournamentData().length - 2) {
+
+        }
 
         boolean length = getTournamentData().length >= 17;
         System.out.println(Arrays.toString(getTournamentData()));
+
         if(length) {
             for(int i = 2; i<15; i+=3) {
+                if(getTournamentData()[i].equals(getPlayer().getUsername())) {
+                    addToUserPane(String.valueOf(((i-1)/3)+1), getTournamentData()[i], getTournamentData()[i+1], getTournamentData()[i+2]);
+                }
                 addToLeaderBoardPane(String.valueOf(((i-1)/3)), getTournamentData()[i], getTournamentData()[i+1], getTournamentData()[i+2]);
             }
         }
         else {
             for(int i = 2; i<getTournamentData().length-2; i+=3) {
                 System.out.println(i);
+                if(getTournamentData()[i].equals(getPlayer().getUsername())) {
+                    addToUserPane(String.valueOf(((i-1)/3)+1), getTournamentData()[i], getTournamentData()[i+1], getTournamentData()[i+2]);
+                }
                 addToLeaderBoardPane(String.valueOf(((i-1)/3)+1), getTournamentData()[i], getTournamentData()[i+1], getTournamentData()[i+2]);
             }
         }
