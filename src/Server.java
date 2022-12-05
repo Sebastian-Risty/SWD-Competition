@@ -336,13 +336,7 @@ class Server {
 
                                 System.out.println("CLIENT LOG OUT");
                                 clients.remove(this);
-                                if(this.currentLobby != null){
-                                    lobbies.get(this.currentLobby).remove(this); // TODO: may not need this here
-                                    this.currentLobby.clientDisconnected();
-                                    this.currentLobby = null;
-                                }
                                 this.username = null;
-                                this.requestedGame = null;
                                 init();
                                 break;
                             case "CLIENT_DISCONNECT":
@@ -352,7 +346,7 @@ class Server {
                                 System.out.println("CLIENT DISCONNECT");
                                 clients.remove(this);
                                 if(this.currentLobby != null){
-                                    lobbies.get(this.currentLobby).remove(this); // TODO: may need to sync
+                                    lobbies.get(this.currentLobby).remove(this);
                                     this.currentLobby.clientDisconnected();
                                     this.currentLobby = null;
                                 }
