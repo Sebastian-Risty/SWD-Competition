@@ -426,7 +426,7 @@ public class Controller {
     }
 
     /**
-     *
+     * TODO
      */
     public void updateTSLeader(String rank, String username, String tournamentWins, String tournamentGamesLeft) {
         tournament.setUsername(username);
@@ -435,7 +435,7 @@ public class Controller {
     }
 
     /**
-     *
+     * TODO
      */
     public void updateTSUser(String rank, String username, String tournamentWins, String tournamentGamesLeft) {
         tournament.setUsername(username);

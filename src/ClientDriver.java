@@ -154,7 +154,11 @@ public class ClientDriver extends Application {
         }
     }
 
-
+    /**
+     * Start method that launches the GUI and opens the login page
+     * @param primaryStage the Stage to open the scene on
+     * @throws IOException if file can't be loaded
+     */
     @Override
     public void start(Stage primaryStage) throws IOException {
         URL fxmlFile = getClass().getResource("LoginFXML.fxml");

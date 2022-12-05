@@ -303,7 +303,9 @@ public abstract class Game implements Runnable {
         }
     }
 
-
+    /**
+     * TODO
+     */
     private boolean findMatch(int[] tempFreq) {
         for (int i = 0; i < 26; i++) {
             if (letterFreq[i] == 0 && tempFreq[i] > 0) {
@@ -314,7 +316,9 @@ public abstract class Game implements Runnable {
         }
         return true;
     }
-
+    /**
+     * TODO
+     */
     private int[] findLetterFreq(String word) {
         int[] freq = new int[26];
         for (char letter : word.toCharArray()) {

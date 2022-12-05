@@ -304,6 +304,12 @@ class Client implements Runnable {
          */
         private final int totalTime;
 
+        /**
+         * Time handler constructor
+         * @param client the client
+         * @param startTime the starting time
+         * @param totalTime the total time
+         */
         public TimerHandler(Client client, String startTime, String totalTime) {
             System.out.println("TIMER CONSTRUCTOR");
             this.client = client;
@@ -311,6 +317,9 @@ class Client implements Runnable {
             this.totalTime = Integer.parseInt(totalTime);
         }
 
+        /**
+         * run method that calculates and keeps track of the time
+         */
         @Override
         public void run() {
             System.out.println("TIMER RUN");
