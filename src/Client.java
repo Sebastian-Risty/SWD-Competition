@@ -5,7 +5,6 @@ import java.util.Formatter;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("BooleanMethodIsAlwaysInverted")
 class Client implements Runnable {
@@ -156,7 +155,7 @@ class Client implements Runnable {
                         controller.updatePlayersConnected(Integer.parseInt(clientMessage[1]));
                         break;
                     }
-                    case "SHUTDOWN":
+                    case "SHUTDOWN": {
                         System.out.println("CALLING SYS EXIT");
                         System.exit(-1);
                         break;
@@ -169,6 +168,7 @@ class Client implements Runnable {
                         controller.joinTournament(clientMessage);
                         break;
                     }
+                }
                 } else {
                 switch (clientMessage[0]) {
                     case "LOGIN_VALID":
