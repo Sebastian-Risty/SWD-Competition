@@ -418,7 +418,24 @@ class Server {
                                 }
                                 break;
                             case "CREATE_TOURNAMENT":
-
+                                synchronized (tournaments) {
+                                    ArrayList<String> names = new ArrayList<>();
+                                    for (Tournament tournament : tournaments.keySet()) {
+                                        names.add(tournament.getName());
+                                    }
+                                    if (names.contains(clientMessage[1])) {
+                                        output.format(String.format("%s,%s\n", Client.sendMessage.CREATE_TOURNAMENT, false));
+                                        output.flush();
+                                    } else {
+                                        output.format(String.format("%s,%s\n", Client.sendMessage.CREATE_TOURNAMENT, true));
+                                        output.flush();
+                                        tournaments.put(new Tournament(clientMessage[1], String.valueOf(System.currentTimeMillis())), Collections.synchronizedList(
+                                                new ArrayList<TournamentStats>() {{
+                                                    add(new TournamentStats(username));
+                                                }}));
+                                        // TODO UPDATE DATABASE
+                                    }
+                                }
                                 break;
                             case "JOIN_TOURNAMENT":
                                 synchronized (tournaments) {
