@@ -10,15 +10,38 @@ import java.util.concurrent.Executors;
 
 
 class Server {
+    /**
+     * Network socket the server will use
+     */
     private static ServerSocket server;
+    /**
+     * Used to read letter combinations from a given file
+     */
     private static File scrambleFile = null;
+    /**\
+     * Incremented each time a scramble is used from scramble file
+     * Game objects will begin at start of file if index exceeds line length in scramble file
+     */
     private static Integer fileIndex = 0;
 
+    /**
+     * Synchronized list used to store clients connected to the server
+     */
     private static final List<ConnectedClient> clients = Collections.synchronizedList(new ArrayList<>());
+    /**
+     * Synchronized map containing Game objects as keys with a list of clients in said game as the values
+     */
     private static final Map<Game, List<ConnectedClient>> lobbies = Collections.synchronizedMap(new HashMap<>());
     private static final Map<Tournament, List<TournamentStats>> tournaments = Collections.synchronizedMap(new HashMap<>());
 
 
+    /**
+     * Creates threads for subclasses of Server
+     * @see AcceptPlayers
+     * @see LobbyHandler
+     * @see MatchHandler
+     * Also creates threads
+     */
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
 
     public enum sendMessage {
@@ -35,11 +58,6 @@ class Server {
         CANCEL_MM,
         LOGOUT_REQUEST,
         CLIENT_DISCONNECT
-    }
-
-    public enum gameMode {
-        ONE_VS_ONE,
-        BATTLE_ROYAL
     }
 
     public static void main(String[] args) {
@@ -81,6 +99,12 @@ class Server {
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public enum gameMode {
+        ONE_VS_ONE,
+        BATTLE_ROYAL,
+        TOURNAMENT
     }
 
     private static class AcceptPlayers implements Runnable {
