@@ -15,7 +15,6 @@ import java.net.URL;
  * @see GameController
  * @see GameResultsController
  * @see SignUpPageController
- * @see TournamentModeController
  */
 public class Controller {
     /**
@@ -325,20 +324,20 @@ public class Controller {
         player.setTournamentWins(tournamentWins);
         player.setTournamentsPlayed(tournamentsPlayed);
     }
-
+    /**
+     *
+     */
     public void updateTSLeader(String rank, String username, String tournamentWins, String tournamentGamesLeft) {
-        tournament.setRank(Integer.parseInt(rank));
         tournament.setUsername(username);
         tournament.setTournamentWins(Integer.parseInt(tournamentWins));
         tournament.setTournamentGamesLeft(Integer.parseInt(tournamentGamesLeft));
     }
-
+    /**
+     *
+     */
     public void updateTSUser(String rank, String username, String tournamentWins, String tournamentGamesLeft) {
-        tournament.setRank(Integer.parseInt(rank));
         tournament.setUsername(username);
         tournament.setTournamentWins(Integer.parseInt(tournamentWins));
         tournament.setTournamentGamesLeft(Integer.parseInt(tournamentGamesLeft));
     }
-
-
 }

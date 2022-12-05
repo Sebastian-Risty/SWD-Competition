@@ -48,8 +48,6 @@ public class HomeScreenController extends Controller {
     private JFXButton logoutConfirmationNo;
     @FXML
     private JFXButton logOutButton;
-    @FXML
-    private Label connectedPlayersLabel;
 
     private boolean readiedUp;
     private boolean logout;
@@ -94,8 +92,8 @@ public class HomeScreenController extends Controller {
                 readiedUp = true;
 
             } else {
-                gameModeFeedback.setText("Select a Game Mode");
-                gameModeFeedback.setTextFill(Color.RED);
+                gameStatus.setText("Select a Game Mode");
+                gameStatus.setTextFill(Color.RED);
             }
         }
         else {
@@ -115,7 +113,7 @@ public class HomeScreenController extends Controller {
     @FXML
     void h2hListener() {
         if(!readiedUp) {
-            gameModeFeedback.setText("");
+            gameStatus.setText("");
             battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
             h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
         }
@@ -124,7 +122,7 @@ public class HomeScreenController extends Controller {
     @FXML
     void battleRoyaleListener() {
         if(!readiedUp) {
-            gameModeFeedback.setText("");
+            gameStatus.setText("");
             h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
             battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
         }
@@ -169,7 +167,7 @@ public class HomeScreenController extends Controller {
             try {
                 switchScene("IndividualTournament.fxml", "Tournament Home");
             } catch (IOException e) {
-                gameModeFeedback.setText("Could not Open Tournament Mode");
+                gameStatus.setText("Could not Open Tournament Mode");
             }
         }
     }
@@ -207,9 +205,15 @@ public class HomeScreenController extends Controller {
 
     @Override
     public void updatePlayersConnected(int numPlayers) {
-        if (numPlayers > 2) {
-            connectedPlayersLabel.setText("Players connected: " + numPlayers);
-        }
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if (numPlayers > 2) {
+                    gameStatus.setText("Players connected: " + numPlayers);
+                }
+            }
+        });
     }
 
     @Override
