@@ -32,24 +32,32 @@ class Server {
      * Synchronized map containing Game objects as keys with a list of clients in said game as the values
      */
     private static final Map<Game, List<ConnectedClient>> lobbies = Collections.synchronizedMap(new HashMap<>());
+    /**
+     * Synchronized map containing Tournament objects as keys with a list of TournamentStats as the values
+     */
     private static final Map<Tournament, List<TournamentStats>> tournaments = Collections.synchronizedMap(new HashMap<>());
 
 
     /**
-     * Creates threads for subclasses of Server
+     * Creates threads for subclasses of Server and for each ConnectedClient object
      * @see AcceptPlayers
      * @see LobbyHandler
      * @see MatchHandler
-     * Also creates threads
+     * @see TournamentHandler
+     * @see ConnectedClient
      */
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
 
+
+    /**
+     * Contains commands the server can receive from clients
+     */
     public enum sendMessage {
-        LOGIN_REQUEST,      // [1] -> username, [2] -> password
-        MODE_SELECTION,     // [1] -> name of game from gameMode enum
-        GUESS,              // [1] -> clients word guess
-        LEADERBOARD,        // requests leaderboard update
-        REGISTER_REQUEST,    // [1] -> username, [2] -> password
+        LOGIN_REQUEST,
+        MODE_SELECTION,
+        GUESS,
+        LEADERBOARD,
+        REGISTER_REQUEST,
 
         CLIENT_DATA_REQUEST,
         CREATE_TOURNAMENT,
@@ -60,6 +68,20 @@ class Server {
         CLIENT_DISCONNECT
     }
 
+    /**
+     * Contains an easy to see way to select which game mode a client is requesting to be placed into
+     */
+    public enum gameMode {
+        ONE_VS_ONE,
+        BATTLE_ROYAL
+    }
+
+    /**
+     * Initializes scramble file and server port if possible. Create threads for subclasses.
+     * @param args args[0] is the port to run the server on, args[1] is file directory path, including the file name.
+     *             If the file is at the root of the project directory, just the file name can be used.
+     * @see ExecutorService
+     */
     public static void main(String[] args) {
         // args[0] port, args[1] file directory path including file name
         Database.initialize("Accounts");
@@ -101,12 +123,10 @@ class Server {
         }
     }
 
-    public enum gameMode {
-        ONE_VS_ONE,
-        BATTLE_ROYAL,
-        TOURNAMENT
-    }
-
+    /**
+     * Creates a new thread for each Client connecting to the server
+     * @see Client
+     */
     private static class AcceptPlayers implements Runnable {
         @Override
         public void run() {
@@ -121,6 +141,7 @@ class Server {
             }
         }
     }
+
 
     private static void initializeTournaments() throws SQLException {
         Database.setTable("mastertournament");
@@ -181,6 +202,9 @@ class Server {
         }
     }
 
+    /**
+     * Handles the creation of lobbies and the placement of players into open lobbies
+     */
     private static class LobbyHandler implements Runnable {
         @Override
         public void run() {
@@ -208,7 +232,7 @@ class Server {
                                     if (client.currentLobby == null) { // create lobby if none were found
                                         System.out.println("Created New ONE_VS_ONE Lobby");
                                         Game temp;
-                                        int MATCH_TIME = 30;
+                                        int MATCH_TIME = 30; // how long each match should be in seconds
                                         if (scrambleFile != null) {
                                             temp = new OneVsOne(MATCH_TIME, scrambleFile, fileIndex);
                                         } else {
@@ -260,8 +284,8 @@ class Server {
                                     if (client.currentLobby == null) { // create lobby if none were found
                                         System.out.println("Created New Battle Royale Lobby");
                                         Game temp;
-                                        int MATCH_TIME = 30;
-                                        int COUNTDOWN_TIME = 60;
+                                        int MATCH_TIME = 30; // how long each match should be in seconds
+                                        int COUNTDOWN_TIME = 60; // how long the
                                         if (scrambleFile != null) {
                                             temp = new BattleRoyale(MATCH_TIME, COUNTDOWN_TIME, scrambleFile, fileIndex);
                                         } else {
@@ -319,6 +343,9 @@ class Server {
         }
     }
 
+    /**
+     *  Handles game state and communicates it with clients within said game
+     */
     private static class MatchHandler implements Runnable {
         @Override
         public void run() {
@@ -407,26 +434,89 @@ class Server {
         }
     }
 
+    /**
+     * Server representation of a connected client, contains temporary stats before uploading to database.
+     * Handles input and output streams for communication between server and client.
+     *
+     */
     private static class ConnectedClient implements Runnable, Comparable<ConnectedClient> {
+        /**
+         * Client socket
+         */
         private final Socket clientSocket;
+        /**
+         * Clients username used to log in
+         */
         private String username = null;
+        /**
+         * The game mode the client is requesting to be placed into
+         */
         private String requestedGame = null;
+        /**
+         * The reference to the game lobby that the client was placed into
+         */
         private Game currentLobby = null;
+        /**
+         * The tournament that the client is currently in
+         */
         private Tournament currentTournament = null;
+        /**
+         * The clients current score in the game they are in, used to determine the winner of the match
+         */
         private int currentScore = 0;
+        /**
+         * The total number of wins in all game modes
+         */
         private int totalWins = 0;
+        /**
+         * The total number of games played in all game modes
+         */
         private int totalGamesPlayed = 0;
+        /**
+         * The total number of wins from head on head matches
+         */
         private int OVOWins = 0;
+        /**
+         * The total number of head on head matches played
+         */
         private int OVOGamesPlayed = 0;
+        /**
+         * The total number of battle royale matches won
+         */
         private int BRWins = 0;
+        /**
+         * The total number of battle royale matches played
+         */
         private int BRGamesPlayed = 0;
+        /**
+         * The number of tournaments won
+         */
         private int tourneyWins = 0;
+        /**
+         * The number of tournament matches played
+         */
         private int tourneyGamesPlayed = 0;
+        /**
+         * Used to store stats about tournaments before being uploaded to DB
+         */
         private TournamentStats tournamentStats;
+        /**
+         * Used to send message commands to the Clients
+         * @see Client
+         */
 
         private Formatter output;
+        /**
+         * Used to accept message commands from Clients
+         * @see Client
+         */
         private Scanner input;
 
+        /**
+         * Creates input and output streams to Client
+         * @param socket The clients socket
+         * @see Client
+         */
         public ConnectedClient(Socket socket) {
             this.clientSocket = socket;
 
@@ -438,9 +528,13 @@ class Server {
             }
         }
 
+        /**
+         * @return comma delimited string of client stats
+         */
         private String getStatString() {
             return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s", username, totalWins, totalGamesPlayed, OVOWins, OVOGamesPlayed, BRWins, BRGamesPlayed, tourneyWins, tourneyGamesPlayed);
         }
+
 
         private String getTournamentData() {
             StringBuilder sb = new StringBuilder();
@@ -467,11 +561,14 @@ class Server {
             return sb.toString();
         }
 
+        /**
+         * Handles message commands sent from client
+         */
         @Override
         public void run() {
             try {
                 init(); // verify login and load client data from db
-                while (!server.isClosed()) { // handle client messages
+                while (!Thread.currentThread().isInterrupted()) { // handle client messages
                     System.out.println("AWAITING CLIENT COMMAND");
                     String receivedData = input.nextLine();
                     System.out.printf("Message Received: %s\n", receivedData);
@@ -569,6 +666,7 @@ class Server {
                                 }
                                 this.username = null;
                                 this.requestedGame = null;
+                                Thread.currentThread().interrupt();
                                 break;
                             case "CANCEL_MM":
                                 System.out.println("CLIENT CANCELED MM");
@@ -608,6 +706,11 @@ class Server {
             }
         }
 
+        /**
+         * Waits until a log in request is received before loading client data and allowing access to main menu
+         * @throws IOException  If there are thread interrupts.
+         * @throws SQLException If there are database errors.
+         */
         private void init() throws IOException, SQLException {
             System.out.println("START INIT");
             Database.initialize("Login");
@@ -664,6 +767,10 @@ class Server {
             }
         }
 
+        /**
+         * Helper function that receives data from database and loads it into appropriate fields
+         * @param data [1] -> userName, total wins, T GamePlayed, OVO wins, OVO GP, BR wins, BR GP, T wins, T GP
+         */
         private void acceptAccountData(String[] data) {
             username = data[0];
             totalWins = Integer.parseInt(data[1]);
@@ -676,12 +783,21 @@ class Server {
             tourneyGamesPlayed = Integer.parseInt(data[8]);
         }
 
-        // [1] -> userName, total wins, T GamePlayed, OVO wins, OVO GP, BR wins, BR GP, T wins, T GP
+        /**
+         * Sends account data to database to be stored. Utilizes getStatString() to get data.
+         * @throws SQLException If there is a database error
+         * @throws FileNotFoundException If the connection to the database fails
+         */
         private void sendAccountData() throws SQLException, FileNotFoundException {
             Database.setTable("Accounts");
             Database.update(getStatString().split(","));
         }
 
+        /**
+         * Used to order the results of game to later be sent to client to display
+         * @param connectedClient The other client to compare to
+         * @return The client with the greater current score
+         */
         @Override
         public int compareTo(ConnectedClient connectedClient) {
             return connectedClient.currentScore - this.currentScore;
@@ -694,3 +810,6 @@ class Server {
 // java docs
 // wiki
 // GUI polish
+// show connected clients as soon as lobby is created
+// stop showing timer when client cancels their lobby
+// player count is not decrementing when client cancel
