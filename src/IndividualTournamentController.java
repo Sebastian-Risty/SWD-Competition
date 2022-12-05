@@ -72,14 +72,11 @@ public class IndividualTournamentController extends Controller {
     @Override
     public void gameStart() {
         System.out.println("GAME START");
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    switchScene("gameFXML.fxml", "Game");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        Platform.runLater(() -> {
+            try {
+                switchScene("gameFXML.fxml", "Game");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
     }
@@ -152,22 +149,12 @@ public class IndividualTournamentController extends Controller {
 
     @Override
     public void updateTSLeader(String rank, String username, String winCount, String gamesLeftCount) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                addToLeaderBoardPane(rank, username, winCount, gamesLeftCount);
-            }
-        });
+        Platform.runLater(() -> addToLeaderBoardPane(rank, username, winCount, gamesLeftCount));
     }
 
     @Override
     public void updateTSUser(String rank, String username, String winCount, String gamesLeftCount) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                addToUserPane(rank, username, winCount, gamesLeftCount);
-            }
-        });
+        Platform.runLater(() -> addToUserPane(rank, username, winCount, gamesLeftCount));
     }
 
 
