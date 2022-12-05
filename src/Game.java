@@ -5,32 +5,88 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public abstract class Game implements Runnable { //TODO: make class abstract and children runnable maybe?
+/**
+ * Game contains the base implementation of a match. Subclasses contain specific rule sets for the game mode
+ */
+
+public abstract class Game implements Runnable {
+    /**
+     *  The list of words that can be used to generate the first part of letter scrambles.
+     *  If scrambles are read from a file, each line is stored as an element here.
+     */
     ArrayList<String> wordsToChooseFrom = new ArrayList<>();
+    /**
+     * The name of the current game mode
+     */
     private String gamemode;
+    /**
+     * The file object containing the list of scrambled letters
+     * Will stay null if not used
+     */
     private File filePath = null;
+    /**
+     * The index / line to grab a scramble from
+     * If index is greater than indeces / lines, starts at first line again
+     */
     private int fileIndex;
+    /**
+     * The selected word taken from wordsToChooseFrom
+     */
     private String selectedWord;
+    /**
+     * Final List of letters used to make guesses
+     */
     private final ArrayList<Character> letters = new ArrayList<>();
+    /**
+     * score corresponding to each letter position in alphabet
+     */
     final static int[] alphabetScores = {1,3,3,2,1,4,2,4,1,8,5,1,3,1,1,3,10,1,1,1,1,4,4,8,4,10};
+    /**
+     * List of words that can be created from generated letters
+     */
     private ArrayList<String> validWords = new ArrayList<>();
+    /**
+     * List of all words read in from words file
+     */
     private final ArrayList<String> allWords = new ArrayList<>();
+    /**
+     * Frequency of each letter corresponding to each letter position in alphabet
+     */
     private int[] letterFreq = new int[26];
+    /**
+     * True if the match is currently in progress
+     */
     private boolean progressFlag = false;
+    /**
+     * True if the match has ended
+     */
     private boolean endFlag = false;
+    /**
+     * True if the match has started
+     */
     private boolean startFlag = false;
+    /**
+     * The number of clients currently connected to this game's lobby
+     */
     private int numConnectedClients = 0;
+    /**
+     * The time to wait to allow more clients to join before match starts
+     */
     private int countDownTime;
-    private boolean preGameLobbyFlag = false;
+    /**
+     * The time the lobby timer started
+     */
     private long lobbyStartTime;
-    private int matchTime;
+    /**
+     * The time to wait before ending a match after it starts
+     */
+    private final int matchTime;
 
     public int getMatchTime() {
         return matchTime;
     }
 
     public void setPreGameLobbyFlag(boolean preGameLobbyFlag) {
-        this.preGameLobbyFlag = preGameLobbyFlag;
     }
 
     public long getLobbyStartTime() {
@@ -91,20 +147,36 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
         numConnectedClients--;
     }
 
+    /**
+     * Game constructor
+     * @param matchTime How long the match should be
+     */
     public Game(int matchTime) {
         this.matchTime = matchTime;
     }
 
+    /**
+     * Game constructor
+     * @param matchTime How long the match should be
+     * @param filePath File object for scramble file
+     * @param fileIndex Current index to read from scramble file
+     */
     public Game(int matchTime, File filePath, int fileIndex) {
         this.matchTime = matchTime;
         this.filePath = filePath;
         this.fileIndex = fileIndex;
     }
 
+    /**
+     * Increments client count when client connects
+     */
     public void clientConnected() {
         numConnectedClients++;
     }
 
+    /**
+     * builds game differently depending on if File object exists
+     */
     @Override
     public void run() {
         if (filePath == null) {
@@ -120,6 +192,11 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
         startGame();
     }
 
+    /**
+     * Generate first portion of letters from an existing word
+     * Add additional randomly generated letters
+     * Scramble the letters
+     */
     private void normalGame() {
         readAllWords();
         selectWord();
@@ -129,15 +206,20 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
         findValidWords();
     }
 
+    /**
+     * Read from word file and display it as read
+     */
     private void TAGame() {
         readLetterFile();
         readAllWords();
         selectedWord = wordsToChooseFrom.get(fileIndex);
         generateLetters();
-        //Collections.sort(letters);
         findValidWords();
     }
 
+    /**
+     * Read lines from scramble file
+     */
     private void readLetterFile() {
         BufferedReader reader;
         try {
@@ -153,6 +235,9 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
         }
     }
 
+    /**
+     * Read lines from words file
+     */
     private void readAllWords() {
         BufferedReader reader;
         try {
@@ -170,6 +255,10 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
         }
     }
 
+    /**
+     * Build list of words to choose from of words of length > 5
+     * Pick a random word from the list and update selected word
+     */
     private void selectWord() {
         for (String word : allWords) {
             if (word.length() > 5) {
@@ -181,12 +270,18 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
         selectedWord = wordsToChooseFrom.get(selectedIndex);
     }
 
+    /**
+     * Create list of letters from selected word
+     */
     private void generateLetters() {
         for (char letter : selectedWord.toCharArray()) {
             letters.add(letter);
         }
     }
 
+    /**
+     * Generate random letters
+     */
     private void addAdditionalLetters() {
         int numAddedLetters = (int) (Math.random() * 4);
         for (int i = 0; i < numAddedLetters; i++) {
@@ -194,6 +289,9 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
         }
     }
 
+    /**
+     * Generate list of words that are made of generated letters
+     */
     private void findValidWords() {
         validWords = new ArrayList<>();
         letterFreq = findLetterFreq(String.valueOf(letters).replaceAll("[,\\s\\[\\]]", ""));
@@ -204,6 +302,7 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
             }
         }
     }
+
 
     private boolean findMatch(int[] tempFreq) {
         for (int i = 0; i < 26; i++) {
@@ -224,6 +323,12 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
         return freq;
     }
 
+    /**
+     * Used to calculate the score of a clients guess if it is valid
+     * @param guess The clients guess
+     * @return Integer value representing the score of the guess
+     * Each letter has a score and the length of the word is accounted for
+     */
     public int guess(String guess) {
         if (validWords.contains(guess.toLowerCase())) {
             int scoreSum = 0;
@@ -236,15 +341,20 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
         return 0;
     }
 
+    /**
+     * Abstract method used to employ rule set for how clients should wait in lobby
+     * @throws InterruptedException If thread is interrupted
+     */
     public abstract void pregameLobby() throws InterruptedException;
 
+    /**
+     * Abstract method used to employ rule set of how long a match should last etc.
+     */
     public abstract void startGame();
 
     public String getTournamentName() {
         return "";
     }
 
-
-    //TODO: rounds can be specified as special rule set in subclasses
 
 }

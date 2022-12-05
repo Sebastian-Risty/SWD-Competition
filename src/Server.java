@@ -87,7 +87,6 @@ class Server {
      * @see ExecutorService
      */
     public static void main(String[] args) {
-        // args[0] port, args[1] file directory path including file name
         Database.initialize("Accounts");
         Database.initialize("mastertournament");
         server = null;
