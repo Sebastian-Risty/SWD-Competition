@@ -306,12 +306,13 @@ class Server {
                                     synchronized (lobbies) {
                                         for (Game game : lobbies.keySet()) {
                                             if (game.getGamemode().equals("Tournament") && !game.isInProgress()) { // client joins open game if possible
-                                                if (lobbies.get(game)[0].)
+                                                if (lobbies.get(game).get(0).currentTournament == client.currentTournament) {
                                                     lobbies.get(game).add(client);
-                                                System.out.println("ADDED CLIENT TO GAME");
-                                                client.currentLobby = game;
-                                                game.clientConnected();
-                                                break;
+                                                    System.out.println("ADDED CLIENT TO GAME");
+                                                    client.currentLobby = game;
+                                                    game.clientConnected();
+                                                    break;
+                                                }
                                             }
                                         }
                                     }
