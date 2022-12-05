@@ -490,7 +490,7 @@ class Server {
                                                 new ArrayList<TournamentStats>() {{
                                                     add(new TournamentStats(username));
                                                 }}));
-                                        Database.createTournament(clientMessage[1], startTime);
+                                        Database.createTournament(clientMessage[1], String.valueOf(startTime));
                                         Thread.sleep(10);
                                         Database.addToTournament(username, clientMessage[1]);
                                         Thread.sleep(10);
