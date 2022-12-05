@@ -18,7 +18,7 @@
          </font>
       </JFXButton>
       <JFXTextField fx:id="createField" layoutX="361.0" layoutY="40.0" />
-      <JFXButton fx:id="joinTourney" layoutX="358.0" layoutY="79.0" onAction="#createButtonListener" text="Create Tournament">
+      <JFXButton fx:id="createTourney" layoutX="358.0" layoutY="79.0" onAction="#createButtonListener" text="Create Tournament">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>

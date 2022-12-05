@@ -37,10 +37,15 @@ public class TournamentHomeController extends Controller {
     public void initialize() {
         getClient().setController(this);
         getClient().sendMessage(String.format("%s\n", Server.sendMessage.TOURNAMENT_DATA));
-        verifyRippler = new JFXRippler(ripplerPane);
-        parentPane.getChildren().add(verifyRippler);
-        joinTourney.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null,null)));
-        createTourney.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null,null)));
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                verifyRippler = new JFXRippler(ripplerPane);
+                parentPane.getChildren().add(verifyRippler);
+                joinTourney.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null,null)));
+                createTourney.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null,null)));
+            }
+        });
     }
 
     public void setUpTournamentData() {
