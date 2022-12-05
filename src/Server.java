@@ -42,7 +42,10 @@ class Server {
         BATTLE_ROYAL
     }
 
-    public static void main(String[] args) { // args[0] port, args[1] file name/path
+    public static void main(String[] args) {
+        // args[0] port, args[1] file directory path including file name
+        Database.initialize("Accounts");
+        Database.initialize("mastertournament");
         server = null;
         try {
             switch (args.length) {
@@ -98,12 +101,14 @@ class Server {
     private static void initializeTournaments() throws SQLException {
         Database.setTable("mastertournament");
         String[] tournamentData = Database.getInfo("");
-        for (int i = 0; i < tournamentData.length; i += 2) {
-            Tournament tournament = new Tournament(tournamentData[i], tournamentData[i + 1]);
-            String[] userData = Database.getUserData(tournament.getName());
-            tournaments.put(tournament, Collections.synchronizedList(new ArrayList<>()));
-            for (int j = 0; j < userData.length; j += 3) {
-                tournaments.get(tournament).add(new TournamentStats(userData[j], userData[j + 1], userData[j + 2]));
+        if (tournamentData.length > 1) {
+            for (int i = 0; i < tournamentData.length; i += 2) {
+                Tournament tournament = new Tournament(tournamentData[i], tournamentData[i + 1]);
+                String[] userData = Database.getUserData(tournament.getName());
+                tournaments.put(tournament, Collections.synchronizedList(new ArrayList<>()));
+                for (int j = 0; j < userData.length; j += 3) {
+                    tournaments.get(tournament).add(new TournamentStats(userData[j], userData[j + 1], userData[j + 2]));
+                }
             }
         }
     }
@@ -522,45 +527,37 @@ class Server {
 
                                 System.out.println("CLIENT LOG OUT");
                                 clients.remove(this);
-                                if (this.currentLobby != null) {
-                                    lobbies.get(this.currentLobby).remove(this); // TODO: may not need this here
-                                    this.currentLobby.clientDisconnected();
-                                    this.currentLobby = null;
-                                }
                                 this.username = null;
-                                this.requestedGame = null;
                                 init();
                                 break;
                             case "CLIENT_DISCONNECT":
                                 Database.setTable("Accounts");
                                 Database.update(getStatString().split(","));
 
-                                System.out.println("CLIENT DISCONNECT");
+                                System.out.println("Removing Client from list");
                                 clients.remove(this);
-                                if (this.currentLobby != null) {
-                                    lobbies.get(this.currentLobby).remove(this); // TODO: may need to sync
-                                    this.currentLobby.clientDisconnected();
-                                    this.currentLobby = null;
+                                if(this.currentLobby != null){
+                                    synchronized (lobbies){
+                                        lobbies.get(this.currentLobby).remove(this);
+                                        this.currentLobby.clientDisconnected();
+                                        this.currentLobby = null;
+                                    }
                                 }
                                 this.username = null;
                                 this.requestedGame = null;
-
-                                output.format("%s", Client.sendMessage.SHUTDOWN);
-                                output.flush();
                                 break;
                             case "CANCEL_MM":
                                 System.out.println("CLIENT CANCELED MM");
                                 this.requestedGame = null;
-                                if (this.currentLobby != null) {
-                                    lobbies.get(this.currentLobby).remove(this); // TODO: may need to put in sync blocks
+                                if(this.currentLobby != null){
+                                    lobbies.get(this.currentLobby).remove(this);
                                     this.currentLobby.clientDisconnected();
                                     this.currentLobby = null;
                                 }
                                 break;
+                            }
                         }
-                    } // TODO: on window close send command to server saying it close and then flip flag inside this run to then break form loop d then hit finally block so account is removed or smthn
-                    catch (Exception e) {
-                        e.printStackTrace();
+                     catch(Exception e){
                         System.out.println("BAD INPUT RECEIVED");
                     }
                 }
@@ -669,8 +666,7 @@ class Server {
 }
 
 // TODO
-// text GUI
-// game display timer
-// handle file to be read
 // tourney
-// save client data when their window closes
+// java docs
+// wiki
+// GUI polish

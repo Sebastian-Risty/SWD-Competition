@@ -5,7 +5,6 @@ import java.util.Formatter;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("BooleanMethodIsAlwaysInverted")
 class Client implements Runnable {
@@ -20,11 +19,15 @@ class Client implements Runnable {
     private String[] gameResults;
     private PlayerStats stats;
     private final ExecutorService clientExecutor = Executors.newCachedThreadPool();
-    private TimerHandler timerHandler = null;
+    private Integer guessResult = null;
 
     // TEXTMODE STUFF
     private boolean loggedIn = false;
     private boolean gameStart = false;
+
+    public Integer getGuessResult() {
+        return guessResult;
+    }
 
     public boolean isGameStart() {
         return gameStart;
@@ -153,17 +156,20 @@ class Client implements Runnable {
                         break;
                     }
                     case "SHUTDOWN": {
-                       shutDown();
+                        System.out.println("CALLING SYS EXIT");
+                        System.exit(-1);
                         break;
                     }
                     case "CREATE_TOURNAMENT": {
                         controller.createTournament(clientMessage);
+                        break;
                     }
                     case "JOIN_TOURNAMENT": {
                         controller.joinTournament(clientMessage);
+                        break;
                     }
                 }
-            } else {
+                } else {
                 switch (clientMessage[0]) {
                     case "LOGIN_VALID":
                     case "SIGNUP_VALID": {
@@ -178,20 +184,21 @@ class Client implements Runnable {
                     }
                     case "GAME_START": {
                         letters = clientMessage[1];
-                        controller.gameStart();
-                        break;
-                    }
-                    case "GAME_END": {
-                        gameResults = clientMessage;
                         gameStart = true;
                         break;
                     }
-                    case "GUESS_RESULT": {
-                        controller.guessResult(Integer.parseInt(clientMessage[1]));
+                    case "GAME_END": {
+                        System.out.println("GAME OVER!");
+                        gameResults = clientMessage;
+                        for (int i = 1; i < getGameResults().length; i+=2) {
+                            System.out.printf("Rank: %s | User: %s | Score: %s\n", (i / 2) + 1, getGameResults()[i], getGameResults()[i+1]);
+                        }
+                        sendMessage(String.format("%s\n", Server.sendMessage.CLIENT_DISCONNECT));
+                        System.exit(0);
                         break;
                     }
-                    case "SHUTDOWN": {
-                        shutDown();
+                    case "GUESS_RESULT": {
+                        guessResult = Integer.parseInt(clientMessage[1]);
                         break;
                     }
                 }
@@ -199,22 +206,10 @@ class Client implements Runnable {
         }
     }
 
-    private void shutDown(){
-        clientExecutor.shutdown();
-        try {
-            if (!clientExecutor.awaitTermination(2, TimeUnit.SECONDS)) {
-                System.out.println("shutdown failed, forcing.");
-                clientExecutor.shutdownNow();
-            }
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private static class TimerHandler implements Runnable {
-        private Client client;
-        private long startTime;
-        private int totalTime;
+        private final Client client;
+        private final long startTime;
+        private final int totalTime;
 
         public TimerHandler(Client client, String startTime, String totalTime) {
             System.out.println("TIMER CONSTRUCTOR");

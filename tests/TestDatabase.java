@@ -22,7 +22,7 @@ public class TestDatabase {
     public void testUpdate() throws SQLException { // also tests displayLeadBoard() and validLogin()
         init();
         Database.setTable("Test");
-        String[] data = new String[]{"Sam", "mypassword1", "1000"}; // note when testing that the password (index 1) must be numerical because of the Integer.Parseint() in update()
+        String[] data = new String[]{"Sam", "mypassword1", "1000"};
         Database.update(data);
         String[] data2 = new String[]{"Cole", "mypassword2", "500"};
         Database.update(data2);
@@ -92,8 +92,11 @@ public class TestDatabase {
         Database.addToTournament("Matt", "testtournament");
         Database.addToTournament("Sam", "testtournament");
         Database.addToTournament("Cole", "testtournament");
-        System.out.println(Arrays.toString(Database.getUserData("testtournament")));
+//        System.out.println(Arrays.toString(Database.getUserData("testtournament")));
         Database.removeFromTournament("Sebastian", "testtournament");
+
+        Database.setTable("testtournament");
+        Database.update(new String[]{"Sam", "1", "4"});
 //        System.out.println(Arrays.toString(Database.getInfo("Matt")));
 
         Database.deleteTournament("testtournament");
