@@ -125,7 +125,7 @@ public class LoginScreenController extends Controller {
     public void loginInvalid() {
         Platform.runLater(() -> {
             loginFeedback.setText("Invalid Login or user is already logged in");
-            pane.getChildren().remove(0);
+            parentPane.getChildren().remove(0);
             verifyRippler = new JFXRippler(pane);
             parentPane.getChildren().add(verifyRippler);
             verifyRippler.setRipplerFill(new Color(1, 0, 0, 0));
