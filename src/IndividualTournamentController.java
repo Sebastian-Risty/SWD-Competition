@@ -18,13 +18,20 @@ public class IndividualTournamentController extends Controller {
     private GridPane userPane;
     @FXML
     private JFXButton startButton;
-
     @FXML
     private JFXButton mainMenuButton;
 
     public void initialize() {
+
         startButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         mainMenuButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+
+        String[] tourneyDataArray = getTournamentData().split(",");
+
+        for(int i = 0; i<15; i++) {
+
+        }
+
     }
 
     @FXML
