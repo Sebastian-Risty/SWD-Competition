@@ -30,7 +30,7 @@ public class TournamentHomeController extends Controller {
     public void initialize() {
         getClient().setController(this);
         getClient().sendMessage(String.format("%s\n", Server.sendMessage.TOURNAMENT_DATA));
-        verifyRippler.setRipplerFill(new Color(1, 0, 0, 0));
+        verifyRippler = new JFXRippler(ripplerPane);
         parentPane.getChildren().add(verifyRippler);
     }
 
