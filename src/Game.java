@@ -151,6 +151,7 @@ public abstract class Game implements Runnable {
 
     /**
      * Boolean method for game in progress
+     * @return progressFlag
      */
     public boolean isInProgress() {
         return progressFlag;
@@ -158,6 +159,7 @@ public abstract class Game implements Runnable {
 
     /**
      * Boolean method for game finished
+     * @return end flag
      */
     public boolean isFinished() {
         return endFlag;
@@ -174,6 +176,7 @@ public abstract class Game implements Runnable {
 
     /**
      * Boolean method for game start
+     * @return start flag
      */
     public boolean hasStarted() {
         return startFlag;

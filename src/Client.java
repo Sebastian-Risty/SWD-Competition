@@ -10,8 +10,8 @@ import java.util.concurrent.Executors;
  * Temporarily stores data sent from server.
  * If in text mode utilizes different methods of storing states of match.
  */
-@SuppressWarnings({"BooleanMethodIsAlwaysInverted", "BusyWait"})
 class Client implements Runnable {
+
     /**
      * True if client is running in text mode. Text mode only displays the absolute minimum to play the game.
      */

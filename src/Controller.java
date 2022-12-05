@@ -67,6 +67,7 @@ public class Controller {
 
     /**
      * Getter method for tournament data
+     * @return tournament data
      */
     public static String[] getTournamentData() {
         return tournamentData;
@@ -74,6 +75,7 @@ public class Controller {
 
     /**
      * Setter method for the tournament data
+     * @param tournamentData stats
      */
     public static void setTournamentData(String[] tournamentData) {
         Controller.tournamentData = tournamentData;
@@ -265,6 +267,7 @@ public class Controller {
      *
      * @param path       the path of the FXML file to load
      * @param sceneTitle the title for the new scene
+     * @throws IOException exception
      */
     public void switchScene(String path, String sceneTitle) throws IOException {
 
@@ -411,6 +414,8 @@ public class Controller {
      * @param username         the user's username
      * @param totalWins        the user's total wins
      * @param totalGamesPlayed the user's total games played
+     * @param tournamentWins the user's tourney wins
+     * @param tournamentsPlayed user's tourneys played
      * @param OVOWins          the user's head-to-head wins
      * @param OVOGamesPlayed   the user's head-to-head games played
      * @param BRWins           the user's battle royale wins

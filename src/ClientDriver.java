@@ -26,7 +26,7 @@ public class ClientDriver extends Application {
      * Sets up controller or text mode depending on args
      * Also creates connection to server from given args
      *
-     * @param args [0]-> text mode ("text"), [1] -> server ip, [2] -> server port
+     * @param args [0] text mode ("text"), [1]  server ip, [2] server port
      * @throws UnknownHostException If server cannot be found
      * @throws InterruptedException If thread is interrupted
      */
