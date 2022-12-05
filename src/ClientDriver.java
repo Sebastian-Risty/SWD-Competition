@@ -74,7 +74,10 @@ public class ClientDriver extends Application {
                 }
                 Thread.sleep(100);
                 if(!textClient.isLoggedIn() && input == '1' || input == '2'){
-                    System.out.println("login failed, please try again or register first");
+                    System.out.println("login failed, please try again or register first\n");
+                    System.out.println("Please select to log in or Register");
+                    System.out.println("[1] Log In");
+                    System.out.println("[2] Register");
                 }
             } while(!textClient.isLoggedIn());
 
@@ -100,6 +103,9 @@ public class ClientDriver extends Application {
                     if(scanner.hasNext()){
                         if(scanner.nextLine().charAt(0) == '3'){
                             textClient.sendMessage(String.format("%s\n", Server.sendMessage.CANCEL_MM));
+                            System.out.println("Please Select Mode");
+                            System.out.println("[1] 1 V 1");
+                            System.out.println("[2] BR");
                             break;
                         }
                     }
@@ -108,15 +114,25 @@ public class ClientDriver extends Application {
 
             System.out.println("Enter Guesses!");
             // play game
-            do{
+            while(true){
                 System.out.printf("LETTERS: %s\n", textClient.getLetters());
-                String guess = scanner.nextLine();
-                textClient.sendMessage(String.format("%s,%s\n", Server.sendMessage.GUESS, guess));
-                Thread.sleep(100);
 
+                while(scanner.hasNextLine()){
+                    System.out.println("GUESS RECEIVED!");
+                    String guess = scanner.nextLine();
+                    textClient.sendMessage(String.format("%s,%s\n", Server.sendMessage.GUESS, guess));
 
-            } while(true); // wait until match is over
+                    Thread.sleep(100);
 
+                    if(textClient.getGuessResult() != null){
+                        if(textClient.getGuessResult() > 0){
+                            System.out.printf("Scored %s\n", textClient.getGuessResult() );
+                        } else{
+                            System.out.println("Not a word!");
+                        }
+                    }
+                }
+            }
         }
     }
 

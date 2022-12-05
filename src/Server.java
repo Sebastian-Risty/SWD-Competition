@@ -366,13 +366,13 @@ class Server {
                                 System.out.println("CLIENT CANCELED MM");
                                 this.requestedGame = null;
                                 if(this.currentLobby != null){
-                                    lobbies.get(this.currentLobby).remove(this); // TODO: may need to put in sync blocks
+                                    lobbies.get(this.currentLobby).remove(this);
                                     this.currentLobby.clientDisconnected();
                                     this.currentLobby = null;
                                 }
                                 break;
                             }
-                        } // TODO: on window close send command to server saying it close and then flip flag inside this run to then break form loop d then hit finally block so account is removed or smthn
+                        }
                      catch(Exception e){
                         System.out.println("BAD INPUT RECEIVED");
                     }
