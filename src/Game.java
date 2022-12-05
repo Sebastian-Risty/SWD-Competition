@@ -88,59 +88,74 @@ public abstract class Game implements Runnable {
 
     /**
      * Getter for match time
+     *
      * @return match time
      */
     public int getMatchTime() {
         return matchTime;
     }
+
     /**
      * Getter for pregame lobby flag
+     *
      * @return the pregame lobby flag
      */
     public boolean getPreGameLobbyFlag() {
         return preGameLobbyFlag;
     }
+
     /**
      * Setter for pregame lobby flag
+     *
      * @param preGameLobbyFlag flag for pregame lobby
      */
     public void setPreGameLobbyFlag(boolean preGameLobbyFlag) {
         this.preGameLobbyFlag = preGameLobbyFlag;
     }
+
     /**
      * Getter for lobby start time
+     *
      * @return lobby start time
      */
     public long getLobbyStartTime() {
         return lobbyStartTime;
     }
+
     /**
      * Setter for lobby start time
+     *
      * @param lobbyStartTime the lobby start time
      */
     public void setLobbyStartTime(long lobbyStartTime) {
         this.lobbyStartTime = lobbyStartTime;
     }
-    /**
-     * Setter for countdown time
-     * @param countDownTime the time count down
-     */
-    public void setCountDownTime(int countDownTime) {
-        this.countDownTime = countDownTime;
-    }
+
     /**
      * Getter for countdomn time
+     *
      * @return countdown time
      */
     public int getCountDownTime() {
         return countDownTime;
     }
+
+    /**
+     * Setter for countdown time
+     *
+     * @param countDownTime the time count down
+     */
+    public void setCountDownTime(int countDownTime) {
+        this.countDownTime = countDownTime;
+    }
+
     /**
      * Boolean method for game in progress
      */
     public boolean isInProgress() {
         return progressFlag;
     }
+
     /**
      * Boolean method for game finished
      */
@@ -156,6 +171,7 @@ public abstract class Game implements Runnable {
     public Game(int matchTime) {
         this.matchTime = matchTime;
     }
+
     /**
      * Boolean method for game start
      */
@@ -175,52 +191,64 @@ public abstract class Game implements Runnable {
         this.filePath = filePath;
         this.fileIndex = fileIndex;
     }
+
     /**
      * Getter for the game mode
+     *
      * @return game mode
      */
     public String getGamemode() {
         return gamemode;
     }
+
     /**
      * Setter for the game mode
+     *
      * @param gamemode the game mode
      */
     public void setGamemode(String gamemode) {
         this.gamemode = gamemode;
     }
+
     /**
      * Getter for the letters list
+     *
      * @return the letters list
      */
     public ArrayList<Character> getLetters() {
         return letters;
     }
+
     /**
      * Getter for number of connected clients
+     *
      * @return number of connected clients
      */
     public int getNumConnectedClients() {
         return numConnectedClients;
     }
+
     /**
      * Method for changing the progress flag
      */
     public void changeProgressFlag() {
         progressFlag = !progressFlag;
     }
+
     /**
      * Method for changing the end flag
      */
     public void changeEndFlag() {
         endFlag = !endFlag;
     }
+
     /**
      * method for changing the start flag
      */
     public void changeStartFlag() {
         startFlag = !startFlag;
     }
+
     /**
      * Method for decrementing number of connected clients when one disconnects
      */
@@ -366,6 +394,7 @@ public abstract class Game implements Runnable {
 
     /**
      * findMatch looks for word matches
+     *
      * @param tempFreq frequency of each letter
      * @return true or false whether it is a match
      */
@@ -382,6 +411,7 @@ public abstract class Game implements Runnable {
 
     /**
      * Method for finding the frequency of a letter
+     *
      * @param word the word to find letter frequency of
      * @return freq the frequencies of all the letters
      */
