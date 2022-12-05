@@ -9,11 +9,10 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class gameController extends Controller {
-
     @FXML
     private JFXTextArea wordPanel;
     @FXML
@@ -32,6 +31,19 @@ public class gameController extends Controller {
     private Label timeLabel;
     private String lastGuess;
     private int playerScore;
+    private ArrayList<String> correctGuesses;
+
+    public void initialize() {
+        getClient().setController(this);
+        correctGuesses = new ArrayList<>();
+        guessWordField.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+        letters.setText(getClient().getLetters());
+        scoreLabel.setText(scoreLabel.getText() + " 0");
+        timeLabel.setText(timeLabel.getText() + " 0");
+        playerScore = 0;
+        guessRippler = new JFXRippler(childPane);
+        parentPane.getChildren().add(guessRippler);
+    }
 
     @FXML
     void enterPressed(KeyEvent event) {
@@ -44,17 +56,6 @@ public class gameController extends Controller {
             guessRippler = new JFXRippler(childPane);
             parentPane.getChildren().add(guessRippler);
         }
-    }
-
-    public void initialize() {
-        getClient().setController(this);
-        guessWordField.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
-        letters.setText(getClient().getLetters());
-        scoreLabel.setText(scoreLabel.getText() + " 0");
-        timeLabel.setText(timeLabel.getText() + " 0");
-        playerScore = 0;
-        guessRippler = new JFXRippler(childPane);
-        parentPane.getChildren().add(guessRippler);
     }
 
     @Override
@@ -79,7 +80,8 @@ public class gameController extends Controller {
                 System.out.println(score);
                 guessRippler.setEnabled(true);
 
-                if(score>0) {
+                if(score>0 && !correctGuesses.contains(lastGuess)) {
+                    correctGuesses.add(lastGuess);
                     wordPanel.setText(wordPanel.getText() + lastGuess);
                     playerScore += score;
                     scoreLabel.setText("Score: " + playerScore);
