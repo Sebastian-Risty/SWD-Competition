@@ -101,6 +101,9 @@ public class GameController extends Controller {
         }
     }
 
+    /**
+     * Method for the client to call to let the controller know the game is over. Overrides the controller's method
+     */
     @Override
     public void endGame() {
         Platform.runLater(() -> {
@@ -111,7 +114,10 @@ public class GameController extends Controller {
             }
         });
     }
-
+    /**
+     * Method for the client to give the controller the results of a guess. Overrides Controller's method
+     * @param score the score of the word
+     */
     @Override
     public void guessResult(int score) {
         Platform.runLater(() -> {
@@ -132,7 +138,10 @@ public class GameController extends Controller {
             }
         });
     }
-
+    /**
+     * Method for the client to call when the server updates the time. Overrides the Controller's method
+     * @param time the updated time from the client
+     */
     @Override
     public void updateTimer(int time) {
         Platform.runLater(() -> timeLabel.setText("Time: " + time));
