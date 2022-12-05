@@ -267,9 +267,9 @@ class Server {
                                         Game temp;
                                         int MATCH_TIME = 30;
                                         if (scrambleFile != null) {
-                                            temp = new OneVsOne(MATCH_TIME, scrambleFile, fileIndex);
+                                            temp = new TournamentGame(MATCH_TIME, scrambleFile, fileIndex);
                                         } else {
-                                            temp = new OneVsOne(MATCH_TIME);
+                                            temp = new TournamentGame(MATCH_TIME);
                                         }
                                         executorService.execute(temp);
                                         lobbies.put(temp, Collections.synchronizedList(new ArrayList<ConnectedClient>() {{
@@ -324,6 +324,18 @@ class Server {
 
                             String temp = sb.toString();
 
+                            if (sortedClients.get(0).currentScore > sortedClients.get(1).currentScore) {
+                                sortedClients.get(0).totalWins++;
+                                switch (lobby.getGamemode()) {
+                                    case "OneVsOne":
+                                        sortedClients.get(0).OVOWins++;
+                                        break;
+                                    case "BattleRoyale":
+                                        sortedClients.get(0).BRWins++;
+                                        break;
+                                }
+                            }
+
                             for (ConnectedClient client : lobbies.get(lobby)) { // send match data
                                 client.output.format(temp);
                                 client.output.flush();
@@ -340,16 +352,9 @@ class Server {
                                     case "BattleRoyale":
                                         client.BRGamesPlayed++;
                                         break;
+                                    case "Tournament":
+                                        tournaments.get(lobby.getTournamentName());
                                 }
-                            }
-                            sortedClients.get(0).totalWins++;
-                            switch (lobby.getGamemode()) {
-                                case "OneVsOne":
-                                    sortedClients.get(0).OVOGamesPlayed++;
-                                    break;
-                                case "BattleRoyale":
-                                    sortedClients.get(0).BRGamesPlayed++;
-                                    break;
                             }
 
                             synchronized (lobbies) {
@@ -377,6 +382,7 @@ class Server {
         private int BRGamesPlayed = 0;
         private int tourneyWins = 0;
         private int tourneyGamesPlayed = 0;
+        private TournamentStats tournamentStats;
 
         private Formatter output;
         private Scanner input;
@@ -402,7 +408,9 @@ class Server {
             for (Tournament tournament : tournaments.keySet()) {
                 sb.append(tournament.getName()).append(",");
             }
-            sb.delete(sb.length() - 1, sb.length());
+            if (sb.length() > 0) {
+                sb.delete(sb.length() - 1, sb.length());
+            }
             return sb.toString();
         }
 
@@ -413,7 +421,9 @@ class Server {
             for (String s : data) {
                 sb.append(s).append(",");
             }
-            sb.delete(sb.length() - 1, sb.length());
+            if (sb.length() > 0) {
+                sb.delete(sb.length() - 1, sb.length());
+            }
             return sb.toString();
         }
 
