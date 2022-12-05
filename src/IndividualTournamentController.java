@@ -1,5 +1,6 @@
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -9,39 +10,77 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class IndividualTournamentController extends Controller {
 
     @FXML
-    private GridPane leaderboardPane;
+    private JFXButton readyUp;
+
     @FXML
-    private GridPane userPane;
+    private Label gameModeFeedback;
+
     @FXML
-    private JFXButton startButton;
+    private Label gameStatus;
+
     @FXML
     private JFXButton mainMenuButton;
 
-    public void initialize() {
+    @FXML
+    private GridPane leaderboardPane;
 
-        startButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+    @FXML
+    private GridPane userPane;
+
+    private boolean readiedUp;
+
+    public void initialize() {
+        readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         mainMenuButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
 
-        String[] tourneyDataArray = getTournamentData().split(",");
-
-        for(int i = 0; i<15; i++) {
-
+        boolean length = getTournamentData().length >= 17;
+        System.out.println(Arrays.toString(getTournamentData()));
+        if (length) {
+            for (int i = 2; i < 15; i += 3) {
+                addToLeaderBoardPane(String.valueOf(((i - 1) / 3)), getTournamentData()[i], getTournamentData()[i + 1], getTournamentData()[i + 2]);
+            }
+        } else {
+            for (int i = 2; i < getTournamentData().length - 2; i += 3) {
+                System.out.println(i);
+                addToLeaderBoardPane(String.valueOf(((i - 1) / 3) + 1), getTournamentData()[i], getTournamentData()[i + 1], getTournamentData()[i + 2]);
+            }
         }
+    }
 
+
+    @FXML
+    void mainMenuButtonListener(ActionEvent event) throws IOException {
+        if (!readiedUp) {
+            switchScene("homeScreenFXML.fxml", "Main Menu");
+        }
     }
 
     @FXML
-    public void startButtonListener(){
+    void readyUpListener(ActionEvent event) {
+        if (!readiedUp) {
+            // Send client the mode the user selected
+            getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.MODE_SELECTION, Server.gameMode.TOURNAMENT));
+            // Set the labels on the screen while waiting to connect to the game
+            gameStatus.setText("Connecting to Game...");
+            gameModeFeedback.setText("Waiting for Player");
+            readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
+            readyUp.setText("Cancel");
 
-    }
-
-    @FXML
-    public void menuButtonListener() throws IOException {
-        switchScene("homeScreenFXML.fxml", "Main Menu");
+            readiedUp = true;
+        } else {
+            // send cancel message to server
+            getClient().sendMessage(String.format("%s\n", Server.sendMessage.CANCEL_MM));
+            readyUp.setText("Ready Up!");
+            readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, null, null)));
+            gameStatus.setText("");
+            gameModeFeedback.setText("");
+            readiedUp = false;
+        }
     }
 
     private int getNumOnLeaderboardPane() {
@@ -51,14 +90,13 @@ public class IndividualTournamentController extends Controller {
             Node child = leaderboardPane.getChildren().get(i);
             if (child.isManaged()) {
                 Integer rowIndex = GridPane.getRowIndex(child);
-                if(rowIndex != null){
-                    numRows = Math.max(numRows,rowIndex+1);
+                if (rowIndex != null) {
+                    numRows = Math.max(numRows, rowIndex + 1);
                 }
             }
         }
         return numRows;
     }
-
 
 
     private void addToLeaderBoardPane(String rankIn, String usernameInp, String winIn, String gamesLeftInp) {
@@ -93,7 +131,7 @@ public class IndividualTournamentController extends Controller {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                addToLeaderBoardPane(rank,username,winCount,gamesLeftCount);
+                addToLeaderBoardPane(rank, username, winCount, gamesLeftCount);
             }
         });
     }
@@ -103,7 +141,7 @@ public class IndividualTournamentController extends Controller {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                addToUserPane(rank,username,winCount,gamesLeftCount);
+                addToUserPane(rank, username, winCount, gamesLeftCount);
             }
         });
     }

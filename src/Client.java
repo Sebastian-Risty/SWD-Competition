@@ -88,7 +88,7 @@ class Client implements Runnable {
                 throw new RuntimeException(e);
             }
             System.out.println("RETRY CONNECTION");
-            connectToServer(); //TODO: limit retry count
+            connectToServer();
         }
     }
 
@@ -100,109 +100,112 @@ class Client implements Runnable {
     @Override
     public void run() {
         System.out.println("AWAITING SERVER DATA");
-        while (true) {
-            String receivedData = input.nextLine();
-            System.out.printf("Message Received: %s\n", receivedData);
-            String[] clientMessage = receivedData.split(",");
-            if (!textMode) {
-                switch (clientMessage[0]) {
-                    case "LOGIN_VALID": {
-                        controller.loginValid();
-                        break;
-                    }
-                    case "LOGIN_INVALID": {
-                        controller.loginInvalid();
-                        break;
-                    }
-                    case "CLIENT_DATA": {
-                        System.out.println(Arrays.toString(clientMessage));
-                        controller.updatePlayerStats(clientMessage[1], clientMessage[2], clientMessage[3], clientMessage[4],
-                                clientMessage[5], clientMessage[6], clientMessage[7], clientMessage[8], clientMessage[9]);
-                        controller.updatePlayerStatsScreen();
-                        break;
-                    }
-                    case "SIGNUP_VALID": {
-                        controller.signUpValid();
-                        break;
-                    }
-                    case "SIGNUP_INVALID": {
-                        controller.signUpInvalid();
-                        break;
-                    }
-                    case "TOURNAMENT_DATA": {
-                        controller.updateTournament(clientMessage);
-                        break;
-                    }
-                    case "GAME_START": {
-                        letters = clientMessage[1];
-                        controller.gameStart();
-                        break;
-                    }
-                    case "GAME_END": {
-                        gameResults = clientMessage;
-                        controller.endGame();
-                        break;
-                    }
-                    case "GUESS_RESULT": {
-                        controller.guessResult(Integer.parseInt(clientMessage[1]));
-                        break;
-                    }
-                    case "TIMER_UPDATE": {
-                        clientExecutor.execute(new TimerHandler(this, clientMessage[1], clientMessage[2]));
-                        break;
-                    }
-                    case "PLAYER_COUNT_UPDATE": {
-                        controller.updatePlayersConnected(Integer.parseInt(clientMessage[1]));
-                        break;
-                    }
-                    case "SHUTDOWN": {
-                        System.out.println("CALLING SYS EXIT");
-                        System.exit(-1);
-                        break;
-                    }
-                    case "CREATE_TOURNAMENT": {
-                        controller.createTournament(clientMessage);
-                        break;
-                    }
-                    case "TOURNAMENT_PLAYER_DATA": {
-                        controller.joinTournament(clientMessage);
-                        break;
-                    }
-                }
-                } else {
-                switch (clientMessage[0]) {
-                    case "LOGIN_VALID":
-                    case "SIGNUP_VALID": {
-                        loggedIn = true;
-                        break;
-                    }
-                    case "CLIENT_DATA": {
-                        System.out.println(Arrays.toString(clientMessage));
-                        stats = new PlayerStats(clientMessage[1], clientMessage[2], clientMessage[3], clientMessage[4],
-                                clientMessage[5], clientMessage[6], clientMessage[7], clientMessage[8], clientMessage[9]);
-                        break;
-                    }
-                    case "GAME_START": {
-                        letters = clientMessage[1];
-                        gameStart = true;
-                        break;
-                    }
-                    case "GAME_END": {
-                        System.out.println("GAME OVER!");
-                        gameResults = clientMessage;
-                        for (int i = 1; i < getGameResults().length; i+=2) {
-                            System.out.printf("Rank: %s | User: %s | Score: %s\n", (i / 2) + 1, getGameResults()[i], getGameResults()[i+1]);
+        try{
+            while (!Thread.currentThread().isInterrupted()) {
+                String receivedData = input.nextLine();
+                System.out.printf("Message Received: %s\n", receivedData);
+                String[] clientMessage = receivedData.split(",");
+                if (!textMode) {
+                    switch (clientMessage[0]) {
+                        case "LOGIN_VALID": {
+                            controller.loginValid();
+                            break;
                         }
-                        sendMessage(String.format("%s\n", Server.sendMessage.CLIENT_DISCONNECT));
-                        System.exit(0);
-                        break;
+                        case "LOGIN_INVALID": {
+                            controller.loginInvalid();
+                            break;
+                        }
+                        case "CLIENT_DATA": {
+                            System.out.println(Arrays.toString(clientMessage));
+                            controller.updatePlayerStats(clientMessage[1], clientMessage[2], clientMessage[3], clientMessage[4],
+                                    clientMessage[5], clientMessage[6], clientMessage[7], clientMessage[8], clientMessage[9]);
+                            controller.updatePlayerStatsScreen();
+                            break;
+                        }
+                        case "SIGNUP_VALID": {
+                            controller.signUpValid();
+                            break;
+                        }
+                        case "SIGNUP_INVALID": {
+                            controller.signUpInvalid();
+                            break;
+                        }
+                        case "TOURNAMENT_DATA": {
+                            controller.updateTournament(clientMessage);
+                            break;
+                        }
+                        case "GAME_START": {
+                            letters = clientMessage[1];
+                            controller.gameStart();
+                            break;
+                        }
+                        case "GAME_END": {
+                            gameResults = clientMessage;
+                            controller.endGame();
+                            break;
+                        }
+                        case "GUESS_RESULT": {
+                            controller.guessResult(Integer.parseInt(clientMessage[1]));
+                            break;
+                        }
+                        case "TIMER_UPDATE": {
+                            clientExecutor.execute(new TimerHandler(this, clientMessage[1], clientMessage[2]));
+                            break;
+                        }
+                        case "PLAYER_COUNT_UPDATE": {
+                            controller.updatePlayersConnected(Integer.parseInt(clientMessage[1]));
+                            break;
+                        }
+                        case "SHUTDOWN": {
+                            System.exit(-1);
+                            break;
+                        }
+                        case "CREATE_TOURNAMENT": {
+                            controller.createTournament(clientMessage);
+                            break;
+                        }
+                        case "TOURNAMENT_PLAYER_DATA": {
+                            controller.joinTournament(clientMessage);
+                            break;
+                        }
                     }
-                    case "GUESS_RESULT": {
-                        guessResult = Integer.parseInt(clientMessage[1]);
-                        break;
+                } else {
+                    switch (clientMessage[0]) {
+                        case "LOGIN_VALID":
+                        case "SIGNUP_VALID": {
+                            loggedIn = true;
+                            break;
+                        }
+                        case "CLIENT_DATA": {
+                            //System.out.println(Arrays.toString(clientMessage));
+                            stats = new PlayerStats(clientMessage[1], clientMessage[2], clientMessage[3], clientMessage[4],
+                                    clientMessage[5], clientMessage[6], clientMessage[7], clientMessage[8], clientMessage[9]);
+                            break;
+                        }
+                        case "GAME_START": {
+                            letters = clientMessage[1];
+                            gameStart = true;
+                            break;
+                        }
+                        case "GAME_END": {
+                            System.out.println("GAME OVER!");
+                            gameResults = clientMessage;
+                            for (int i = 1; i < getGameResults().length; i+=2) {
+                                System.out.printf("Rank: %s | User: %s | Score: %s\n", (i / 2) + 1, getGameResults()[i], getGameResults()[i+1]);
+                            }
+                            sendMessage(String.format("%s\n", Server.sendMessage.CLIENT_DISCONNECT));
+                            System.exit(-1);
+                            break;
+                        }
+                        case "GUESS_RESULT": {
+                            guessResult = Integer.parseInt(clientMessage[1]);
+                            break;
+                        }
                     }
                 }
             }
+        } catch(Exception e){
+            System.out.println("client closed successfully!");
         }
     }
 
