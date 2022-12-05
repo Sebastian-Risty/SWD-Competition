@@ -1,8 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
-
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TournamentHome">
-
+<?import javafx.scene.text.Font?>
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TournamentHomeController">
+   <children>
+      <JFXTextField fx:id="joinField" layoutX="80.0" layoutY="40.0" />
+      <JFXButton layoutX="74.0" layoutY="75.0" onAction="#joinButtonListener" prefHeight="34.0" prefWidth="167.0" text="Join Tournament">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </JFXButton>
+      <JFXTextField fx:id="createField" layoutX="361.0" layoutY="40.0" />
+      <JFXButton layoutX="358.0" layoutY="79.0" onAction="#createButtonListener" text="Create Tournament">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </JFXButton>
+      <JFXButton layoutX="389.0" layoutY="235.0" onAction="#menuButtonListener" text="Main Menu">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </JFXButton>
+      <ScrollPane layoutX="58.0" layoutY="154.0" prefHeight="200.0" prefWidth="200.0">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <ListView fx:id="tournamentList" prefHeight="200.0" prefWidth="200.0"/>
+               </children>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
+      <JFXTextField layoutX="71.0" layoutY="122.0" promptText="Available Tournaments">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </JFXTextField>
+   </children>
 </AnchorPane>

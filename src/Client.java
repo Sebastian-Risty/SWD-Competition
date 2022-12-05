@@ -126,6 +126,9 @@ class Client implements Runnable {
                         controller.signUpInvalid();
                         break;
                     }
+                    case "TOURNAMENT_DATA": {
+                        controller.updateTournament(clientMessage);
+                    }
                     case "GAME_START": {
                         letters = clientMessage[1];
                         controller.gameStart();
@@ -241,7 +244,8 @@ class Client implements Runnable {
         SIGNUP_VALID,   //
         SIGNUP_INVALID, //
         GAME_START, //
-        GUESS_RESULT,   // [1] -> score received from guess
+        GUESS_RESULT, // [1] -> score received from guess
+        TOURNAMENT_DATA,
         GAME_END,        // [1] -> (bool)hasWon, winningUsername,
         TIMER_UPDATE,
         PLAYER_COUNT_UPDATE, // [1] -> numPlayers in match
