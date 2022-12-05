@@ -73,7 +73,8 @@ class Server {
      */
     public enum gameMode {
         ONE_VS_ONE,
-        BATTLE_ROYAL
+        BATTLE_ROYAL,
+        TOURNAMENT
     }
 
     /**
@@ -306,12 +307,13 @@ class Server {
                                     synchronized (lobbies) {
                                         for (Game game : lobbies.keySet()) {
                                             if (game.getGamemode().equals("Tournament") && !game.isInProgress()) { // client joins open game if possible
-                                                // add client
-                                                lobbies.get(game).add(client);
-                                                System.out.println("ADDED CLIENT TO GAME");
-                                                client.currentLobby = game;
-                                                game.clientConnected();
-                                                break;
+                                                if (lobbies.get(game).get(0).currentTournament == client.currentTournament) {
+                                                    lobbies.get(game).add(client);
+                                                    System.out.println("ADDED CLIENT TO GAME");
+                                                    client.currentLobby = game;
+                                                    game.clientConnected();
+                                                    break;
+                                                }
                                             }
                                         }
                                     }
