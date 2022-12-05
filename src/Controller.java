@@ -59,15 +59,15 @@ public class Controller {
      */
     private static Parent root;
 
-    public static String getTournamentData() {
+    public static String[] getTournamentData() {
         return tournamentData;
     }
 
-    public static void setTournamentData(String tournamentData) {
+    public static void setTournamentData(String[] tournamentData) {
         Controller.tournamentData = tournamentData;
     }
 
-    private static String tournamentData;
+    private static String[] tournamentData;
     /**
      * Getter method for playerStats
      * @return the playerStats reference
