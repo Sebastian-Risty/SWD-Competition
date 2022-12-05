@@ -560,7 +560,7 @@ class Server {
                         }
                     } // TODO: on window close send command to server saying it close and then flip flag inside this run to then break form loop d then hit finally block so account is removed or smthn
                     catch (Exception e) {
-                        System.out.println("BAD INPUT RECEIVED");
+                        e.printStackTrace();
                     }
                 }
             } catch (IOException | SQLException e) {
