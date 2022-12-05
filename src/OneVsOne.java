@@ -3,6 +3,7 @@ import java.io.File;
 /**
  * Represents specific rules for head on head matches
  */
+@SuppressWarnings({"BusyWait", "StatementWithEmptyBody"})
 public class OneVsOne extends Game {
 
     /**

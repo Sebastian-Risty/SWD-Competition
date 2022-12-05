@@ -3,6 +3,7 @@ import java.io.File;
 /**
  * Represents specific rules for BR matches
  */
+@SuppressWarnings({"BusyWait", "StatementWithEmptyBody"})
 public class BattleRoyale extends Game {
     /**
      * BattleRoyale constructor

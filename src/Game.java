@@ -8,6 +8,7 @@ import java.util.Collections;
 /**
  * Game contains the base implementation of a match. Subclasses contain specific rule sets for the game mode
  */
+
 public abstract class Game implements Runnable {
     /**
      *  The list of words that can be used to generate the first part of letter scrambles.
