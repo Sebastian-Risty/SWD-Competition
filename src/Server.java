@@ -339,7 +339,7 @@ class Server {
     }
 
     /**
-     *
+     *  Handles game state and communicates it with clients within said game
      */
     private static class MatchHandler implements Runnable {
         @Override
@@ -429,26 +429,89 @@ class Server {
         }
     }
 
+    /**
+     * Server representation of a connected client, contains temporary stats before uploading to database.
+     * Handles input and output streams for communication between server and client.
+     *
+     */
     private static class ConnectedClient implements Runnable, Comparable<ConnectedClient> {
+        /**
+         * Client socket
+         */
         private final Socket clientSocket;
+        /**
+         * Clients username used to log in
+         */
         private String username = null;
+        /**
+         * The game mode the client is requesting to be placed into
+         */
         private String requestedGame = null;
+        /**
+         * The reference to the game lobby that the client was placed into
+         */
         private Game currentLobby = null;
+        /**
+         * The tournament that the client is currently in
+         */
         private Tournament currentTournament = null;
+        /**
+         * The clients current score in the game they are in, used to determine the winner of the match
+         */
         private int currentScore = 0;
+        /**
+         * The total number of wins in all game modes
+         */
         private int totalWins = 0;
+        /**
+         * The total number of games played in all game modes
+         */
         private int totalGamesPlayed = 0;
+        /**
+         * The total number of wins from head on head matches
+         */
         private int OVOWins = 0;
+        /**
+         * The total number of head on head matches played
+         */
         private int OVOGamesPlayed = 0;
+        /**
+         * The total number of battle royale matches won
+         */
         private int BRWins = 0;
+        /**
+         * The total number of battle royale matches played
+         */
         private int BRGamesPlayed = 0;
+        /**
+         * The number of tournaments won
+         */
         private int tourneyWins = 0;
+        /**
+         * The number of tournament matches played
+         */
         private int tourneyGamesPlayed = 0;
+        /**
+         * Used to store stats about tournaments before being uploaded to DB
+         */
         private TournamentStats tournamentStats;
+        /**
+         * Used to send message commands to the Clients
+         * @see Client
+         */
 
         private Formatter output;
+        /**
+         * Used to accept message commands from Clients
+         * @see Client
+         */
         private Scanner input;
 
+        /**
+         * Creates input and output streams to Client
+         * @param socket The clients socket
+         * @see Client
+         */
         public ConnectedClient(Socket socket) {
             this.clientSocket = socket;
 
@@ -460,9 +523,13 @@ class Server {
             }
         }
 
+        /**
+         * @return comma delimited string of client stats
+         */
         private String getStatString() {
             return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s", username, totalWins, totalGamesPlayed, OVOWins, OVOGamesPlayed, BRWins, BRGamesPlayed, tourneyWins, tourneyGamesPlayed);
         }
+
 
         private String getTournamentData() {
             StringBuilder sb = new StringBuilder();
@@ -489,6 +556,9 @@ class Server {
             return sb.toString();
         }
 
+        /**
+         * Handles message commands sent from client
+         */
         @Override
         public void run() {
             try {
@@ -631,6 +701,11 @@ class Server {
             }
         }
 
+        /**
+         * Waits until a log in request is received before loading client data and allowing access to main menu
+         * @throws IOException  If there are thread interrupts.
+         * @throws SQLException If there are database errors.
+         */
         private void init() throws IOException, SQLException {
             System.out.println("START INIT");
             Database.initialize("Login");
@@ -687,6 +762,10 @@ class Server {
             }
         }
 
+        /**
+         * Helper function that receives data from database and loads it into appropriate fields
+         * @param data [1] -> userName, total wins, T GamePlayed, OVO wins, OVO GP, BR wins, BR GP, T wins, T GP
+         */
         private void acceptAccountData(String[] data) {
             username = data[0];
             totalWins = Integer.parseInt(data[1]);
@@ -699,12 +778,21 @@ class Server {
             tourneyGamesPlayed = Integer.parseInt(data[8]);
         }
 
-        // [1] -> userName, total wins, T GamePlayed, OVO wins, OVO GP, BR wins, BR GP, T wins, T GP
+        /**
+         * Sends account data to database to be stored. Utilizes getStatString() to get data.
+         * @throws SQLException If there is a database error
+         * @throws FileNotFoundException If the connection to the database fails
+         */
         private void sendAccountData() throws SQLException, FileNotFoundException {
             Database.setTable("Accounts");
             Database.update(getStatString().split(","));
         }
 
+        /**
+         * Used to order the results of game to later be sent to client to display
+         * @param connectedClient The other client to compare to
+         * @return The client with the greater current score
+         */
         @Override
         public int compareTo(ConnectedClient connectedClient) {
             return connectedClient.currentScore - this.currentScore;
