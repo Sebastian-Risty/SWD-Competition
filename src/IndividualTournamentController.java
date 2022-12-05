@@ -35,7 +35,6 @@ public class IndividualTournamentController extends Controller {
     private boolean readiedUp;
 
     public void initialize() {
-
         readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         mainMenuButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
 
@@ -51,15 +50,14 @@ public class IndividualTournamentController extends Controller {
                 addToLeaderBoardPane(String.valueOf(((i - 1) / 3) + 1), getTournamentData()[i], getTournamentData()[i + 1], getTournamentData()[i + 2]);
             }
         }
-
-        // username, wins, gamesleft
-
     }
 
 
     @FXML
     void mainMenuButtonListener(ActionEvent event) throws IOException {
-        switchScene("homeScreenFXML.fxml", "Main Menu");
+        if (!readiedUp) {
+            switchScene("homeScreenFXML.fxml", "Main Menu");
+        }
     }
 
     @FXML
@@ -83,11 +81,6 @@ public class IndividualTournamentController extends Controller {
             gameModeFeedback.setText("");
             readiedUp = false;
         }
-    }
-
-    public void initialize() {
-        readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
-        mainMenuButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
     }
 
     private int getNumOnLeaderboardPane() {
