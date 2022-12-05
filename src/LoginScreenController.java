@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXRippler;
 import com.jfoenix.controls.JFXTextField;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
@@ -12,18 +13,29 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import java.io.IOException;
-
+/**
+ * LoginScreenController class that derives from Controller and controls the login JavaFX screen
+ * @see Controller
+ */
 public class LoginScreenController extends Controller {
+    /**
+     * Member variable for the rippler that ripples to let the user know if the login was invalid
+     */
     @FXML
     private JFXRippler verifyRippler;
+    /**
+     * Member variable for the passwordField
+     */
     @FXML
     private JFXPasswordField passwordField;
+    @FXML
+    private Label loginFeedback;
     @FXML
     private JFXTextField usernameField;
     @FXML
     private Pane pane;
     @FXML
-    private GridPane gridPane;
+    private Pane parentPane;
     @FXML
     private JFXButton enterButton;
 
@@ -31,11 +43,10 @@ public class LoginScreenController extends Controller {
         // create a client
         setClient(new Client(getIp(), getPort()));
         getClient().setController(this);
-
         enterButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         verifyRippler = new JFXRippler(pane);
         verifyRippler.setRipplerFill(new Color(1, 0, 0, 0));
-        gridPane.getChildren().add(verifyRippler);
+        parentPane.getChildren().add(verifyRippler);
         usernameField.requestFocus();
     }
 
@@ -74,9 +85,10 @@ public class LoginScreenController extends Controller {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                gridPane.getChildren().remove(5);
+                loginFeedback.setText("Invalid Login or user is already logged in");
+                pane.getChildren().remove(0);
                 verifyRippler = new JFXRippler(pane);
-                gridPane.getChildren().add(verifyRippler);
+                parentPane.getChildren().add(verifyRippler);
                 verifyRippler.setRipplerFill(new Color(1, 0, 0, 0));
                 verifyRippler.createManualRipple();
             }
