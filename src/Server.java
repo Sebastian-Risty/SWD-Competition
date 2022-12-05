@@ -650,6 +650,7 @@ class Server {
                                                 for (TournamentStats stats : tournaments.get(tournament)) {
                                                     if (stats.getUsername().equals(username)) {
                                                         tempFlag = true;
+                                                        break;
                                                     }
                                                 }
                                                 if (!tempFlag) {
