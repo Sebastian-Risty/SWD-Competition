@@ -372,7 +372,7 @@ public class Database {
             if (Objects.equals(table, "mastertournament")) { // updating timestarted
                 statement.executeUpdate("UPDATE mastertournament SET " + metaData.getColumnName(i) + " = '" + data[i - 1] + "' WHERE tournamentid = '" + data[0] + "';");
             } else if (i == 3 && (!Objects.equals(table,"Accounts") && !Objects.equals(table,"Test") && !Objects.equals(table,"mastertournament") && !Objects.equals(table,"Login"))) { // changing gamesLeft
-                statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = '" + data[i - 1] + "' WHERE gamesleft = '" + data[0] + "';");
+                statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = '" + data[i - 1] + "' WHERE username = '" + data[0] + "';");
             } else if ((Objects.equals(table, "Test") || Objects.equals(table, "Login")) && i == 2) // changing a password
                 statement.executeUpdate("UPDATE " + table + " SET " + metaData.getColumnName(i) + " = '" + Encryptor.shiftMessage(data[i - 1], keyInfo, false) + "' WHERE username = '" + data[0] + "';");
             else // changing any column other than the username or password (all other columns are integers)
