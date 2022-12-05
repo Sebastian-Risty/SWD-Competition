@@ -89,7 +89,7 @@ public class TournamentHomeController extends Controller {
             });
         }
         else {
-            parentPane.getChildren().remove(7);
+            parentPane.getChildren().remove(0);
             verifyRippler = new JFXRippler(ripplerPane);
             parentPane.getChildren().add(verifyRippler);
             verifyRippler.setRipplerFill(new Color(1, 0, 0, 0));
@@ -112,7 +112,7 @@ public class TournamentHomeController extends Controller {
                     }
                 }
                 else {
-                    parentPane.getChildren().remove(7);
+                    parentPane.getChildren().remove(0);
                     verifyRippler = new JFXRippler(ripplerPane);
                     parentPane.getChildren().add(verifyRippler);
                     verifyRippler.setRipplerFill(new Color(1, 0, 0, 0));

@@ -1,8 +1,12 @@
+import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 
 import java.io.IOException;
 
@@ -12,6 +16,16 @@ public class IndividualTournamentController extends Controller {
     private GridPane leaderboardPane;
     @FXML
     private GridPane userPane;
+    @FXML
+    private JFXButton startButton;
+
+    @FXML
+    private JFXButton mainMenuButton;
+
+    public void initialize() {
+        startButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+        mainMenuButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+    }
 
     @FXML
     public void startButtonListener(){
