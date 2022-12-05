@@ -107,7 +107,7 @@ class Server {
                     }
                     break;
                 default:
-                    server = new ServerSocket(23720);
+                    server = new ServerSocket(23704);
             }
             server.setReuseAddress(true);
 
