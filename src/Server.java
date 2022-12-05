@@ -8,7 +8,10 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
+/**
+ * Server handles client connections, matchmaking, match handling, and backing up data to database.
+ */
+@SuppressWarnings({"BusyWait"})
 class Server {
     /**
      * Network socket the server will use
