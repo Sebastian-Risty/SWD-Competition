@@ -4,6 +4,10 @@ public class TournamentGame extends OneVsOne {
 
     String tournamentName;
 
+    public String getTournamentName() {
+        return tournamentName;
+    }
+
     public TournamentGame(int matchTime, File filePath, int fileIndex, String tournamentName) {
         super(matchTime, filePath, fileIndex);
         setGamemode("Tournament");
@@ -16,7 +20,27 @@ public class TournamentGame extends OneVsOne {
         this.tournamentName = tournamentName;
     }
 
-    public String getTournamentName() {
-        return tournamentName;
+    @Override
+    public void pregameLobby() throws InterruptedException {
+        while (!isInProgress()) {
+            Thread.sleep(10);
+            if (getNumConnectedClients() == 2) {
+                System.out.println("CHANGED FLAG");
+                changeProgressFlag();
+                changeStartFlag();
+                startGame();
+            }
+        }
+    }
+
+    @Override
+    public void startGame() {
+        if (!isFinished()) {
+            System.out.println("STARTING MATCH TIMER");
+            long startTime = System.currentTimeMillis();
+            while (((System.currentTimeMillis() - startTime) / 1000) < getMatchTime()) ;
+            System.out.println("MATCH ENDED");
+            changeEndFlag();
+        }
     }
 }

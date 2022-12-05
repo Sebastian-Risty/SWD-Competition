@@ -34,9 +34,7 @@ public class BattleRoyale extends Game {
     public void startGame() {
         setPreGameLobbyFlag(false);
         long startTime = System.currentTimeMillis();
-        System.out.println("STARTING GAME TIMER");
         while (((System.currentTimeMillis() - startTime) / 1000) < getMatchTime()) ;
-        System.out.println("GAME FINISHED");
         changeEndFlag();
     }
 }
