@@ -21,12 +21,16 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
     private boolean startFlag = false;
     private int numConnectedClients = 0;
     private int countDownTime;
-    private boolean preGameLobbyFlag = false;
+    private volatile boolean preGameLobbyFlag = false;
     private long lobbyStartTime;
     private int matchTime;
 
     public int getMatchTime() {
         return matchTime;
+    }
+
+    public boolean getPreGameLobbyFlag() {
+        return preGameLobbyFlag;
     }
 
     public void setPreGameLobbyFlag(boolean preGameLobbyFlag) {

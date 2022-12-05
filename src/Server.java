@@ -214,6 +214,9 @@ class Server {
                 // loop through client list
                 synchronized (clients) {
                     for (ConnectedClient client : clients) {
+//                        System.out.println("USERNAME: " + client.username);
+//                        System.out.println("RG: " + client.requestedGame);
+//                        System.out.println("CL: " + client.currentLobby);
                         // HANDLE LOBBY REQUESTS
                         if (client.requestedGame != null) {
                             switch (client.requestedGame) {
@@ -356,94 +359,99 @@ class Server {
             while (!server.isClosed()) {
                 synchronized (lobbies) {
                     for (Game lobby : lobbies.keySet()) {
-                        if (lobby.hasStarted()) { // START GAME
-                            for (ConnectedClient client : lobbies.get(lobby)) {
-                                client.output.format(String.format("%s,%s\n", Client.sendMessage.GAME_START, lobby.getLetters().toString().replaceAll("[], \\[]", "")));
-                                client.output.flush();
-                                client.output.format(String.format("%s,%s,%s\n", Client.sendMessage.TIMER_UPDATE, System.currentTimeMillis(), lobby.getMatchTime()));
-                                client.output.flush();
-                            }
-                            lobby.changeStartFlag();
-                        }
-
-                        if (lobby.isFinished()) { // END GAME
-                            List<ConnectedClient> sortedClients = lobbies.get(lobby);
-                            Collections.sort(sortedClients);
-
-                            StringBuilder sb = new StringBuilder();
-
-                            sb.append(Client.sendMessage.GAME_END).append(',');
-
-                            for (ConnectedClient client : sortedClients) {
-                                sb.append(client.username).append(',').append(client.currentScore).append(',');
-                            }
-
-
-                            sb.delete(sb.length() - 1, sb.length()).append("\n");
-
-                            String temp = sb.toString();
-
-                            System.out.println(temp);
-
-                            if (sortedClients.get(0).currentScore > sortedClients.get(1).currentScore) {
-                                sortedClients.get(0).totalWins++;
-                                switch (lobby.getGamemode()) {
-                                    case "OneVsOne":
-                                        sortedClients.get(0).OVOWins++;
-                                        break;
-                                    case "BattleRoyale":
-                                        sortedClients.get(0).BRWins++;
-                                        break;
-                                    case "Tournament":
-                                        List<TournamentStats> statsList = tournaments.get(sortedClients.get(0).currentTournament);
-                                        for (TournamentStats stats : statsList) {
-                                            if (sortedClients.get(0).username.equals(stats.getUsername())) {
-                                                stats.setTournamentWins(stats.getTournamentWins() + 1);
-                                            }
-                                        }
-                                        break;
+                        System.out.println(lobby);
+                        if (lobby.getNumConnectedClients() == 0) {
+                            lobby.setPreGameLobbyFlag(false);
+                            lobbies.remove(lobby);
+                        } else {
+                            if (lobby.hasStarted()) { // START GAME
+                                for (ConnectedClient client : lobbies.get(lobby)) {
+                                    client.output.format(String.format("%s,%s\n", Client.sendMessage.GAME_START, lobby.getLetters().toString().replaceAll("[], \\[]", "")));
+                                    client.output.flush();
+                                    client.output.format(String.format("%s,%s,%s\n", Client.sendMessage.TIMER_UPDATE, System.currentTimeMillis(), lobby.getMatchTime()));
+                                    client.output.flush();
                                 }
+                                lobby.changeStartFlag();
                             }
+                            if (lobby.isFinished()) { // END GAME
+                                List<ConnectedClient> sortedClients = lobbies.get(lobby);
+                                Collections.sort(sortedClients);
 
-                            for (ConnectedClient client : lobbies.get(lobby)) { // send match data
-                                client.output.format(temp);
-                                client.output.flush();
+                                StringBuilder sb = new StringBuilder();
 
-                                client.currentLobby = null;
-                                client.currentScore = 0;
-                                client.totalGamesPlayed++;
+                                sb.append(Client.sendMessage.GAME_END).append(',');
 
-                                switch (lobby.getGamemode()) {
-                                    case "OneVsOne":
-                                        client.OVOGamesPlayed++;
-                                        break;
-                                    case "BattleRoyale":
-                                        client.BRGamesPlayed++;
-                                        break;
-                                    case "Tournament":
-                                        Database.setTable(client.currentTournament.getName());
-                                        List<TournamentStats> statsList = tournaments.get(client.currentTournament);
-                                        for (TournamentStats stats : statsList) {
-                                            if (stats.getUsername().equals(client.username)) {
-                                                stats.setTournamentGamesLeft(stats.getTournamentGamesLeft() - 1);
-                                                System.out.println(stats.getTournamentGamesLeft());
-                                                try {
-                                                    Database.update(
-                                                            new String[]{stats.getUsername(),
-                                                                    String.valueOf(stats.getTournamentWins()),
-                                                                    String.valueOf(stats.getTournamentGamesLeft())});
-                                                } catch (SQLException e) {
-                                                    throw new RuntimeException(e);
+                                for (ConnectedClient client : sortedClients) {
+                                    sb.append(client.username).append(',').append(client.currentScore).append(',');
+                                }
+
+
+                                sb.delete(sb.length() - 1, sb.length()).append("\n");
+
+                                String temp = sb.toString();
+
+                                System.out.println(temp);
+
+                                if (sortedClients.get(0).currentScore > sortedClients.get(1).currentScore) {
+                                    sortedClients.get(0).totalWins++;
+                                    switch (lobby.getGamemode()) {
+                                        case "OneVsOne":
+                                            sortedClients.get(0).OVOWins++;
+                                            break;
+                                        case "BattleRoyale":
+                                            sortedClients.get(0).BRWins++;
+                                            break;
+                                        case "Tournament":
+                                            List<TournamentStats> statsList = tournaments.get(sortedClients.get(0).currentTournament);
+                                            for (TournamentStats stats : statsList) {
+                                                if (sortedClients.get(0).username.equals(stats.getUsername())) {
+                                                    stats.setTournamentWins(stats.getTournamentWins() + 1);
                                                 }
                                             }
-                                        }
-                                        break;
+                                            break;
+                                    }
                                 }
-                            }
 
-                            synchronized (lobbies) {
-                                lobbies.remove(lobby);
-                                System.out.println("Removed match from current lobbies");
+                                for (ConnectedClient client : lobbies.get(lobby)) { // send match data
+                                    client.output.format(temp);
+                                    client.output.flush();
+
+                                    client.currentLobby = null;
+                                    client.currentScore = 0;
+                                    client.totalGamesPlayed++;
+
+                                    switch (lobby.getGamemode()) {
+                                        case "OneVsOne":
+                                            client.OVOGamesPlayed++;
+                                            break;
+                                        case "BattleRoyale":
+                                            client.BRGamesPlayed++;
+                                            break;
+                                        case "Tournament":
+                                            Database.setTable(client.currentTournament.getName());
+                                            List<TournamentStats> statsList = tournaments.get(client.currentTournament);
+                                            for (TournamentStats stats : statsList) {
+                                                if (stats.getUsername().equals(client.username)) {
+                                                    stats.setTournamentGamesLeft(stats.getTournamentGamesLeft() - 1);
+                                                    System.out.println(stats.getTournamentGamesLeft());
+                                                    try {
+                                                        Database.update(
+                                                                new String[]{stats.getUsername(),
+                                                                        String.valueOf(stats.getTournamentWins()),
+                                                                        String.valueOf(stats.getTournamentGamesLeft())});
+                                                    } catch (SQLException e) {
+                                                        throw new RuntimeException(e);
+                                                    }
+                                                }
+                                            }
+                                            break;
+                                    }
+                                }
+
+                                synchronized (lobbies) {
+                                    lobbies.remove(lobby);
+                                    System.out.println("Removed match from current lobbies");
+                                }
                             }
                         }
                     }
@@ -687,15 +695,20 @@ class Server {
                                 Thread.currentThread().interrupt();
                                 break;
                             case "CANCEL_MM":
-                                System.out.println("CLIENT CANCELED MM");
-                                this.requestedGame = null;
-                                if(this.currentLobby != null){
-                                    lobbies.get(this.currentLobby).remove(this);
+                                synchronized (lobbies) {
+                                    System.out.println("CLIENT CANCELED MM");
+                                    this.requestedGame = null;
+                                    for (ConnectedClient client : lobbies.get(this.currentLobby)) {
+                                        if (client != this) {
+                                            client.output.format(String.format("%s,%s\n", Client.sendMessage.PLAYER_COUNT_UPDATE, (this.currentLobby.getNumConnectedClients())));
+                                            client.output.flush();
+                                        }
+                                    }
                                     this.currentLobby.clientDisconnected();
                                     this.currentLobby = null;
                                 }
                                 break;
-                            }
+                        }
                         }
                      catch(Exception e){
                          e.printStackTrace();

@@ -6,6 +6,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+
 import java.io.IOException;
 
 /**
@@ -147,6 +148,7 @@ public class HomeScreenController extends Controller {
                 // Send client the mode the user selected
                 getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.MODE_SELECTION, Server.gameMode.BATTLE_ROYAL));
                 // Set the labels on the screen while waiting to connect to the game
+                gameStatus.setTextFill(Color.BLACK);
                 gameStatus.setText("Connecting to Game...");
                 gameStatus.setText("Waiting for Players");
                 readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
@@ -157,6 +159,7 @@ public class HomeScreenController extends Controller {
                 // send user's mode selection to server
                 getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.MODE_SELECTION, Server.gameMode.ONE_VS_ONE));
                 // Edit the labels while waiting to connect to the game
+                gameStatus.setTextFill(Color.BLACK);
                 gameStatus.setText("Connecting to Game...");
                 gameStatus.setText("Waiting for a Match");
                 readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
