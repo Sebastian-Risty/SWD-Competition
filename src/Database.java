@@ -189,8 +189,8 @@ public class Database {
 
     }
 
-    public static String[] getUsers(String tournament) throws SQLException {
-        resultSet = statement.executeQuery("SELECT username FROM " + tournament);
+    public static String[] getUserData(String tournament) throws SQLException {
+        resultSet = statement.executeQuery("SELECT * FROM " + tournament);
         metaData = resultSet.getMetaData();
         return getHelper(metaData);
     }

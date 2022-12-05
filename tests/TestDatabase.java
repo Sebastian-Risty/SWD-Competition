@@ -93,7 +93,7 @@ public class TestDatabase {
         Database.addToTournament("Matt", "testtournament");
         Database.addToTournament("Sam", "testtournament");
         Database.addToTournament("Cole", "testtournament");
-        System.out.println(Arrays.toString(Database.getUsers("testtournament")));
+        System.out.println(Arrays.toString(Database.getUserData("testtournament")));
         Database.removeFromTournament("Sebastian", "testtournament");
 //        System.out.println(Arrays.toString(Database.getInfo("Matt")));
 
