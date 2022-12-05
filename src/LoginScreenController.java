@@ -13,7 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import java.io.IOException;
 
-public class LoginFXMLController extends Controller {
+public class LoginScreenController extends Controller {
     @FXML
     private JFXRippler verifyRippler;
     @FXML
@@ -33,7 +33,6 @@ public class LoginFXMLController extends Controller {
         getClient().setController(this);
 
         enterButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
-
         verifyRippler = new JFXRippler(pane);
         verifyRippler.setRipplerFill(new Color(1, 0, 0, 0));
         gridPane.getChildren().add(verifyRippler);
@@ -75,6 +74,10 @@ public class LoginFXMLController extends Controller {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
+                gridPane.getChildren().remove(5);
+                verifyRippler = new JFXRippler(pane);
+                gridPane.getChildren().add(verifyRippler);
+                verifyRippler.setRipplerFill(new Color(1, 0, 0, 0));
                 verifyRippler.createManualRipple();
             }
         });

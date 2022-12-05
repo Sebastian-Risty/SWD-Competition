@@ -5,9 +5,8 @@ import java.util.Formatter;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
-@SuppressWarnings({"BooleanMethodIsAlwaysInverted"})
+@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 class Client implements Runnable {
     private boolean textMode = false;
     private final String ip;
@@ -130,6 +129,10 @@ class Client implements Runnable {
                         controller.signUpInvalid();
                         break;
                     }
+                    case "TOURNAMENT_DATA": {
+                        controller.updateTournament(clientMessage);
+                        break;
+                    }
                     case "GAME_START": {
                         letters = clientMessage[1];
                         controller.gameStart();
@@ -149,14 +152,24 @@ class Client implements Runnable {
                         break;
                     }
                     case "PLAYER_COUNT_UPDATE": {
+                        controller.updatePlayersConnected(Integer.parseInt(clientMessage[1]));
                         break;
                     }
-                    case "SHUTDOWN":
+                    case "SHUTDOWN": {
                         System.out.println("CALLING SYS EXIT");
                         System.exit(-1);
                         break;
+                    }
+                    case "CREATE_TOURNAMENT": {
+                        controller.createTournament(clientMessage);
+                        break;
+                    }
+                    case "JOIN_TOURNAMENT": {
+                        controller.joinTournament(clientMessage);
+                        break;
+                    }
                 }
-            } else {
+                } else {
                 switch (clientMessage[0]) {
                     case "LOGIN_VALID":
                     case "SIGNUP_VALID": {
@@ -230,7 +243,10 @@ class Client implements Runnable {
         SIGNUP_VALID,   //
         SIGNUP_INVALID, //
         GAME_START, //
-        GUESS_RESULT,   // [1] -> score received from guess
+        GUESS_RESULT, // [1] -> score received from guess
+        TOURNAMENT_DATA,
+        TOURNAMENT_PLAYER_DATA,
+        CREATE_TOURNAMENT,
         GAME_END,        // [1] -> (bool)hasWon, winningUsername,
         TIMER_UPDATE,
         PLAYER_COUNT_UPDATE, // [1] -> numPlayers in match

@@ -6,7 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import java.io.IOException;
 
-public class gameResultsController extends Controller {
+public class GameResultsController extends Controller {
 
     @FXML
     private ListView<String> leaderboardList;
@@ -26,7 +26,6 @@ public class gameResultsController extends Controller {
             @Override
             public void run() {
                 ObservableList<String> resultsList = FXCollections.observableArrayList();
-                resultsList.add("USERNAME  :  SCORE");
                 System.out.println("Player " + getPlayer().getUsername());
                 for (int i = 1; i < results.length - 1; i += 2) {
                     String name = results[i];
