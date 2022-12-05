@@ -6,7 +6,7 @@ import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
 
-public class StatsPageController extends Controller {
+public class IndividualTournamentController extends Controller {
 
     @FXML
     private GridPane leaderboardPane;

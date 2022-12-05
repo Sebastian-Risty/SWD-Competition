@@ -6,8 +6,8 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class HomeScreenController extends Controller {
     @FXML
@@ -167,7 +167,7 @@ public class HomeScreenController extends Controller {
     void tournamentModeListener() {
         if(!readiedUp) {
             try {
-                switchScene("StatsPage.fxml", "Tournament Home");
+                switchScene("IndividualTournament.fxml", "Tournament Home");
             } catch (IOException e) {
                 gameModeFeedback.setText("Could not Open Tournament Mode");
             }
@@ -204,14 +204,21 @@ public class HomeScreenController extends Controller {
             }
         });
     }
-    @Override
-    public void updateMatchCountDown(int time) {
-        gameModeFeedback.setText(time + " seconds until game starts");
-    }
+
     @Override
     public void updatePlayersConnected(int numPlayers) {
-        if(numPlayers > 2) {
+        if (numPlayers > 2) {
             connectedPlayersLabel.setText("Players connected: " + numPlayers);
         }
+    }
+
+    @Override
+    public void updateTimer(int time) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                gameModeFeedback.setText("Time: " + time);
+            }
+        });
     }
 }
