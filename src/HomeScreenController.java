@@ -209,8 +209,11 @@ public class HomeScreenController extends Controller {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                if (numPlayers > 2) {
+                if(readiedUp) {
                     gameStatus.setText("Players connected: " + numPlayers);
+                    if(numPlayers < 3) {
+                        gameModeFeedback.setText("Waiting for players");
+                    }
                 }
             }
         });
@@ -221,7 +224,10 @@ public class HomeScreenController extends Controller {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                gameModeFeedback.setText("Time: " + time);
+                if(readiedUp) {
+                    gameModeFeedback.setText("Time: " + time);
+
+                }
             }
         });
     }
