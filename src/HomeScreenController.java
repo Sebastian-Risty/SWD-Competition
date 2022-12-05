@@ -69,9 +69,9 @@ public class HomeScreenController extends Controller {
     @FXML
     void readyUpListener() {
 
-        if(!readiedUp) {
+        if (!readiedUp) {
             logOutButton.setText("");
-        if (battleRoyale.getBackground().getFills().get(0).getFill().equals(Color.LIGHTBLUE)) {
+            if (battleRoyale.getBackground().getFills().get(0).getFill().equals(Color.LIGHTBLUE)) {
                 // Send client the mode the user selected
                 getClient().sendMessage(String.format("%s,%s\n", Server.sendMessage.MODE_SELECTION, Server.gameMode.BATTLE_ROYAL));
                 // Set the labels on the screen while waiting to connect to the game
@@ -95,10 +95,10 @@ public class HomeScreenController extends Controller {
                 gameStatus.setText("Select a Game Mode");
                 gameStatus.setTextFill(Color.RED);
             }
-        }
-        else {
+        } else {
             // send cancel message to server
             getClient().sendMessage(String.format("%s\n", Server.sendMessage.CANCEL_MM));
+            getClient().stopTimer();
             readyUp.setText("Ready Up!");
             logOutButton.setText("Log Out");
             readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, null, null)));
@@ -112,7 +112,7 @@ public class HomeScreenController extends Controller {
 
     @FXML
     void h2hListener() {
-        if(!readiedUp) {
+        if (!readiedUp) {
             gameStatus.setText("");
             battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
             h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
@@ -121,7 +121,7 @@ public class HomeScreenController extends Controller {
 
     @FXML
     void battleRoyaleListener() {
-        if(!readiedUp) {
+        if (!readiedUp) {
             gameStatus.setText("");
             h2hMode.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
             battleRoyale.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
@@ -130,7 +130,7 @@ public class HomeScreenController extends Controller {
 
     @FXML
     void logOutListener() {
-        if(!readiedUp) {
+        if (!readiedUp) {
             logout = true;
             logOutButton.setText("Are You Sure?");
             logoutConfirmationNo.setText("No");
@@ -140,20 +140,20 @@ public class HomeScreenController extends Controller {
 
     @FXML
     void logOutConfirmationYesListener() {
-        if(logout) {
+        if (logout) {
             try {
                 getClient().sendMessage(String.format("%s\n", Server.sendMessage.LOGOUT_REQUEST));
                 setPlayer(null);
                 switchScene("LoginFXML.fxml", "Log In");
-            }
-            catch(IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
+
     @FXML
     void logOutConfirmationNoListener() {
-        if(logout) {
+        if (logout) {
             logOutButton.setText("Log Out");
             logoutConfirmationNo.setText("");
             logoutConfirmationYes.setText("");
@@ -163,7 +163,7 @@ public class HomeScreenController extends Controller {
 
     @FXML
     void tournamentModeListener() {
-        if(!readiedUp) {
+        if (!readiedUp) {
             try {
                 switchScene("TournamentHomeFXML.fxml", "Tournament Home");
             } catch (IOException e) {

@@ -303,7 +303,8 @@ class Server {
                                     }
                                     break;
                                 }
-                                case "Tournament": {
+                                case "TOURNAMENT": {
+                                    System.out.println("IN TOURNAMENT CREATOR");
                                     synchronized (lobbies) {
                                         for (Game game : lobbies.keySet()) {
                                             if (game.getGamemode().equals("Tournament") && !game.isInProgress()) { // client joins open game if possible
@@ -382,6 +383,8 @@ class Server {
 
                             String temp = sb.toString();
 
+                            System.out.println(temp);
+
                             if (sortedClients.get(0).currentScore > sortedClients.get(1).currentScore) {
                                 sortedClients.get(0).totalWins++;
                                 switch (lobby.getGamemode()) {
@@ -398,6 +401,7 @@ class Server {
                                                 stats.setTournamentWins(stats.getTournamentWins() + 1);
                                             }
                                         }
+                                        break;
                                 }
                             }
 
@@ -407,7 +411,6 @@ class Server {
 
                                 client.currentLobby = null;
                                 client.currentScore = 0;
-                                System.out.println("Set client cur lobby to null");
                                 client.totalGamesPlayed++;
 
                                 switch (lobby.getGamemode()) {
@@ -418,10 +421,22 @@ class Server {
                                         client.BRGamesPlayed++;
                                         break;
                                     case "Tournament":
+                                        Database.setTable(client.currentTournament.getName());
                                         List<TournamentStats> statsList = tournaments.get(client.currentTournament);
                                         for (TournamentStats stats : statsList) {
-                                            stats.setTournamentGamesLeft(stats.getTournamentGamesLeft() - 1);
+                                            if (stats.getUsername().equals(client.username)) {
+                                                stats.setTournamentGamesLeft(stats.getTournamentGamesLeft() - 1);
+                                                try {
+                                                    Database.update(
+                                                            new String[]{stats.getUsername(),
+                                                                    String.valueOf(stats.getTournamentWins()),
+                                                                    String.valueOf(stats.getTournamentGamesLeft())});
+                                                } catch (SQLException e) {
+                                                    throw new RuntimeException(e);
+                                                }
+                                            }
                                         }
+                                        break;
                                 }
                             }
 

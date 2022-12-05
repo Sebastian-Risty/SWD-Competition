@@ -35,6 +35,7 @@ public class IndividualTournamentController extends Controller {
     private boolean readiedUp;
 
     public void initialize() {
+        getClient().setController(this);
         readyUp.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         mainMenuButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
 
@@ -58,6 +59,21 @@ public class IndividualTournamentController extends Controller {
         if (!readiedUp) {
             switchScene("homeScreenFXML.fxml", "Main Menu");
         }
+    }
+
+    @Override
+    public void gameStart() {
+        System.out.println("GAME START");
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    switchScene("gameFXML.fxml", "Game");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @FXML

@@ -20,6 +20,7 @@ class Client implements Runnable {
     private PlayerStats stats;
     private final ExecutorService clientExecutor = Executors.newCachedThreadPool();
     private Integer guessResult = null;
+    private TimerHandler timerHandler;
 
     // TEXTMODE STUFF
     private boolean loggedIn = false;
@@ -55,6 +56,10 @@ class Client implements Runnable {
 
     public void setController(Controller controller) {
         this.controller = controller;
+    }
+
+    public void stopTimer() {
+        timerHandler = null;
     }
 
     public void sendMessage(String message) { // MUST END WITH NEWLINE
@@ -149,7 +154,7 @@ class Client implements Runnable {
                             break;
                         }
                         case "TIMER_UPDATE": {
-                            clientExecutor.execute(new TimerHandler(this, clientMessage[1], clientMessage[2]));
+                            clientExecutor.execute(timerHandler = new TimerHandler(this, clientMessage[1], clientMessage[2]));
                             break;
                         }
                         case "PLAYER_COUNT_UPDATE": {
