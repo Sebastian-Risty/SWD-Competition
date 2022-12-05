@@ -6,8 +6,8 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class HomeScreenController extends Controller {
     @FXML
@@ -198,8 +198,14 @@ public class HomeScreenController extends Controller {
             }
         });
     }
+
     @Override
-    public void updateMatchCountDown(int time, int numPlayers) {
-        gameModeFeedback.setText(time + " seconds until game starts " + numPlayers + " connected");
+    public void updateTimer(int time) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                gameModeFeedback.setText("Time: " + time);
+            }
+        });
     }
 }

@@ -1,4 +1,4 @@
-public class TournamentStats {
+public class TournamentStats implements Comparable<TournamentStats> {
     private String username;
     private int tournamentGamesLeft;
     private int tournamentWins;
@@ -38,24 +38,17 @@ public class TournamentStats {
         this.tournamentWins = tournamentWins;
     }
 
-    public TournamentStats(int rank, String username, int tournamentWins, int tournamentGamesLeft) {
-        this.rank = rank;
-        this.username = username;
-        this.tournamentWins = tournamentWins;
-        this.tournamentGamesLeft = tournamentGamesLeft;
-    }
 
-    public TournamentStats(String username, int tournamentWins, int tournamentGamesLeft) {
+    public TournamentStats(String username, String tournamentWins, String tournamentGamesLeft) {
         this.username = username;
-        this.tournamentWins = tournamentWins;
-        this.tournamentGamesLeft = tournamentGamesLeft;
+        this.tournamentWins = Integer.parseInt(tournamentWins);
+        this.tournamentGamesLeft = Integer.parseInt(tournamentGamesLeft);
     }
 
     public TournamentStats(String username) {
         this.username = username;
         this.tournamentWins = 0;
         this.tournamentGamesLeft = 0;
-        this.rank = 0;
     }
 
 

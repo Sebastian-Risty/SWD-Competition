@@ -28,7 +28,7 @@ public class OneVsOne extends Game {
 
     @Override
     public void startGame() {
-        if(!isFinished()){
+        if (!isFinished()) {
             System.out.println("STARTING MATCH TIMER");
             long startTime = System.currentTimeMillis();
             while (((System.currentTimeMillis() - startTime) / 1000) < getMatchTime()) ;

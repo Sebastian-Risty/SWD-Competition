@@ -145,6 +145,7 @@ class Client implements Runnable {
                         break;
                     }
                     case "PLAYER_COUNT_UPDATE": {
+                        controller.update
                         break;
                     }
                     case "SHUTDOWN":

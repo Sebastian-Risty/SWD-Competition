@@ -1,4 +1,4 @@
-import java.io.*;
+import java.io.FileNotFoundException;
 import java.sql.*;
 import java.util.Objects;
 
@@ -128,7 +128,7 @@ public class Database {
         table = tournamentTable;
         resultSet = statement.executeQuery("SELECT COUNT(1) FROM " + table + " WHERE username = '" + usernameInp + "';");
         if (!inDB(resultSet)) {
-            statement.executeUpdate("INSERT INTO " + table + "(username,wins,ranking) VALUES ('" + usernameInp + "', 0, '" + (countRows(tournamentTable) + 1) + "');");
+            statement.executeUpdate("INSERT INTO " + table + "(username,wins,gamesleft) VALUES ('" + usernameInp + "', 0, '5');");
             updateData();
             return true;
         }
@@ -156,7 +156,7 @@ public class Database {
                 "(\n" +
                 "    Username varchar(50) NOT NULL PRIMARY KEY ,\n" +
                 "    Wins int NOT NULL DEFAULT 0,\n" +
-                "    Ranking varchar(50) NOT NULL\n" +
+                "    GamesLeft varchar(50) NOT NULL DEFAULT '5'\n" +
                 ");");
         statement.executeUpdate("INSERT INTO mastertournament (tournamentid, timestarted) VALUES ('" + tableName + "', " + timeStarted + ");");
         table = "mastertournament";
@@ -183,14 +183,18 @@ public class Database {
         if (!Objects.equals(table, "mastertournament"))
             resultSet = statement.executeQuery("SELECT * FROM " + table + " WHERE username = '" + username + "';");
         else
-            resultSet = statement.executeQuery("SELECT * FROM mastertournament"); //  WHERE tournamentid = '" + username + "';
+            try {
+                resultSet = statement.executeQuery("SELECT * FROM mastertournament"); //  WHERE tournamentid = '" + username + "';
+            } catch (NullPointerException e) {
+                return new String[0];
+            }
         metaData = resultSet.getMetaData();
         return getHelper(metaData);
 
     }
 
-    public static String[] getUsers(String tournament) throws SQLException {
-        resultSet = statement.executeQuery("SELECT username FROM " + tournament);
+    public static String[] getUserData(String tournament) throws SQLException {
+        resultSet = statement.executeQuery("SELECT * FROM " + tournament);
         metaData = resultSet.getMetaData();
         return getHelper(metaData);
     }
