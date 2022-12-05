@@ -151,17 +151,16 @@ class Client implements Runnable {
                         controller.updatePlayersConnected(Integer.parseInt(clientMessage[1]));
                         break;
                     }
-                    case "SHUTDOWN":
-                        clientExecutor.shutdown();
-                        try {
-                            if (!clientExecutor.awaitTermination(2, TimeUnit.SECONDS)) {
-                                System.out.println("shutdown failed, forcing.");
-                                clientExecutor.shutdownNow();
-                            }
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
+                    case "SHUTDOWN": {
+                       shutDown();
                         break;
+                    }
+                    case "CREATE_TOURNAMENT": {
+                        controller.createTournament();
+                    }
+                    case "JOIN_TOURNAMENT": {
+                        controller.joinTournament();
+                    }
                 }
             } else {
                 switch (clientMessage[0]) {
@@ -191,19 +190,23 @@ class Client implements Runnable {
                         break;
                     }
                     case "SHUTDOWN": {
-                        clientExecutor.shutdown();
-                        try {
-                            if (!clientExecutor.awaitTermination(2, TimeUnit.SECONDS)) {
-                                System.out.println("shutdown failed, forcing.");
-                                clientExecutor.shutdownNow();
-                            }
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
+                        shutDown();
                         break;
                     }
                 }
             }
+        }
+    }
+
+    private void shutDown(){
+        clientExecutor.shutdown();
+        try {
+            if (!clientExecutor.awaitTermination(2, TimeUnit.SECONDS)) {
+                System.out.println("shutdown failed, forcing.");
+                clientExecutor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
