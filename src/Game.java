@@ -141,7 +141,7 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
         readAllWords();
         selectedWord = wordsToChooseFrom.get(fileIndex);
         generateLetters();
-        Collections.sort(letters);
+        //Collections.sort(letters);
         findValidWords();
     }
 
@@ -179,7 +179,7 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
 
     private void selectWord() {
         for (String word : allWords) {
-            if (word.length() < 6) {
+            if (word.length() > 5) {
                 wordsToChooseFrom.add(word);
             }
         }

@@ -41,7 +41,7 @@ class Server {
         BATTLE_ROYAL
     }
 
-    public static void main(String[] args) { // args[0] port, args[1] file name/path
+    public static void main(String[] args) { // args[0] port, args[1] file directory path including file name
         server = null;
         try {
             switch (args.length){
