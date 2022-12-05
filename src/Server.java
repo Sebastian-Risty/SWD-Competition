@@ -429,11 +429,14 @@ class Server {
                                     } else {
                                         output.format(String.format("%s,%s\n", Client.sendMessage.CREATE_TOURNAMENT, true));
                                         output.flush();
-                                        tournaments.put(new Tournament(clientMessage[1], String.valueOf(System.currentTimeMillis())), Collections.synchronizedList(
+                                        int startTime = (int) System.currentTimeMillis();
+                                        tournaments.put(new Tournament(clientMessage[1], String.valueOf(startTime)), Collections.synchronizedList(
                                                 new ArrayList<TournamentStats>() {{
                                                     add(new TournamentStats(username));
                                                 }}));
-                                        // TODO UPDATE DATABASE
+                                        Database.createTournament(clientMessage[1], startTime);
+                                        Thread.sleep(10);
+                                        Database.addToTournament(username, clientMessage[1]);
                                     }
                                 }
                                 break;
@@ -444,10 +447,12 @@ class Server {
                                         names.add(tournament.getName());
                                     }
                                     if (names.contains(clientMessage[1])) {
+                                        Database.addToTournament(username, clientMessage[1]);
+                                        Thread.sleep(10);
                                         output.format(String.format("%s,%s,%s\n", Client.sendMessage.TOURNAMENT_PLAYER_DATA, true, getTournamentPlayerData(clientMessage[1])));
                                         output.flush();
                                     } else {
-                                        output.format(String.format("%s,%s,%s\n", Client.sendMessage.TOURNAMENT_PLAYER_DATA, false, ""));
+                                        output.format(String.format("%s,%s\n", Client.sendMessage.TOURNAMENT_PLAYER_DATA, false));
                                         output.flush();
                                     }
                                 }
