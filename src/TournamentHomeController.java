@@ -11,34 +11,15 @@ import java.util.Objects;
 
 public class TournamentHomeController extends Controller {
     @FXML
-    JFXTextField createField;
+    private JFXTextField createField;
     @FXML
-    JFXTextField joinField;
-
-
+    private JFXTextField joinField;
     @FXML
     private ListView<String> tournamentList;
 
-    @FXML
-    void createButtonListener(ActionEvent event) {
-
-    }
-
-    @FXML
-    void joinButtonListener(ActionEvent event) {
-
-    }
-
-    @FXML
-    void menuButtonListener(ActionEvent event) {
-
-    }
-
     public void initialize() {
-        // TODO get tournaments from server and add them to scroll pane
         getClient().setController(this);
         getClient().sendMessage(String.format("%s\n", Server.sendMessage.TOURNAMENT_DATA));
-
     }
 
     public void setUpTournamentData() {
@@ -49,18 +30,18 @@ public class TournamentHomeController extends Controller {
     public void joinButtonListener(){
         String tournament = joinField.getText();
 
-        if (!Objects.equals(tournament, "")){
-            // TODO send message to server
+        if (!tournament.equals("")){
+            getClient().sendMessage(String.format("%s\n", Server.sendMessage.JOIN_TOURNAMENT));
         }
 
     }
 
     @FXML
     public void createButtonListener(){
-        String tournament = joinField.getText();
+        String tournament = createField.getText();
 
-        if (!Objects.equals(tournament, "")) {
-            // TODO send message to server
+        if (!tournament.equals("")) {
+            getClient().sendMessage(String.format("%s\n", Server.sendMessage.CREATE_TOURNAMENT));
         }
 
     }
@@ -80,6 +61,26 @@ public class TournamentHomeController extends Controller {
                     tempList.add(data[i]);
                 }
                 tournamentList.setItems(tempList);
+            }
+        });
+    }
+
+    @Override
+    public void joinTournament() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+           // TODO
+            }
+        });
+    }
+
+    @Override
+    public void createTournament() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                //TODO
             }
         });
     }

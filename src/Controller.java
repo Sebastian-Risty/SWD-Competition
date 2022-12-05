@@ -296,6 +296,13 @@ public class Controller {
      */
     public void guessResult(int score) {
     }
+    public void joinTournament() {
+    }
+    public void createTournament() {
+    }
+    public void updateTournament(String[] data) {
+
+    }
     /**
      * Method for updating the player stats screen in the home page. HomeScreenController overrides this
      */
