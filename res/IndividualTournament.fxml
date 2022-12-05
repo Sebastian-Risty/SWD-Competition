@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.text.Font?>
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="StatsPageController">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="IndividualTournamentController">
    <GridPane fx:id="leaderboardPane" layoutX="23.0" layoutY="41.0" prefHeight="41.0" prefWidth="302.0">
       <columnConstraints>
          <ColumnConstraints hgrow="SOMETIMES" maxWidth="85.0" minWidth="10.0" prefWidth="63.0"/>
@@ -22,33 +17,33 @@
       </rowConstraints>
       <Label text="Username:" GridPane.columnIndex="1">
          <font>
-            <Font name="System Bold" size="13.0"/>
+            <Font name="System Bold" size="13.0" />
          </font>
       </Label>
       <Label text="Wins:" GridPane.columnIndex="2">
          <font>
-            <Font name="System Bold" size="13.0"/>
+            <Font name="System Bold" size="13.0" />
          </font>
       </Label>
       <Label text="Games Left:" GridPane.columnIndex="3">
          <font>
-            <Font name="System Bold" size="13.0"/>
+            <Font name="System Bold" size="13.0" />
          </font>
       </Label>
       <Label text="Rank:">
          <font>
-            <Font name="System Bold" size="13.0"/>
+            <Font name="System Bold" size="13.0" />
          </font>
       </Label>
    </GridPane>
    <Label layoutX="23.0" layoutY="25.0" text="Leaderboard:">
       <font>
-         <Font name="System Bold" size="13.0"/>
+         <Font name="System Bold" size="13.0" />
       </font>
    </Label>
    <Label layoutX="23.0" layoutY="283.0" text="Your Stats:">
       <font>
-         <Font name="System Bold" size="13.0"/>
+         <Font name="System Bold" size="13.0" />
       </font>
    </Label>
    <GridPane fx:id="userPane" layoutX="23.0" layoutY="299.0" prefHeight="41.0" prefWidth="302.0">
@@ -63,12 +58,12 @@
       </rowConstraints>
       <Label text="Username:" GridPane.columnIndex="1">
          <font>
-            <Font name="System Bold" size="13.0"/>
+            <Font name="System Bold" size="13.0" />
          </font>
       </Label>
       <Label text="Wins:" GridPane.columnIndex="2">
          <font>
-            <Font name="System Bold" size="13.0"/>
+            <Font name="System Bold" size="13.0" />
          </font>
       </Label>
       <Label text="Games Left:" GridPane.columnIndex="3">
@@ -82,16 +77,39 @@
          </font>
       </Label>
    </GridPane>
-   <JFXButton layoutX="404.0" layoutY="89.0" onAction="#startButtonListener" prefHeight="49.0" prefWidth="146.0"
-              text="Start!">
-      <font>
-         <Font name="System Bold" size="25.0"/>
-      </font>
-   </JFXButton>
-   <JFXButton layoutX="376.0" layoutY="216.0" onAction="#menuButtonListener" prefHeight="67.0" prefWidth="203.0"
-              text="Main Menu">
-      <font>
-         <Font name="System Bold" size="25.0"/>
-      </font>
-   </JFXButton>
+   <GridPane layoutX="325.0" layoutY="36.0" prefHeight="327.0" prefWidth="285.0">
+      <columnConstraints>
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+      </columnConstraints>
+      <rowConstraints>
+         <RowConstraints maxHeight="92.0" minHeight="9.0" prefHeight="41.0" vgrow="SOMETIMES"/>
+         <RowConstraints maxHeight="223.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES"/>
+         <RowConstraints maxHeight="223.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES"/>
+         <RowConstraints maxHeight="223.0" minHeight="10.0" prefHeight="105.0" vgrow="SOMETIMES"/>
+         <RowConstraints maxHeight="223.0" minHeight="10.0" prefHeight="54.0" vgrow="SOMETIMES"/>
+      </rowConstraints>
+      <children>
+         <JFXButton fx:id="readyUp" onAction="#readyUpListener" text="Ready Up!" GridPane.halignment="CENTER">
+            <font>
+               <Font name="System Bold" size="18.0"/>
+            </font>
+         </JFXButton>
+         <Label fx:id="gameModeFeedback" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+            <font>
+               <Font name="System Bold" size="16.0"/>
+            </font>
+         </Label>
+         <Label fx:id="gameStatus" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+            <font>
+               <Font name="System Bold Italic" size="18.0"/>
+            </font>
+         </Label>
+         <JFXButton fx:id="mainMenuButton" onAction="#mainMenuButtonListener" prefHeight="67.0" prefWidth="203.0"
+                    text="Main Menu" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+            <font>
+               <Font name="System Bold" size="25.0"/>
+            </font>
+         </JFXButton>
+      </children>
+   </GridPane>
 </AnchorPane>

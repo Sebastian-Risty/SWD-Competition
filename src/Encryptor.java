@@ -4,11 +4,11 @@ import java.util.Scanner;
 /**
  * Encryptor contains is used to shift
  */
-public class Encryptor { // TEST
+public class Encryptor {
     /**
      * in order alphabet, every character is uppercase
      */
-    public final static char[] alphabet = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z','a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+    public final static char[] alphabet = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
     /**
      * The encryption shift value. This differs from the key shift value because the key's updates
      */
@@ -20,6 +20,7 @@ public class Encryptor { // TEST
 
     /**
      * Sets the filename
+     *
      * @param fileName the desired name of the encryption file
      */
     public Encryptor(String fileName) {
@@ -30,9 +31,10 @@ public class Encryptor { // TEST
      * shiftLetter takes in a letter and returns the appropriately shifted version of that letter. This function can
      * be used for both encryption and decryption. If decrypt is true, it will decrypt. If false, it will encrypt.
      * If the letter character is non-alphabetic, it will simply return the same character
-     * @param letter the letter to be shifted
+     *
+     * @param letter     the letter to be shifted
      * @param shiftValue the value the letter will be shifted by
-     * @param decrypt true if decryption, false if encryption. Used to determine the appropriate method of shifting
+     * @param decrypt    true if decryption, false if encryption. Used to determine the appropriate method of shifting
      * @return character of the shifted letter
      */
     private static char shiftLetter(char letter, int shiftValue, boolean decrypt) {
@@ -62,6 +64,7 @@ public class Encryptor { // TEST
     /**
      * Shifts the given message based on the provided keyInfo. If decrypt is true, it will shift in the appropriate way
      * for decryption. If false, it will shift for encryption. The message is shifted by shifting each individual letter
+     *
      * @param message The message to be shifted
      * @param keyInfo String array containing the shift index and key values from the key file
      * @param decrypt true if decryption, false if encryption
@@ -79,8 +82,8 @@ public class Encryptor { // TEST
         StringBuilder output = new StringBuilder();
         int shiftIndex = currPos % shiftVals.length; // modulo operator handles cases where position is greater than shiftVals.length, without this there would be an out-of-bounds error
         for (int i = 0; i < message.length(); i++) {
-                output.append(shiftLetter(message.charAt(i), shiftVals[shiftIndex], decrypt));
-                shiftIndex++;
+            output.append(shiftLetter(message.charAt(i), shiftVals[shiftIndex], decrypt));
+            shiftIndex++;
             if (shiftIndex >= shiftVals.length) {
                 shiftIndex = 0;
             }
@@ -90,6 +93,7 @@ public class Encryptor { // TEST
 
     /**
      * returns the information from a given fileName. If the fileName is not found, the output array will contain an error message
+     *
      * @param fileName the name of the file to be read from
      * @return String array containing the information from fileName
      */
@@ -111,43 +115,10 @@ public class Encryptor { // TEST
     }
 
     /**
-     * Creates a file where the name is gotten from the instance variable fileName
-     * @return String message displaying whether the file was created successfully
-     */
-    public String createFile() {
-        try {
-            File encryptFile = new File(fileName);
-            if (encryptFile.createNewFile()) {
-                return "Encryptor file \"" + encryptFile.getName() + "\" created successfully";
-            } else {
-                return "Filename \"" + fileName + "\" already exists";
-            }
-        } catch (IOException e) {
-            return "Error creating file";
-        }
-    }
-
-    /**
-     * Uses a FileWriter object to write to encryptor file. The first line is the instance variable position, the second
-     * line is the inputted encrypted message.
-     * @param message the encrypted message to be written to the file
-     * @return String displaying whether the file was successfully written to
-     */
-    public String writeToEncryptorFile(String message) {
-        try {
-            FileWriter keyWriter = new FileWriter(fileName);
-            keyWriter.write(position + "\n" + message);
-            keyWriter.close();
-            return "Successfully wrote to file \"" + fileName + "\"";
-        } catch (IOException ex) {
-            return "An error occurred";
-        }
-    }
-
-    /**
      * Replaces the key file's old shift index with a new shift index
+     *
      * @param keyFileName the name of the key file
-     * @param newPos the position to replace the old position in the key file
+     * @param newPos      the position to replace the old position in the key file
      * @return String displaying whether the file was successfully updated
      */
     public static String updateKeyFile(String keyFileName, int newPos) {
@@ -169,7 +140,44 @@ public class Encryptor { // TEST
     }
 
     /**
+     * Creates a file where the name is gotten from the instance variable fileName
+     *
+     * @return String message displaying whether the file was created successfully
+     */
+    public String createFile() {
+        try {
+            File encryptFile = new File(fileName);
+            if (encryptFile.createNewFile()) {
+                return "Encryptor file \"" + encryptFile.getName() + "\" created successfully";
+            } else {
+                return "Filename \"" + fileName + "\" already exists";
+            }
+        } catch (IOException e) {
+            return "Error creating file";
+        }
+    }
+
+    /**
+     * Uses a FileWriter object to write to encryptor file. The first line is the instance variable position, the second
+     * line is the inputted encrypted message.
+     *
+     * @param message the encrypted message to be written to the file
+     * @return String displaying whether the file was successfully written to
+     */
+    public String writeToEncryptorFile(String message) {
+        try {
+            FileWriter keyWriter = new FileWriter(fileName);
+            keyWriter.write(position + "\n" + message);
+            keyWriter.close();
+            return "Successfully wrote to file \"" + fileName + "\"";
+        } catch (IOException ex) {
+            return "An error occurred";
+        }
+    }
+
+    /**
      * sets the position
+     *
      * @param position the desired position
      */
     public void setPosition(int position) {

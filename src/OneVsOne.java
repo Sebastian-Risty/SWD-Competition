@@ -1,24 +1,45 @@
 import java.io.File;
 
+/**
+ * Represents specific rules for head on head matches
+ */
+@SuppressWarnings({"BusyWait", "StatementWithEmptyBody"})
 public class OneVsOne extends Game {
 
+    /**
+     * OneVsOne constructor
+     *
+     * @param matchTime How long each match should last
+     * @param filePath  File object path
+     * @param fileIndex Index to read from file
+     *                  Calls super constructor
+     */
     public OneVsOne(int matchTime, File filePath, int fileIndex) {
         super(matchTime, filePath, fileIndex);
         setGamemode("OneVsOne");
     }
 
+    /**
+     * OneVsOne constructor
+     *
+     * @param matchTime How long the match should be
+     *                  Calls super constructor
+     */
     public OneVsOne(int matchTime) {
         super(matchTime);
         setGamemode("OneVsOne");
     }
 
+    /**
+     * Starts the match once 2 clients are connected
+     *
+     * @throws InterruptedException If thread is interrupted
+     */
     @Override
     public void pregameLobby() throws InterruptedException {
-        System.out.println("IN 1v1 PREGAME");
         while (!isInProgress()) {
             Thread.sleep(10);
             if (getNumConnectedClients() == 2) {
-                System.out.println("CHANGED FLAG");
                 changeProgressFlag();
                 changeStartFlag();
                 startGame();
@@ -26,14 +47,16 @@ public class OneVsOne extends Game {
         }
     }
 
+    /**
+     * Waits for match time then finished the match
+     */
     @Override
     public void startGame() {
-        if(!isFinished()){
-            System.out.println("STARTING MATCH TIMER");
+        if (!isFinished()) {
             long startTime = System.currentTimeMillis();
             while (((System.currentTimeMillis() - startTime) / 1000) < getMatchTime()) ;
-            System.out.println("MATCH ENDED");
             changeEndFlag();
         }
     }
+
 }
