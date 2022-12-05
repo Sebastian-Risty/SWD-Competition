@@ -413,18 +413,23 @@ class Server {
                                             client.BRGamesPlayed++;
                                             break;
                                         case "Tournament":
-                                            Database.setTable(client.currentTournament.getName());
-                                            List<TournamentStats> statsList = tournaments.get(client.currentTournament);
-                                            for (TournamentStats stats : statsList) {
-                                                if (stats.getUsername().equals(client.username)) {
-                                                    stats.setTournamentGamesLeft(stats.getTournamentGamesLeft() - 1);
-                                                    try {
-                                                        Database.update(
-                                                                new String[]{stats.getUsername(),
-                                                                        String.valueOf(stats.getTournamentWins()),
-                                                                        String.valueOf(stats.getTournamentGamesLeft())});
-                                                    } catch (SQLException e) {
-                                                        throw new RuntimeException(e);
+                                            synchronized (tournaments) {
+                                                Database.initialize(client.currentTournament.getName());
+                                                Database.setTable(client.currentTournament.getName());
+                                                List<TournamentStats> statsList = tournaments.get(client.currentTournament);
+                                                for (TournamentStats stats : statsList) {
+                                                    if (stats.getUsername().equals(client.username)) {
+                                                        stats.setTournamentGamesLeft(stats.getTournamentGamesLeft() - 1);
+                                                        try {
+                                                            System.out.println(stats.getTournamentGamesLeft());
+
+                                                            Database.update(
+                                                                    new String[]{stats.getUsername(),
+                                                                            String.valueOf(stats.getTournamentWins()),
+                                                                            String.valueOf(stats.getTournamentGamesLeft())});
+                                                        } catch (SQLException e) {
+                                                            throw new RuntimeException(e);
+                                                        }
                                                     }
                                                 }
                                             }
