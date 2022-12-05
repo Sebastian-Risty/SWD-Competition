@@ -242,7 +242,9 @@ public abstract class Game implements Runnable { //TODO: make class abstract and
 
     public abstract void startGame();
 
-    public abstract String getTournamentName();
+    public String getTournamentName() {
+        return "";
+    }
 
 
     //TODO: rounds can be specified as special rule set in subclasses
