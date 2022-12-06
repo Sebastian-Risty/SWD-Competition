@@ -404,6 +404,7 @@ class Server {
 
                                         client.currentLobby = null;
                                         client.currentScore = 0;
+                                        client.currentTournament = null;
                                         client.totalGamesPlayed++;
 
                                         switch (lobby.getGamemode()) {
@@ -703,7 +704,7 @@ class Server {
                                     this.requestedGame = null;
                                     for (ConnectedClient client : lobbies.get(this.currentLobby)) {
                                         if (client != this) {
-                                            client.output.format(String.format("%s,%s\n", Client.sendMessage.PLAYER_COUNT_UPDATE, (this.currentLobby.getNumConnectedClients())));
+                                            client.output.format(String.format("%s,%s\n", Client.sendMessage.PLAYER_COUNT_UPDATE, (this.currentLobby.getNumConnectedClients() - 1)));
                                             client.output.flush();
                                         }
                                     }
